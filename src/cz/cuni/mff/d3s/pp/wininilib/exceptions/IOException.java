@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 /**
  * Basically only wrapper for <i>java.io.Exception</i>.
  *
- * @author Jakub Naplava
+ * @author Jakub Naplava; Jan Kluj
  */
 public class IOException extends WinIniLibException {
 

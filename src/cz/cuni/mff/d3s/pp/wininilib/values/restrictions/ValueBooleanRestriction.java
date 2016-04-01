@@ -4,11 +4,11 @@ import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 
 /**
- * Provides restriction rules for signed type values.
+ * Provides restriction rules for boolean type values.
  *
  * @author Jakub Naplava; Jan Kluj
  */
-public class ValueSignedRestriction implements ValueRestriction {
+public class ValueBooleanRestriction implements ValueRestriction {
 
     /**
      * Evaluates whether the specified value satisfies the restriction. If not,
