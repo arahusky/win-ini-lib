@@ -9,9 +9,17 @@ import cz.cuni.mff.d3s.pp.wininilib.Value;
  */
 public class ValueUnsigned implements Value {
 
+    /**
+     * Initializes a new instance of <code>ValueUnsigned</code>.
+     *
+     * @param value value to be parsed.
+     */
+    public ValueUnsigned(Object value) {
+        
+    }
+    
     @Override
     public Object get() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

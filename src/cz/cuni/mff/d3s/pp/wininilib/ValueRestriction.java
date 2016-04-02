@@ -1,5 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+
 /**
  * Each value restriction must be derived from this interface. Provides a basic
  * behaviour of restrictions.
@@ -14,5 +16,5 @@ public interface ValueRestriction {
      *
      * @param value value to be checked.
      */
-    void checkRestriction(Value value);
+    void checkRestriction(Value value) throws ViolatedRestrictionException;
 }

@@ -9,9 +9,9 @@ public class Main {
     public static void main(String[] args) {
 
         /**
-         * DESCRIPRION OF WINDOWS INI LIBRARY. WinIniLib provides a
+         * DESCRIPTION OF WINDOWS INI LIBRARY. WinIniLib provides a
          * representation for Formats. They contains some sections, which
-         * consist of properties. Property is key-value pair, basically.
+         * consists of properties. Property is key-value pair, basically.
          * Property can be multi-valued. The library reflects the actual/real
          * Windows .ini files. For more informations about .ini files visit
          * https://en.wikipedia.org/wiki/INI_file.

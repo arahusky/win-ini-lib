@@ -9,6 +9,15 @@ import cz.cuni.mff.d3s.pp.wininilib.Value;
  */
 public class ValueString implements Value {
 
+    /**
+     * Initializes a new instance of <code>ValueString</code>.
+     *
+     * @param string string to be parsed.
+     */
+    public ValueString(String string) {
+        
+    }
+    
     @Override
     public Object get() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

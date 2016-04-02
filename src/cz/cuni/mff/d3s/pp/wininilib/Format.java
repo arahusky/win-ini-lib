@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -14,7 +15,8 @@ public class Format {
     private List<Section> sections;
 
     /**
-     * Initializes a new instance of <code>Format</code>. Represents an .ini file.
+     * Initializes a new instance of <code>Format</code>. Represents an .ini
+     * file.
      */
     public Format() {
         sections = new ArrayList<>();
@@ -94,21 +96,23 @@ public class Format {
 
     /**
      * Saves the current format to a file with the specified type.
+     *
      * @param fileName name of file where to save.
      * @param type type of format representantion.
      */
     public void saveToFile(String fileName, SaveType type) {
         // calls toString(type);
     }
-    
-    
+
     /**
      * Loads the format from the specified file. The file will be loaded to the
-     * current instance of Format. File must be valid to this Format.
+     * current instance of Format. File must be valid to this Format, otherwise
+     * an exception is thrown.
      *
      * @param fileName name of the file to load from.
+     * @throws FileFormatException if the loaded file does not have this format
      */
-    public void loadDataFromFile(String fileName) {
+    public void loadDataFromFile(String fileName) throws FileFormatException{
 
     }
 
@@ -150,11 +154,12 @@ public class Format {
     }
 
     /**
-     * Represents a type of format to load. STRICT loaded file must cooperate
-     * with the current format, no defaults. RELAXED tries avoid error as much
+     * Represents a type of format to load. STRICT loaded file must meet 
+     * the current format, no defaults. RELAXED tries to avoid errors as much
      * as possible.
      */
     public enum LoadType {
+
         STRICT,
         RELAXED
     }
@@ -166,6 +171,7 @@ public class Format {
      *
      */
     public enum SaveType {
+
         FULL,
         ORIGIN
     }
