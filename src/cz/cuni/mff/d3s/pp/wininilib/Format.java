@@ -93,6 +93,16 @@ public class Format {
     }
 
     /**
+     * Saves the current format to a file with the specified type.
+     * @param fileName name of file where to save.
+     * @param type type of format representantion.
+     */
+    public void saveToFile(String fileName, SaveType type) {
+        // calls toString(type);
+    }
+    
+    
+    /**
      * Loads the format from the specified file. The file will be loaded to the
      * current instance of Format. File must be valid to this Format.
      *
