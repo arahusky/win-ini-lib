@@ -15,7 +15,7 @@ public class IniFile {
     private List<Section> sections;
 
     /**
-     * Initializes a new instance of <code>ini file</code>. Represents an .ini
+     * Initializes a new instance of <code>IniFile</code>. Represents an .ini
      * file.
      */
     public IniFile() {
@@ -32,6 +32,12 @@ public class IniFile {
         return null;
     }
 
+    /**
+     * Returns the section with the specified identifier.
+     *
+     * @param identifier identifier of section to be returned.
+     * @return the section with the specified identifier.
+     */
     public Section getSection(String identifier) {
         return null;
     }
@@ -118,16 +124,36 @@ public class IniFile {
      * @param fileName name of the file to load from.
      * @param type type of way of load.
      * @throws FileFormatException if the loaded file does not have this ini
-     * file
+     * file structure or is not valid.
      */
     public void loadDataFromFile(String fileName, LoadType type) throws FileFormatException {
 
     }
 
+    /**
+     * Loads the ini file from the specified stream. The stream will be loaded
+     * to the current instance of IniFile. Ini file within the stream must be
+     * valid to this IniFile, otherwise an exception is thrown.
+     *
+     * @param stream stream that contains the ini file.
+     * @param type type of way of load.
+     * @throws FileFormatException if the loaded ini file from the stream does
+     * not have this ini file structure or is not valid.
+     */
     public void loadDataFromStream(Stream stream, LoadType type) throws FileFormatException {
 
     }
 
+    /**
+     * Loads the ini file from the specified string. The string will be loaded
+     * to the current instance of IniFile. Ini file within the string must be
+     * valid to this IniFile, otherwise an exception is thrown.
+     *
+     * @param iniFile string that contains the ini file.
+     * @param type type of way of load.
+     * @throws FileFormatException if the loaded ini file from the string does
+     * not have this ini file structure or is not valid.
+     */
     public void loadDataFromString(String iniFile, LoadType type) throws FileFormatException {
 
     }
@@ -138,20 +164,9 @@ public class IniFile {
      *
      * @param fileName name of the file to load from.
      * @return Loaded ini file from the file with the specified type of load.
+     * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadFormatFromFile(String fileName) throws FileFormatException {
-        return null;
-    }
-
-    /**
-     * Loads the ini file from the specified string with the specified type of
-     * load. Always loaded in RELAXED mode.
-     *
-     * @param iniFile file string from which the IniFile will be loaded.
-     * @return Loaded ini file from the specified string with the specified type
-     * of load.
-     */
-    public static IniFile loadFormatFromString(String iniFile) throws FileFormatException {
         return null;
     }
 
@@ -162,8 +177,22 @@ public class IniFile {
      * @param stream stream from which the IniFile will be loaded.
      * @return Loaded ini file from the specified stream with the specified type
      * of load.
+     * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadFormatFromStream(Stream stream) throws FileFormatException {
+        return null;
+    }
+
+    /**
+     * Loads the ini file from the specified string with the specified type of
+     * load. Always loaded in RELAXED mode.
+     *
+     * @param iniFile file string from which the IniFile will be loaded.
+     * @return Loaded ini file from the specified string with the specified type
+     * of load.
+     * @throws FileFormatException if the loaded ini file is not valid.
+     */
+    public static IniFile loadFormatFromString(String iniFile) throws FileFormatException {
         return null;
     }
 

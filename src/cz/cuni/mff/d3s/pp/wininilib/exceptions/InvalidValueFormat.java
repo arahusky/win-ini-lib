@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 
 /**
+ * This exception is thrown when some value has invalid format and can not be
+ * parsed.
  *
  * @author Jakub Naplava; Jan Kluj
  */

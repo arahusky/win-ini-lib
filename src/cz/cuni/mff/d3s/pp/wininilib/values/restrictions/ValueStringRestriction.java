@@ -16,9 +16,11 @@ public class ValueStringRestriction implements ValueRestriction {
      * exception is thrown.
      *
      * @param value value to be checked.
+     * @throws ViolatedRestrictionException if this restriction has been
+     * violated.
      */
     @Override
-    public void checkRestriction(Value value) throws ViolatedRestrictionException{
+    public void checkRestriction(Value value) throws ViolatedRestrictionException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

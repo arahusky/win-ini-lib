@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 
 /**
  * Represents a <code>Boolean</code> value of the property.
@@ -15,10 +15,11 @@ public class ValueBoolean implements Value {
     /**
      * Initializes a new instance of <code>BooleanValue</code>.
      *
-     * @param string value to be parsed.
+     * @param value value to be parsed.
+     * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueBoolean(String value) throws ViolatedRestrictionException {
-        // Check for restriction
+    public ValueBoolean(String value) throws InvalidValueFormat {
+
     }
 
     /**

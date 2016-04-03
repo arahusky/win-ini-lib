@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
  */
 public class ExampleUsage {
 
-    public static IniFile getBasicFormat() throws TooManyValuesException, ViolatedRestrictionException {
+    public static IniFile getBasicFormat() throws TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException {
         //First, we have to define the format
 
         IniFile format = new IniFile();
@@ -40,12 +40,13 @@ public class ExampleUsage {
         return format;
     }
 
-    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException {
+    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat {
         String fileName = "sampleFile.ini";
 
-        IniFile format = getBasicFormat();
+        IniFile ini = getBasicFormat();
         try {
-            format.loadDataFromFile(fileName, LoadType.RELAXED);
+            ini.loadDataFromFile(fileName, LoadType.RELAXED);
+            System.out.println("The file meets the specified format.");
         } catch (FileFormatException ex) {
             System.err.println("The file did not meet specified format.");
         }
@@ -53,17 +54,26 @@ public class ExampleUsage {
 
     public static void loadModifyAndSaveIniFile() throws FileFormatException, TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException {
         String fileName = "sampleFile.ini";
-        IniFile format = getBasicFormat();
+        IniFile ini = getBasicFormat();
 
-        format.loadDataFromFile(fileName, LoadType.RELAXED);
+        ini.loadDataFromFile(fileName, LoadType.RELAXED);
 
         //TODO getSection(string identifier)
-        Section sectionToBeModified = format.getSection(2);
+        Section sectionToBeModified = ini.getSection(2);
 
         //TODO getProperty(string key)
         Property prop = sectionToBeModified.getProperty(2);
         prop.addValue(new ValueSigned(123));
 
-        format.saveToFile(fileName, IniFile.SaveType.FULL);
+        ini.saveToFile(fileName, IniFile.SaveType.FULL);
+    }
+    
+    public static void loadFileStatic() {
+        String fileName = "sampleFile.ini";
+        try {
+            IniFile ini = IniFile.loadFormatFromFile(fileName);
+        } catch (FileFormatException ex) {
+            System.err.println("This file is not valid ini file.");
+        }
     }
 }

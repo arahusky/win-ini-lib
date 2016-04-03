@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import java.util.List;
 
 /**
@@ -10,9 +11,9 @@ import java.util.List;
  */
 public class Property {
 
-    private String key;
+    private final String key;
     private boolean required;
-    private boolean isSingleValue; // TODO: IS NECESSARY?
+    private boolean isSingleValue;
     private ValueDelimiter delimiter;
     private Value implicitValue;
     private ValueRestriction valueRestriction;
@@ -92,9 +93,11 @@ public class Property {
      *
      * @param index index of old value.
      * @param value new value to set.
+     * @throws ViolatedRestrictionException if restriction of the current
+     * property has been violated.
      */
-    public void setValue(int index, Value value) {
-        
+    public void setValue(int index, Value value) throws ViolatedRestrictionException {
+
     }
 
     /**
@@ -110,12 +113,40 @@ public class Property {
      * Adds the specified value to the current property.
      *
      * @param value value to be added.
+     * @throws TooManyValuesException if someone tries to add multiple values to
+     * single value property.
+     * @throws ViolatedRestrictionException if restriction of the current
+     * property has been violated.
      */
-    public void addValue(Value value) throws TooManyValuesException {
+    public void addValue(Value value) throws TooManyValuesException, ViolatedRestrictionException {
         values.add(value);
     }
 
-    public void addValue(String identifier, String nameOfProperty) throws TooManyValuesException {
+    /**
+     * Adds the specified value to the current property.
+     *
+     * @param value value to be added.
+     * @throws TooManyValuesException if someone tries to add multiple values to
+     * single value property.
+     * @throws ViolatedRestrictionException if restriction of the current
+     * property has been violated.
+     */
+    public void addValue(Object value) throws TooManyValuesException, ViolatedRestrictionException {
+
+    }
+
+    /**
+     * Adds the specified value to the current property. Value is specified by
+     * reference to another property.
+     *
+     * @param identifier identifier of any section.
+     * @param nameOfProperty property that will be linked to this one.
+     * @throws TooManyValuesException if someone tries to add multiple values to
+     * single value property.
+     * @throws ViolatedRestrictionException if restriction of the current
+     * property has been violated.
+     */
+    public void addValue(String identifier, String nameOfProperty) throws TooManyValuesException, ViolatedRestrictionException {
 
     }
 

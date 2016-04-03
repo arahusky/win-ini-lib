@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 
 /**
  * Represents a <code>String</code> value of the property.
@@ -14,8 +13,9 @@ public class ValueString implements Value {
      * Initializes a new instance of <code>ValueString</code>.
      *
      * @param string string to be parsed.
+     * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueString(String string) throws ViolatedRestrictionException {
+    public ValueString(String string) {
 
     }
 

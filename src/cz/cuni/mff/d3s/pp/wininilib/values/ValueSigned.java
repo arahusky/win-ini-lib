@@ -2,7 +2,6 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 
 /**
  * Represents a <code>Signed</code> value of the property.
@@ -17,9 +16,9 @@ public class ValueSigned implements Value {
      * Initializes a new instance of <code>ValueSigned</code>.
      *
      * @param value value to be parsed.
-     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat
+     * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueSigned(Object value) throws InvalidValueFormat, ViolatedRestrictionException {
+    public ValueSigned(Object value) throws InvalidValueFormat {
         try {
             this.value = (long) (value);
         } catch (ClassCastException ex) {

@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 
 /**
- * Some of the restrictions has been violated.
+ * Some of the restrictions have been violated.
  *
  * @author Jakub Naplava; Jan Kluj
  */

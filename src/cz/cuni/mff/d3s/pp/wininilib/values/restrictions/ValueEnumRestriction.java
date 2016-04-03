@@ -16,6 +16,8 @@ public class ValueEnumRestriction implements ValueRestriction {
      * exception is thrown.
      *
      * @param value value to be checked.
+     * @throws ViolatedRestrictionException if this restriction has been
+     * violated.
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {

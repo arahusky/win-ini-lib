@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib;
 import java.util.List;
 
 /**
- * Represents a section of the Format.
+ * Represents a section of the IniFile.
  *
  * @author Jakub Naplava; Jan Kluj
  */
@@ -52,7 +52,13 @@ public class Section {
     public Property getProperty(int i) {
         return properties.get(i);
     }
-    
+
+    /**
+     * Returns the property with the specified identifier.
+     *
+     * @param identifier identifier (key) of the property to return.
+     * @return the property with the specified identifier.
+     */
     public Property getProperty(String identifier) {
         return null;
     }
