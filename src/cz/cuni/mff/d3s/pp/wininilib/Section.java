@@ -52,6 +52,10 @@ public class Section {
     public Property getProperty(int i) {
         return properties.get(i);
     }
+    
+    public Property getProperty(String identifier) {
+        return null;
+    }
 
     /**
      * Removes first occurrence of given property.

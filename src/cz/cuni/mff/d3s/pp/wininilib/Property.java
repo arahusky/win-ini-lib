@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import java.util.List;
 
 /**
@@ -93,7 +94,7 @@ public class Property {
      * @param value new value to set.
      */
     public void setValue(int index, Value value) {
-
+        
     }
 
     /**
@@ -110,8 +111,12 @@ public class Property {
      *
      * @param value value to be added.
      */
-    public void addValue(Value value) {
+    public void addValue(Value value) throws TooManyValuesException {
         values.add(value);
+    }
+
+    public void addValue(String identifier, String nameOfProperty) throws TooManyValuesException {
+
     }
 
     /**

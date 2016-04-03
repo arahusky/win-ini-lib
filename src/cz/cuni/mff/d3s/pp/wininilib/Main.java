@@ -57,5 +57,10 @@ public class Main {
          * to a file.
          * 
          */
+        
+        
+        Object o = "Ahoj";
+        long lo = (long)(o);
+        
     }
 }

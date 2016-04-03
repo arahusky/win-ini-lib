@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 
 /**
  * Represents a <code>Unsigned</code> value of the property.
@@ -14,10 +15,10 @@ public class ValueUnsigned implements Value {
      *
      * @param value value to be parsed.
      */
-    public ValueUnsigned(Object value) {
-        
+    public ValueUnsigned(Object value) throws ViolatedRestrictionException {
+
     }
-    
+
     @Override
     public Object get() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

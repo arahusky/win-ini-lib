@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class ValueEnum implements Value {
      *
      * @param options Possible values this instance can have.
      */
-    public ValueEnum(List<String> options) {
+    public ValueEnum(List<String> options) throws ViolatedRestrictionException {
         
     }
     

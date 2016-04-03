@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 
 /**
  * Represents a <code>Float</code> value of the property.
@@ -14,7 +15,7 @@ public class ValueFloat implements Value {
      *
      * @param value value to be parsed.
      */
-    public ValueFloat(Object value) {
+    public ValueFloat(Object value) throws ViolatedRestrictionException {
         
     }
     
