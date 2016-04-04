@@ -11,7 +11,7 @@
                 
                 <h3> Windows .ini file format </h3>
                 <p>
-                    Windows .ini files serve for saving the configuration of programs. They consist of sections, which are blocks of related properties. 
+                    Windows .ini files serve for saving programs' configuration. They consist of sections, which are blocks of related properties. 
                     These properties are key-value pairs, with values of different type and arity. 
                     The values can be further restricted (e.g. it can only contain positive numbers), can contain comments, etc.
                     For bigger overview, we recommend you visiting <a href="https://en.wikipedia.org/wiki/INI_file" target="_blank">Wikipedia</a>.
@@ -24,15 +24,51 @@
                     <ul>
                         <li>IniFile: serves for specifying new format, loading existing configuration, accessing its internals as well as saving it back. </lI>
                         <li>Section: represents one section and provides methods to work with its properties</li>
-                        <li>Property: represents one property and provides method to work with its key and values</li>
+                        <li>Property: represents one property and provides methods to work with its key and values</li>
                         <li>Value: interface for all possible property values</li>
                         <li>ValueRestriction: interface for Value restrictions</li>
                     </ul>       
                     
                     Package <i>values</i> contains several implementations of <i>Value</i> interface (such as value for string, float or boolean).
-                    Package <i>values.restrictions</i> then contains implementations of <i>ValueRestriction</i> interface; therefore classes, which check the validity of specific value.
+                    Package <i>values.restrictions</i> then contains implementations of <i>ValueRestriction</i> interface; therefore classes, which check the validity of a specific value.
                                 
                     Finally, the last package <i>exceptions</i> contains all exceptions that are thrown by the library code.  
+                </p>
+                                
+                <h3> Demo examples </h3>                
+                <p>
+                    The most common tasks, user will use this library for are:
+                    <h4> Define own format of .ini file</h4>
+                    <code>
+                        IniFile format = new IniFile(); //create new format<br />
+                        Section section1 = new Section("Section1", true); //create new required section named 'Section1'<br />
+                        Property property1 = new Property("Option1", true, new ValueStringRestriction()); //create new required property named 'Option1' with string type<br />
+                        property1.addValue(new ValueString("value1")); //add new string value to defined property<br />
+                        section1.addProperty(property1); <br />
+                        format.addSection(section1); <br />
+                    </code>
+                    <h4> Load .ini file, check it against specified format, modify it and save back</h4>
+                    <p>
+                        <pre>
+IniFile ini = loadFormat(); //load already defined format 
+try {       
+    ini.loadDataFromFile(fileName, LoadType.RELAXED); //try to fill in the ini format file with the configuration
+    System.out.println("The file meets the specified format."); 
+    Section sectionToBeModified = ini.getSection("Section1"); //we will modify section named 'Section1' 
+
+    Property prop = sectionToBeModified.getProperty("Option1"); 
+    prop.addValue(new ValueSigned(123)); //add new signed value to the property
+
+    ini.saveToFile(fileName, IniFile.SaveType.FULL); // save the modified configuration back to file
+} catch (FileFormatException ex) {  
+    System.err.println("The file did not meet specified format."); 
+} 
+                            
+                        </pre>
+                    </p>
+                </p>
+                <p>
+                    To get more familiar with the library, we suggest you to inspect sample demo code, which is located in ExampleUsage java file.
                 </p>
                 
                 <h3>Compilation</h3>
@@ -45,17 +81,6 @@
                     <li>main: performs all previous tasks</li>
                                         
                     </ul>
-                </p>
-                                
-                <h3> Demo examples </h3>                
-                <p>
-                    The most common tasks, user will use this library for are:
-                    <h4> Define own format of .ini file</h4>
-                    
-                    <h4> Load .ini file, check it against specified format, modify it and save back</h4>
-                </p>
-                <p>
-                    To get more familiar with the library, we suggest you to inspect sample demo code, which is located in ExampleUsage java file.
                 </p>
 
                 <h3> Other information</h3>
