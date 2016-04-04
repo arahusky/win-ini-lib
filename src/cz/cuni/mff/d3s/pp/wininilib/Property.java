@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import java.util.List;
@@ -219,5 +220,25 @@ public class Property {
     public enum ValueDelimiter {
         COMMA,
         COLON
+    }
+    
+    /**
+     * Returns a string representation of the current <code>Property</code>.
+     * Always saved with FULL save mode.
+     * @return a string representation of the current <code>Property</code>.
+     */
+    @Override
+    public String toString() {
+        return null;
+    }
+    
+    /**
+     * Returns a string representation of the current <code>Property</code>.
+     * Property is represented with the specified save mode.
+     * @param type save mode to be returned with.
+     * @return a string representation of the current <code>Property</code>.
+     */
+    public String toString(SaveType type) {
+        return null;
     }
 }

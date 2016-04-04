@@ -166,7 +166,7 @@ public class IniFile {
      * @return Loaded ini file from the file with the specified type of load.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
-    public static IniFile loadFormatFromFile(String fileName) throws FileFormatException {
+    public static IniFile loadIniFromFile(String fileName) throws FileFormatException {
         return null;
     }
 
@@ -179,7 +179,7 @@ public class IniFile {
      * of load.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
-    public static IniFile loadFormatFromStream(Stream stream) throws FileFormatException {
+    public static IniFile loadIniFromStream(Stream stream) throws FileFormatException {
         return null;
     }
 
@@ -192,7 +192,7 @@ public class IniFile {
      * of load.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
-    public static IniFile loadFormatFromString(String iniFile) throws FileFormatException {
+    public static IniFile loadIniFromString(String iniFile) throws FileFormatException {
         return null;
     }
 

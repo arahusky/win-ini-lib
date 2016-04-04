@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import java.math.BigDecimal;
 
 /**
  * Represents a <code>Unsigned</code> value of the property.
@@ -10,6 +11,8 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
  */
 public class ValueUnsigned implements Value {
 
+    private BigDecimal value;
+    
     /**
      * Initializes a new instance of <code>ValueUnsigned</code>.
      *
@@ -17,7 +20,7 @@ public class ValueUnsigned implements Value {
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
     public ValueUnsigned(Object value) throws InvalidValueFormat {
-
+        // value = ...
     }
 
     @Override

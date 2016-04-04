@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
 import java.util.List;
 
 /**
@@ -89,5 +90,24 @@ public class Section {
      */
     public void addProperty(Property property) {
         properties.add(property);
+    }
+    
+    /**
+     * Returns a string representation of the current <code>Section</code>.
+     * @return a string representation of the current <code>Section</code>.
+     */
+    @Override
+    public String toString() {
+        return null;
+    }
+    
+    /**
+     * Returns a string representation of the current <code>Section</code>.
+     * Represented with the specified save type.
+     * @param type save mode to be returned with.
+     * @return a string representation of the current <code>Section</code>.
+     */
+    public String toString(SaveType type) {
+        return null;
     }
 }

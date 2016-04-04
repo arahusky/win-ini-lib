@@ -1,6 +1,9 @@
-package cz.cuni.mff.d3s.pp.wininilib;
+package cz.cuni.mff.d3s.pp.wininilib.examples;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadType;
+import cz.cuni.mff.d3s.pp.wininilib.Property;
+import cz.cuni.mff.d3s.pp.wininilib.Section;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
@@ -97,7 +100,7 @@ public class ExampleUsage {
     public static void loadFileStatic() {
         String fileName = "sampleFile.ini";
         try {
-            IniFile ini = IniFile.loadFormatFromFile(fileName);
+            IniFile ini = IniFile.loadIniFromFile(fileName);
             System.out.println(ini.toString(IniFile.SaveType.FULL));
         } catch (FileFormatException ex) {
             System.err.println("This file is not valid ini file.");
