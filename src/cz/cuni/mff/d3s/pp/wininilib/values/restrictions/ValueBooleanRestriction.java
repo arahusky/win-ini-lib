@@ -29,4 +29,28 @@ public class ValueBooleanRestriction implements ValueRestriction {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Returns a list of all values that can represent a <code>true</code>
+     * value.
+     *
+     * @return a list of all values that can represent a <code>true</code>
+     * value.
+     */
+    public static List<String> getAllTrueValues() {
+        // return different instance of list...
+        return null;
+    }
+    
+    /**
+     * Returns a list of all values that can represent a <code>false</code>
+     * value.
+     *
+     * @return a list of all values that can represent a <code>false</code>
+     * value.
+     */
+    public static List<String> getAllFalseValues() {
+        // return different instance of list...
+        return null;
+    }
+
 }
