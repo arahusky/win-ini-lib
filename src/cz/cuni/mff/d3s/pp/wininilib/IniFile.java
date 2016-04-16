@@ -1,7 +1,18 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -12,7 +23,13 @@ import java.util.stream.Stream;
  */
 public class IniFile {
 
-    private List<Section> sections;
+    private final List<Section> sections;
+    private static final String NEW_LINE = System.getProperty("line.separator");
+    private static final String CODING = "UTF-8";
+    private static final String COMMENT_DELIMITER = ";";
+    private static final String EQUAL_SIGN = "=";
+    private static final String COMMA = ",";
+    private static final String COLON = ":";
 
     /**
      * Initializes a new instance of <code>IniFile</code>. Represents an .ini
@@ -29,16 +46,22 @@ public class IniFile {
      * @return the element at the specified position in sections.
      */
     public Section getSection(int i) {
-        return null;
+        return sections.get(i);
     }
 
     /**
      * Returns the section with the specified identifier.
      *
      * @param identifier identifier of section to be returned.
-     * @return the section with the specified identifier.
+     * @return the section with the specified identifier. Null if there is not a
+     * section with the specified name.
      */
     public Section getSection(String identifier) {
+        for (Section s : sections) {
+            if (s.getIdentifier().equals(identifier)) {
+                return s;
+            }
+        }
         return null;
     }
 
@@ -46,9 +69,16 @@ public class IniFile {
      * Adds the specified element to the end of sections.
      *
      * @param section section to be added to sections.
+     * @throws DupliciteNameException if there is already section with current
+     * name.
      */
-    public void addSection(Section section) {
-
+    public void addSection(Section section) throws DupliciteNameException {
+        for (Section s : sections) {
+            if (s.getIdentifier().equals(section.getIdentifier())) {
+                throw new DupliciteNameException("Section with name " + section.getIdentifier() + " is already defined.");
+            }
+        }
+        sections.add(section);
     }
 
     /**
@@ -58,7 +88,7 @@ public class IniFile {
      * @return true if any section was removed; otherwise false.
      */
     public boolean removeSection(Section section) {
-        return false;
+        return sections.remove(section);
     }
 
     /**
@@ -71,13 +101,14 @@ public class IniFile {
     }
 
     /**
-     * Provides a string representation of the current ini file.
+     * Provides a string representation of the current ini file. Using FULL save
+     * type.
      *
      * @return a string representation of the current ini file.
      */
     @Override
     public String toString() {
-        return null;
+        return toString(SaveType.FULL);
     }
 
     /**
@@ -90,7 +121,13 @@ public class IniFile {
      * specified type.
      */
     public String toString(SaveType type) {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (Section section : sections) {
+            sb.append(section.toString(type));
+            sb.append(NEW_LINE);
+            sb.append(NEW_LINE);
+        }
+        return sb.toString();
     }
 
     /**
@@ -103,6 +140,11 @@ public class IniFile {
      * specified type.
      */
     public Stream toStream(SaveType type) {
+
+        // TODO: tady moc nevim co s tim... resp. jak pouzit javosky stream
+        String result = toString(type);
+        Stream stream = sections.stream();
+
         return null;
     }
 
@@ -111,9 +153,21 @@ public class IniFile {
      *
      * @param fileName name of file where to save.
      * @param type type of ini file representantion.
+     * @throws IOException if any IO operation could not be performed.
      */
-    public void saveToFile(String fileName, SaveType type) {
-        // calls toString(type);
+    public void saveToFile(String fileName, SaveType type) throws IOException {
+        File file = new File(fileName);
+
+        // TODO: overridujeme stavajici file bez upozorneni?
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        try (PrintWriter writer = new PrintWriter(fileName, CODING)) {
+            writer.write(toString(type));
+        }
+
+        // TODO: vyhazujeme IOException, original Java, budeme to obalovat nasi IOEx???
     }
 
     /**
@@ -126,8 +180,15 @@ public class IniFile {
      * @throws FileFormatException if the loaded file does not have this ini
      * file structure or is not valid.
      */
-    public void loadDataFromFile(String fileName, LoadType type) throws FileFormatException {
-
+    public void loadDataFromFile(String fileName, LoadType type) throws FileFormatException, IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            List<String> data = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                data.add(line);
+            }
+            validateAndFill(data, type);
+        }
     }
 
     /**
@@ -141,7 +202,9 @@ public class IniFile {
      * not have this ini file structure or is not valid.
      */
     public void loadDataFromStream(Stream stream, LoadType type) throws FileFormatException {
-
+        String[] arr = (String[]) stream.toArray();
+        List<String> data = new ArrayList<>(Arrays.asList(arr));
+        validateAndFill(data, type);
     }
 
     /**
@@ -155,7 +218,8 @@ public class IniFile {
      * not have this ini file structure or is not valid.
      */
     public void loadDataFromString(String iniFile, LoadType type) throws FileFormatException {
-
+        String[] data = iniFile.split(NEW_LINE);
+        validateAndFill(Arrays.asList(data), type);
     }
 
     /**
@@ -166,8 +230,18 @@ public class IniFile {
      * @return Loaded ini file from the file with the specified type of load.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
-    public static IniFile loadIniFromFile(String fileName) throws FileFormatException {
-        return null;
+    public static IniFile loadIniFromFile(String fileName) throws FileFormatException, IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            List<String> data = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                data.add(line);
+            }
+            return createIniFile(data);
+
+            // TODO: poresit EXCEPTIONY, jake se budou pouzivat ... nase, nebo 
+            // teda nechame nekdy IOEX... pokud treba nejde najit soubor nebo tak...
+        }
     }
 
     /**
@@ -180,7 +254,9 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromStream(Stream stream) throws FileFormatException {
-        return null;
+        String[] arr = (String[]) stream.toArray();
+        List<String> data = new ArrayList<>(Arrays.asList(arr));
+        return createIniFile(data);
     }
 
     /**
@@ -193,7 +269,8 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromString(String iniFile) throws FileFormatException {
-        return null;
+        String[] data = iniFile.split(NEW_LINE);
+        return createIniFile(Arrays.asList(data));
     }
 
     /**
@@ -217,5 +294,156 @@ public class IniFile {
 
         FULL,
         ORIGIN
+    }
+
+    //
+    //
+    //
+    
+    /**
+     * Validates and fills the current instance of IniFile with the specified
+     * data.
+     *
+     * @param data data to fill with.
+     * @param type data load mode.
+     */
+    private static void validateAndFill(List<String> data, LoadType type) {
+        // TODO: Budeme zachovavat poradi nebo to muze byt v tom filu i na preskacku?
+        
+    }
+
+    /**
+     * Creates an INI file using the specified data.
+     *
+     * @param data data of the ini file.
+     * @return an INI file using the specified data.
+     */
+    private static IniFile createIniFile(List<String> data) throws FileFormatException {
+
+        IniFile iniFile = new IniFile();
+
+        boolean sectionStarted = false;
+        StringBuilder section = new StringBuilder();
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).isEmpty()) {
+                data.remove(i);
+            }
+
+            // Divide line to value and a comment
+            String[] parts = data.get(i).split(COMMENT_DELIMITER, 2);
+            String value = parts[0];
+
+            if ((value.charAt(0) == '[') && (value.charAt(value.length() - 1) == ']')) {
+                // new section found
+                if (!section.toString().isEmpty()) {
+                    try {
+                        iniFile.addSection(parseSection(section.toString()));
+                    } catch (DupliciteNameException ex) {
+                        throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
+                    }
+                }
+                section = new StringBuilder();
+                section.append(data.get(i));
+                sectionStarted = true;
+                continue;
+            }
+
+            if (sectionStarted) {
+                section.append(data.get(i));
+            } else {
+                throw new FileFormatException("Invalid file format.");
+            }
+        }
+        return iniFile;
+    }
+
+    /**
+     * As a parameter gets a section a parses it to a instance of Section class.
+     * Always used in RELAXED mode.
+     *
+     * @param section section to be parsed.
+     * @return a parsed section.
+     */
+    private static Section parseSection(String section) throws FileFormatException {
+        Section result = null;
+        boolean required = false;
+
+        String[] lines = section.split(NEW_LINE);
+        if (lines.length == 0) {
+            throw new FileFormatException("Invalid format.");
+        }
+
+        for (int i = 0; i < lines.length; i++) {
+            String[] parts = lines[i].split(COMMENT_DELIMITER, 2);
+            String value = parts[0];
+            String comment = "";
+            if (parts.length > 1) {
+                comment = parts[1];
+            }
+
+            if (i == 0) {
+                result = new Section(value, required);
+                result.setComment(comment);
+                continue;
+            }
+            result.addProperty(parseProperty(lines[i]));
+        }
+        return result;
+    }
+
+    /**
+     * TODO: Rict, ze defaultne to vemu jako string a hotovo...
+     *
+     * @param property
+     * @return
+     */
+    private static Property parseProperty(String property) throws FileFormatException {
+        Property prop;
+
+        String[] parts = property.split(COMMENT_DELIMITER, 2);
+        String leftSide = parts[0];
+        String comment = "";
+        if (parts.length > 1) {
+            comment = parts[1];
+        }
+
+        parts = leftSide.split(EQUAL_SIGN);
+        switch (parts.length) {
+            // Using string-value type. 'Real' type can not be decided.
+            case 2:
+                String[] values = splitIntoValues(parts[1]);
+                boolean isSingleValue = true;
+                if (values.length > 1) {
+                    isSingleValue = false;
+                }
+                prop = new Property(parts[0], isSingleValue, new ValueStringRestriction());
+                try {
+                    for (String val : values) {
+                        prop.addValue(new ValueString(val));
+                    }
+                } catch (TooManyValuesException | ViolatedRestrictionException ex) {
+                    throw new FileFormatException("Invalid file format.", ex);
+                }
+                break;
+            case 1:
+                prop = new Property(parts[0], true, new ValueStringRestriction());
+            default:
+                throw new FileFormatException("Invalid file format.");
+        }
+
+        return null;
+
+    }
+
+    private static String[] splitIntoValues(String line) {
+        // If we have both 'comma' and 'colon' in line, we use comma as delimiter
+        String[] values = null;
+        if (line.contains(COLON)) {
+            values = line.split(COLON);
+        }
+        if (line.contains(COMMA)) {
+            values = line.split(COMMA);
+        }
+        return values;
     }
 }

@@ -4,6 +4,7 @@ import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadType;
 import cz.cuni.mff.d3s.pp.wininilib.Property;
 import cz.cuni.mff.d3s.pp.wininilib.Section;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
@@ -12,6 +13,8 @@ import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * This class shows basic examples of the library usage.
@@ -26,7 +29,7 @@ public class ExampleUsage {
      *
      * @return created ini-file format.
      */
-    public static IniFile getBasicFormat() throws TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException {
+    public static IniFile getBasicFormat() throws TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException, DupliciteNameException {
         //First, we have to define the format
         IniFile format = new IniFile();
 
@@ -60,7 +63,7 @@ public class ExampleUsage {
      * @throws ViolatedRestrictionException
      * @throws InvalidValueFormat
      */
-    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat {
+    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat, DupliciteNameException, IOException {
         String fileName = "sampleFile.ini";
 
         IniFile ini = getBasicFormat();
@@ -78,7 +81,7 @@ public class ExampleUsage {
      * save it back.
      *
      */
-    public static void loadModifyAndSaveIniFile() throws FileFormatException, TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException {
+    public static void loadModifyAndSaveIniFile() throws FileFormatException, TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException, DupliciteNameException, FileNotFoundException, IOException {
         String fileName = "sampleFile.ini";
         IniFile ini = getBasicFormat();
 
@@ -97,7 +100,7 @@ public class ExampleUsage {
      * This means, that no ini-file format needs to be predefined, but it is
      * derived from the configuration.
      */
-    public static void loadFileStatic() {
+    public static void loadFileStatic() throws IOException {
         String fileName = "sampleFile.ini";
         try {
             IniFile ini = IniFile.loadIniFromFile(fileName);

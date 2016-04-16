@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a section of the IniFile.
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class Section {
 
-    private String identifier;
+    private final String identifier;
     private boolean required;
     private List<Property> properties;
     private String comment;
@@ -24,6 +25,15 @@ public class Section {
     public Section(String identifier, boolean required) {
         this.identifier = identifier;
         this.required = required;
+    }
+
+    /**
+     * Returns identifier of the current section.
+     *
+     * @return identifier of the current section.
+     */
+    public String getIdentifier() {
+        return identifier;
     }
 
     /**
@@ -91,23 +101,70 @@ public class Section {
     public void addProperty(Property property) {
         properties.add(property);
     }
-    
+
     /**
      * Returns a string representation of the current <code>Section</code>.
+     *
      * @return a string representation of the current <code>Section</code>.
      */
     @Override
     public String toString() {
         return null;
     }
-    
+
     /**
      * Returns a string representation of the current <code>Section</code>.
      * Represented with the specified save type.
+     *
      * @param type save mode to be returned with.
      * @return a string representation of the current <code>Section</code>.
      */
     public String toString(SaveType type) {
         return null;
+    }
+
+    /**
+     * Compares the current object with the specified object. 
+     * @param obj to compare with.
+     * @return true if objects are same; otherwise false.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!obj.getClass().equals(Section.class)) {
+            return false;
+        }
+        Section toComapre = (Section) obj;
+        if (!identifier.equals(toComapre.identifier)) {
+            return false;
+        }
+        if (required != toComapre.required) {
+            return false;
+        }
+        
+        // Compare properties one by one
+        for (Property prop1 : properties) {
+            for (Property prop2 : toComapre.properties) {
+                if (prop1.equals(prop2)) {
+                    return false;
+                }
+            } 
+        }
+        return true;
+    }
+
+    /**
+     * A hash code of the current section.
+     *
+     * @return a hash code of the current section.
+     */
+    @Override
+    public int hashCode() {
+        // This is automatically generated hashCode by NetBeans IDE.
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.identifier);
+        hash = 71 * hash + (this.required ? 1 : 0);
+        hash = 71 * hash + Objects.hashCode(this.properties);
+        return hash;
+        //
     }
 }
