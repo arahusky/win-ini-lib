@@ -3,6 +3,18 @@ package cz.cuni.mff.d3s.pp.wininilib;
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueEnum;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueEnumRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueFloatRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueSignedRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueUnsignedRestriction;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,13 +27,12 @@ public class Property {
 
     private final String key;
     private boolean required;
-    private boolean isSingleValue;
+    private final boolean isSingleValue;
     private ValueDelimiter delimiter;
     private Value implicitValue;
     private ValueRestriction valueRestriction;
     private String comment;
-    private Value valueType;
-
+    private Class<? extends Value> valueType;
     private List<Value> values;
 
     /**
@@ -58,16 +69,46 @@ public class Property {
         this.isSingleValue = isSingleValue;
         this.implicitValue = implicitValue;
         this.valueRestriction = valueRestriction;
+
+        setValueType(valueRestriction);
     }
 
     /**
-     * Sets the value type of the current property.
-     *
-     * @param restriction From this restriction will be recognized the value
-     * type.
+     * Sets a value type of the current property.
      */
     private void setValueType(ValueRestriction restriction) {
-        //TODO set valueType
+        if (restriction instanceof ValueBooleanRestriction) {
+            valueType = ValueBoolean.class;
+        } else if (restriction instanceof ValueEnumRestriction) {
+            valueType = ValueEnum.class;
+        } else if (restriction instanceof ValueFloatRestriction) {
+            valueType = ValueFloat.class;
+        } else if (restriction instanceof ValueSignedRestriction) {
+            valueType = ValueSigned.class;
+        } else if (restriction instanceof ValueStringRestriction) {
+            valueType = ValueString.class;
+        } else if (restriction instanceof ValueUnsignedRestriction) {
+            valueType = ValueUnsigned.class;
+        }
+        throw new UnsupportedOperationException("Unsupported type of restriction.");
+    }
+
+    /**
+     * Returns type of the current property value (or values).
+     *
+     * @return type of the current property value (or values).
+     */
+    public Class<? extends Value> getValueType() {
+        return valueType;
+    }
+
+    /**
+     * Returns key of the current property.
+     *
+     * @return key of the current property.
+     */
+    public String getKey() {
+        return key;
     }
 
     /**
@@ -87,7 +128,7 @@ public class Property {
      * @return true if any value was removed; otherwise false.
      */
     public boolean removeValue(Value value) {
-        return false;
+        return values.remove(value);
     }
 
     /**
@@ -99,7 +140,8 @@ public class Property {
      * property has been violated.
      */
     public void setValue(int index, Value value) throws ViolatedRestrictionException {
-
+        valueRestriction.checkRestriction(value);
+        values.set(index, value);
     }
 
     /**
@@ -121,8 +163,11 @@ public class Property {
      * property has been violated.
      */
     public void addValue(Value value) throws TooManyValuesException, ViolatedRestrictionException {
+        valueRestriction.checkRestriction(value);
+        if ((isSingleValue) && (values.size() > 0)) {
+            throw new TooManyValuesException("Too many values in single value property.");
+        }
         values.add(value);
-        // TODO: RESTRICTION CHECK
     }
 
     /**
@@ -135,13 +180,28 @@ public class Property {
      * property has been violated.
      */
     public void addValue(Object value) throws TooManyValuesException, ViolatedRestrictionException {
-
+        if (value instanceof ValueBoolean) {
+            addValue((ValueBoolean) value);
+        } else if (value instanceof ValueEnum) {
+            addValue((ValueEnum) value);
+        } else if (value instanceof ValueFloat) {
+            addValue((ValueFloat) value);
+        } else if (value instanceof ValueSigned) {
+            addValue((ValueSigned) value);
+        } else if (value instanceof ValueString) {
+            addValue((ValueString) value);
+        } else if (value instanceof ValueUnsigned) {
+            addValue((ValueUnsigned) value);
+        }
+        throw new UnsupportedOperationException("Unsupported type of value.");
     }
 
     /**
      * Adds the specified value to the current property. Value is specified by
      * reference to another property.
      *
+     * @param iniFile a reference to IniFile where the referenced value can be
+     * found.
      * @param identifier identifier of any section.
      * @param nameOfProperty property that will be linked to this one.
      * @throws TooManyValuesException if someone tries to add multiple values to
@@ -149,8 +209,16 @@ public class Property {
      * @throws ViolatedRestrictionException if restriction of the current
      * property has been violated.
      */
-    public void addValue(String identifier, String nameOfProperty) throws TooManyValuesException, ViolatedRestrictionException {
+    public void addValue(IniFile iniFile, String identifier, String nameOfProperty) throws TooManyValuesException, ViolatedRestrictionException {
+        List<Value> referencedValues = iniFile.getSection(identifier).getProperty(nameOfProperty).values;
+        for (Value v : referencedValues) {
+            // Restriction is checked in differend addValue method.
+            addValue(v);
+        }
 
+        // TODO: Kdyz to udelame takto, tak zapomeneme informace o te referenci => 
+        // do filu potom na vypis se bude davat to bez referenci?? (ono by 
+        // to nevadilo... Ini file neni zrovna urceni pro cteni clovekem...)
     }
 
     /**
@@ -169,6 +237,7 @@ public class Property {
      */
     public void setDelimiter(ValueDelimiter delimiter) {
         this.delimiter = delimiter;
+        // TODO: zkontrolovat jestli je delimiter nastavovan spravne z vnejsku!
     }
 
     /**
@@ -208,44 +277,53 @@ public class Property {
     }
 
     /**
-     * Returns value of the current property.
-     *
-     * @return value of the current property.
-     */
-    public Value getValueType() {
-        return valueType;
-    }
-
-    /**
-     * Value delimiter that is used for multi-valued properties.
-     */
-    public enum ValueDelimiter {
-        COMMA,
-        COLON
-    }
-    
-    /**
      * Returns a string representation of the current <code>Property</code>.
      * Always saved with FULL save mode.
+     *
      * @return a string representation of the current <code>Property</code>.
      */
     @Override
     public String toString() {
-        return null;
+        return toString(SaveType.FULL);
     }
-    
+
     /**
      * Returns a string representation of the current <code>Property</code>.
      * Property is represented with the specified save mode.
+     *
      * @param type save mode to be returned with.
      * @return a string representation of the current <code>Property</code>.
      */
     public String toString(SaveType type) {
-        return null;
+        StringBuilder result = new StringBuilder();
+        result.append(key).append(IniFile.EQUAL_SIGN);
+        for (int i = 0; i < values.size(); i++) {
+            result.append(values.get(i).toString());
+            if (i < values.size() - 1) {
+                result.append(delimiter.toString());
+            }
+        }
+        switch (type) {
+            case FULL:
+                if (values.isEmpty()) {
+                    result.append(implicitValue.toString());
+                }
+                if (!comment.isEmpty()) {
+                    result.append(" ;").append(comment);
+                }
+                break;
+            case ORIGIN:
+                // TODO: jak udelat ORIGIN?
+                break;
+            default:
+                throw new AssertionError();
+        }
+        return result.toString();
     }
-    
+
     /**
      * Compares the current object with the specified one.
+     *
      * @param obj object to be compared with.
      * @return true if objects are same; otherwise false.
      */
@@ -256,6 +334,7 @@ public class Property {
 
     /**
      * Evaluates a hash code of the current property.
+     *
      * @return a hash code of the current property.
      */
     @Override
@@ -272,4 +351,30 @@ public class Property {
         hash = 73 * hash + Objects.hashCode(this.values);
         return hash;
     }
+
+    /**
+     * Value delimiter that is used for multi-valued properties.
+     */
+    public enum ValueDelimiter {
+        COMMA,
+        COLON;
+
+        /**
+         * Returns a string representation of the current delimter.
+         *
+         * @return a string representation of the current delimiter.
+         */
+        @Override
+        public String toString() {
+            switch (this) {
+                case COMMA:
+                    return ",";
+                case COLON:
+                    return ":";
+                default:
+                    throw new UnsupportedOperationException("Invalid delimiter.");
+            }
+        }
+    }
+
 }

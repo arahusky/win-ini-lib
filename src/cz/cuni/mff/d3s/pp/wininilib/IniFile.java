@@ -23,13 +23,12 @@ import java.util.stream.Stream;
  */
 public class IniFile {
 
+    public static final String NEW_LINE = System.getProperty("line.separator");
+    public static final String CODING = "UTF-8";
+    public static final String COMMENT_DELIMITER = ";";
+    public static final String EQUAL_SIGN = "=";
+
     private final List<Section> sections;
-    private static final String NEW_LINE = System.getProperty("line.separator");
-    private static final String CODING = "UTF-8";
-    private static final String COMMENT_DELIMITER = ";";
-    private static final String EQUAL_SIGN = "=";
-    private static final String COMMA = ",";
-    private static final String COLON = ":";
 
     /**
      * Initializes a new instance of <code>IniFile</code>. Represents an .ini
@@ -309,7 +308,7 @@ public class IniFile {
      */
     private static void validateAndFill(List<String> data, LoadType type) {
         // TODO: Budeme zachovavat poradi nebo to muze byt v tom filu i na preskacku?
-        
+
     }
 
     /**
@@ -392,7 +391,8 @@ public class IniFile {
     }
 
     /**
-     * TODO: Rict, ze defaultne to vemu jako string a hotovo...
+     * TODO: Rict, ze defaultne to vemu jako string a hotovo (nebo teda udelat
+     * to nejspecificnejsi...?)
      *
      * @param property
      * @return
@@ -408,10 +408,22 @@ public class IniFile {
         }
 
         parts = leftSide.split(EQUAL_SIGN);
+        Property.ValueDelimiter valueDelimiter = null;
         switch (parts.length) {
             // Using string-value type. 'Real' type can not be decided.
             case 2:
-                String[] values = splitIntoValues(parts[1]);
+                String[] values = null;
+
+                // If we have both 'comma' and 'colon' in line, we use comma as delimiter
+                if (parts[1].contains(Property.ValueDelimiter.COLON.toString())) {
+                    values = parts[1].split(Property.ValueDelimiter.COLON.toString());
+                    valueDelimiter = Property.ValueDelimiter.COLON;
+                }
+                if (parts[1].contains(Property.ValueDelimiter.COMMA.toString())) {
+                    values = parts[1].split(Property.ValueDelimiter.COMMA.toString());
+                    valueDelimiter = Property.ValueDelimiter.COMMA;
+                }
+
                 boolean isSingleValue = true;
                 if (values.length > 1) {
                     isSingleValue = false;
@@ -427,23 +439,16 @@ public class IniFile {
                 break;
             case 1:
                 prop = new Property(parts[0], true, new ValueStringRestriction());
+                valueDelimiter = Property.ValueDelimiter.COMMA;
             default:
                 throw new FileFormatException("Invalid file format.");
         }
 
-        return null;
-
-    }
-
-    private static String[] splitIntoValues(String line) {
-        // If we have both 'comma' and 'colon' in line, we use comma as delimiter
-        String[] values = null;
-        if (line.contains(COLON)) {
-            values = line.split(COLON);
+        if (!comment.isEmpty()) {
+            prop.setComment(comment);
         }
-        if (line.contains(COMMA)) {
-            values = line.split(COMMA);
-        }
-        return values;
+        prop.setDelimiter(valueDelimiter);
+
+        return prop;
     }
 }

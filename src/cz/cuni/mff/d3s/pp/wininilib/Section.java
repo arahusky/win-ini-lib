@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Section {
 
     private final String identifier;
-    private boolean required;
+    private final boolean required;
     private List<Property> properties;
     private String comment;
 
@@ -67,10 +67,15 @@ public class Section {
     /**
      * Returns the property with the specified identifier.
      *
-     * @param identifier identifier (key) of the property to return.
+     * @param key identifier of the property to return.
      * @return the property with the specified identifier.
      */
-    public Property getProperty(String identifier) {
+    public Property getProperty(String key) {
+        for (Property property : properties) {
+            if (property.getKey().equals(key)) {
+                return property;
+            }
+        }
         return null;
     }
 
@@ -81,7 +86,7 @@ public class Section {
      * @return true if any property was removed; otherwise false.
      */
     public boolean removeProperty(Property property) {
-        return false;
+        return properties.remove(property);
     }
 
     /**
@@ -109,7 +114,7 @@ public class Section {
      */
     @Override
     public String toString() {
-        return null;
+        return toString(SaveType.FULL);
     }
 
     /**
@@ -120,11 +125,22 @@ public class Section {
      * @return a string representation of the current <code>Section</code>.
      */
     public String toString(SaveType type) {
-        return null;
+        StringBuilder result = new StringBuilder();
+        result.append("[").append(identifier).append("]");
+        if (!comment.isEmpty()) {
+            result.append(" ;").append(comment);
+        }
+        result.append(IniFile.NEW_LINE);
+
+        for (Property property : properties) {
+            result.append(property.toString(type));
+        }
+        return result.toString();
     }
 
     /**
-     * Compares the current object with the specified object. 
+     * Compares the current object with the specified object.
+     *
      * @param obj to compare with.
      * @return true if objects are same; otherwise false.
      */
@@ -140,14 +156,14 @@ public class Section {
         if (required != toComapre.required) {
             return false;
         }
-        
+
         // Compare properties one by one
         for (Property prop1 : properties) {
             for (Property prop2 : toComapre.properties) {
                 if (prop1.equals(prop2)) {
                     return false;
                 }
-            } 
+            }
         }
         return true;
     }
