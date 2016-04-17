@@ -11,8 +11,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -186,7 +188,7 @@ public class IniFile {
             while ((line = reader.readLine()) != null) {
                 data.add(line);
             }
-            validateAndFill(data, type);
+            validateAndFill(data.toArray(new String[0]), type);
         }
     }
 
@@ -201,8 +203,7 @@ public class IniFile {
      * not have this ini file structure or is not valid.
      */
     public void loadDataFromStream(Stream stream, LoadType type) throws FileFormatException {
-        String[] arr = (String[]) stream.toArray();
-        List<String> data = new ArrayList<>(Arrays.asList(arr));
+        String[] data = (String[]) stream.toArray();
         validateAndFill(data, type);
     }
 
@@ -218,7 +219,7 @@ public class IniFile {
      */
     public void loadDataFromString(String iniFile, LoadType type) throws FileFormatException {
         String[] data = iniFile.split(NEW_LINE);
-        validateAndFill(Arrays.asList(data), type);
+        validateAndFill(data, type);
     }
 
     /**
@@ -236,7 +237,7 @@ public class IniFile {
             while ((line = reader.readLine()) != null) {
                 data.add(line);
             }
-            return createIniFile(data);
+            return createIniFile(data.toArray(new String[0]));
 
             // TODO: poresit EXCEPTIONY, jake se budou pouzivat ... nase, nebo 
             // teda nechame nekdy IOEX... pokud treba nejde najit soubor nebo tak...
@@ -253,8 +254,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromStream(Stream stream) throws FileFormatException {
-        String[] arr = (String[]) stream.toArray();
-        List<String> data = new ArrayList<>(Arrays.asList(arr));
+        String[] data = (String[]) stream.toArray();
         return createIniFile(data);
     }
 
@@ -269,7 +269,7 @@ public class IniFile {
      */
     public static IniFile loadIniFromString(String iniFile) throws FileFormatException {
         String[] data = iniFile.split(NEW_LINE);
-        return createIniFile(Arrays.asList(data));
+        return createIniFile(data);
     }
 
     /**
@@ -298,7 +298,6 @@ public class IniFile {
     //
     //
     //
-    
     /**
      * Validates and fills the current instance of IniFile with the specified
      * data.
@@ -306,9 +305,55 @@ public class IniFile {
      * @param data data to fill with.
      * @param type data load mode.
      */
-    private static void validateAndFill(List<String> data, LoadType type) {
-        // TODO: Budeme zachovavat poradi nebo to muze byt v tom filu i na preskacku?
+    private void validateAndFill(String[] data, LoadType type) throws FileFormatException {
+        List<String> dataOfSections = divideToSections(data);
 
+        for (Section section : sections) {
+            boolean failedToCombine = true;
+            for (int i = 0; i < dataOfSections.size(); i++) {
+                if (tryToCombineSection(section, dataOfSections.get(i), type)) {
+                    failedToCombine = false;
+                    dataOfSections.remove(i); // Each section is usable only once
+                    break;
+                }
+            }
+            if (failedToCombine && type == LoadType.STRICT) {
+                throw new FileFormatException("File is not applicable to the current IniFile instance.");
+            }
+        }
+
+        if (type == LoadType.RELAXED) {
+            // Remaining data from file... 
+            for (String rawSection : dataOfSections) {
+                // TODO.
+            }
+        }
+    }
+
+    /**
+     * Try to fit Section with the specified string-represented section. Returns
+     * true if combination is specified properly. In this case, the specified
+     * section is also filled with data from string-represented section.
+     *
+     * @param section Section to fit.
+     * @param rawSection A string-represented section.
+     * @param type loading mode type.
+     * @return true if the specified section combination is right.
+     */
+    private static boolean tryToCombineSection(Section section, String rawSection, LoadType type) {
+        String[] parts = rawSection.split(COMMENT_DELIMITER, 2);
+        String identif = parts[0].substring(1, parts[0].length());
+        String comment = parts.length > 1 ? parts[1] : "";
+
+        if (!section.getIdentifier().equals(identif)) {
+            return false;
+        }
+        section.setComment(comment);
+
+        
+        // TODO.
+        
+        return false;
     }
 
     /**
@@ -317,43 +362,58 @@ public class IniFile {
      * @param data data of the ini file.
      * @return an INI file using the specified data.
      */
-    private static IniFile createIniFile(List<String> data) throws FileFormatException {
-
+    private static IniFile createIniFile(String[] data) throws FileFormatException {
         IniFile iniFile = new IniFile();
+        try {
+            for (String section : divideToSections(data)) {
+                iniFile.addSection(parseSection(section));
+            }
+        } catch (DupliciteNameException ex) {
+            throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
+        }
+        return iniFile;
+    }
 
+    private static List<String> divideToSections(String[] data) throws FileFormatException {
+        List<String> result = new ArrayList<>();
+        List<String> identifiers = new ArrayList<>(); // Used for check duplicities
         boolean sectionStarted = false;
         StringBuilder section = new StringBuilder();
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).isEmpty()) {
-                data.remove(i);
+
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].isEmpty()) {
+                continue;
             }
 
-            // Divide line to value and a comment
-            String[] parts = data.get(i).split(COMMENT_DELIMITER, 2);
-            String value = parts[0];
+            String[] parts = data[i].split(COMMENT_DELIMITER, 2);
+            String identif = parts[0];
 
-            if ((value.charAt(0) == '[') && (value.charAt(value.length() - 1) == ']')) {
+            if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
                 // new section found
                 if (!section.toString().isEmpty()) {
-                    try {
-                        iniFile.addSection(parseSection(section.toString()));
-                    } catch (DupliciteNameException ex) {
-                        throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
-                    }
+                    result.add(section.toString());
                 }
                 section = new StringBuilder();
-                section.append(data.get(i));
+                section.append(data[i]);
+                String identifierNoBrackets = identif.substring(1, identif.length());
+
+                if (identifiers.contains(identifierNoBrackets)) {
+                    throw new FileFormatException("Duplicite name in file detected.");
+                }
+
+                identifiers.add(identifierNoBrackets);
                 sectionStarted = true;
                 continue;
             }
 
             if (sectionStarted) {
-                section.append(data.get(i));
+                section.append(data[i]);
             } else {
                 throw new FileFormatException("Invalid file format.");
             }
         }
-        return iniFile;
+        result.add(section.toString());
+        return result;
     }
 
     /**
@@ -381,7 +441,7 @@ public class IniFile {
             }
 
             if (i == 0) {
-                result = new Section(value, required);
+                result = new Section(value.substring(1, value.length()), required);
                 result.setComment(comment);
                 continue;
             }
