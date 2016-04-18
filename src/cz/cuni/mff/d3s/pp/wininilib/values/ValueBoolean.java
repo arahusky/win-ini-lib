@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
 
 /**
  * Represents a <code>Boolean</code> value of the property.
@@ -19,7 +20,11 @@ public class ValueBoolean implements Value {
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
     public ValueBoolean(String value) throws InvalidValueFormat {
-
+        if (!ValueBooleanRestriction.getAllTrueValues().contains(value)
+                && !ValueBooleanRestriction.getAllFalseValues().contains(value)) {
+            throw new InvalidValueFormat("Invalid format of the specified value (" + value + ")");
+        }
+        this.value = value;
     }
 
     /**
@@ -29,6 +34,6 @@ public class ValueBoolean implements Value {
      */
     @Override
     public Object get() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return value;
     }
 }

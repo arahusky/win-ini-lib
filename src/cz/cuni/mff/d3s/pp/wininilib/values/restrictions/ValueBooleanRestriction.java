@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,8 +14,15 @@ import java.util.List;
  */
 public class ValueBooleanRestriction implements ValueRestriction {
 
-    private List<String> falseValues = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
-    private List<String> trueValues = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
+    private static List<String> falseValues = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
+    private static List<String> trueValues = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
+
+    /**
+     * Initializes a new instance of <code>ValueBooleanRestriction</code>.
+     */
+    public ValueBooleanRestriction() {
+
+    }
 
     /**
      * Evaluates whether the specified value satisfies the restriction. If not,
@@ -26,7 +34,13 @@ public class ValueBooleanRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!(value instanceof ValueBoolean)) {
+            throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
+        }
+        Object innerValue = value.get();
+        if (!falseValues.contains(innerValue) && !trueValues.contains(innerValue)) {
+            throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
+        }
     }
 
     /**
@@ -37,10 +51,10 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllTrueValues() {
-        // return different instance of list...
-        return null;
+        // TODO: chceme jiny list? nebo dovolime ten samy...?
+        return trueValues;
     }
-    
+
     /**
      * Returns a list of all values that can represent a <code>false</code>
      * value.
@@ -49,8 +63,8 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllFalseValues() {
-        // return different instance of list...
-        return null;
+        // TODO: chceme jiny list? nebo dovolime ten samy...?
+        return falseValues;
     }
 
 }

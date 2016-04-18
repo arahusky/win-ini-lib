@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
@@ -493,7 +494,7 @@ public class IniFile {
                     for (String val : values) {
                         prop.addValue(new ValueString(val));
                     }
-                } catch (TooManyValuesException | ViolatedRestrictionException ex) {
+                } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormat ex) {
                     throw new FileFormatException("Invalid file format.", ex);
                 }
                 break;

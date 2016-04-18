@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
 
 /**
  * Provides restriction rules for float type values.
@@ -10,6 +11,21 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
  * @author Jakub Naplava; Jan Kluj
  */
 public class ValueFloatRestriction implements ValueRestriction {
+
+    private final double lowerBound;
+    private final double upperBound;
+    
+    /**
+     * Initializes a new instance of <code>ValueFloatRestriction</code> with the
+     * specified interval.
+     *
+     * @param lowerBound lower bound of the interval.
+     * @param upperBound upper bound of the interval.
+     */
+    public ValueFloatRestriction(double lowerBound, double upperBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
 
     /**
      * Evaluates whether the specified value satisfies the restriction. If not,
@@ -21,7 +37,13 @@ public class ValueFloatRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!(value instanceof ValueFloat)) {
+            throw new ViolatedRestrictionException("Invalid float value.");
+        }
+        double innerValue = (float)(value.get());
+        if ((lowerBound > innerValue) || (upperBound < innerValue)) {
+            throw new ViolatedRestrictionException("Value is not in correct interval.");
+        }
     }
 
 }
