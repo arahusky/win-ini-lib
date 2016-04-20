@@ -11,6 +11,17 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
  */
 public class ValueEnumRestriction implements ValueRestriction {
 
+    private final Class<? extends Enum> clazz;
+
+    /**
+     * Initializes a new instance of <code>ValueEnumRestriction</code>.
+     *
+     * @param clazz specified Enum.
+     */
+    public ValueEnumRestriction(Class<? extends Enum> clazz) {
+        this.clazz = clazz;
+    }
+
     /**
      * Evaluates whether the specified value satisfies the restriction. If not,
      * exception is thrown.
@@ -21,7 +32,12 @@ public class ValueEnumRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Enum enumValue : clazz.getEnumConstants()) {
+            if (enumValue.equals(value) || enumValue.toString().equals(value.toString())) {
+                return;
+            }
+        }
+        throw new ViolatedRestrictionException("Specified value is not from correct enum.");
     }
 
 }

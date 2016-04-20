@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class ValueBooleanRestriction implements ValueRestriction {
 
-    private static List<String> falseValues = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
-    private static List<String> trueValues = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
+    private static final List<String> falseValues = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
+    private static final List<String> trueValues = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
 
     /**
      * Initializes a new instance of <code>ValueBooleanRestriction</code>.
@@ -51,7 +51,6 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllTrueValues() {
-        // TODO: chceme jiny list? nebo dovolime ten samy...?
         return trueValues;
     }
 
@@ -63,7 +62,6 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllFalseValues() {
-        // TODO: chceme jiny list? nebo dovolime ten samy...?
         return falseValues;
     }
 

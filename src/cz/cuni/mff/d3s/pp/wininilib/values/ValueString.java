@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 import javax.management.openmbean.InvalidOpenTypeException;
@@ -45,7 +46,8 @@ public class ValueString implements Value {
     public enum ForbiddenSymbol {
         COMMA,
         COLON,
-        SEMICOLON;
+        SEMICOLON,
+        NEW_LINE;
 
         @Override
         public String toString() {
@@ -56,6 +58,8 @@ public class ValueString implements Value {
                     return ":";
                 case SEMICOLON:
                     return ";";
+                case NEW_LINE:
+                    return IniFile.NEW_LINE;
                 default:
                     throw new InvalidOpenTypeException();
             }

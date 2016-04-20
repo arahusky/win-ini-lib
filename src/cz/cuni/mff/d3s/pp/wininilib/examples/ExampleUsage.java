@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.examples;
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile;
-import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadType;
+import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadingMode;
 import cz.cuni.mff.d3s.pp.wininilib.Property;
 import cz.cuni.mff.d3s.pp.wininilib.Section;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
@@ -69,7 +69,7 @@ public class ExampleUsage {
         IniFile ini = getBasicFormat();
         try {
             //try to fill in the ini format file with the configuration
-            ini.loadDataFromFile(fileName, LoadType.RELAXED);
+            ini.loadDataFromFile(fileName, LoadingMode.RELAXED);
             System.out.println("The file meets the specified format.");
         } catch (FileFormatException ex) {
             System.err.println("The file did not meet specified format.");
@@ -85,14 +85,14 @@ public class ExampleUsage {
         String fileName = "sampleFile.ini";
         IniFile ini = getBasicFormat();
 
-        ini.loadDataFromFile(fileName, LoadType.RELAXED);
+        ini.loadDataFromFile(fileName, LoadingMode.RELAXED);
 
         Section sectionToBeModified = ini.getSection("Section1");
 
         Property prop = sectionToBeModified.getProperty("Option1");
         prop.addValue(new ValueSigned(123));
 
-        ini.saveToFile(fileName, IniFile.SaveType.FULL);
+        ini.saveToFile(fileName, IniFile.SavingMode.FULL);
     }
 
     /**
@@ -104,7 +104,7 @@ public class ExampleUsage {
         String fileName = "sampleFile.ini";
         try {
             IniFile ini = IniFile.loadIniFromFile(fileName);
-            System.out.println(ini.toString(IniFile.SaveType.FULL));
+            System.out.println(ini.toString(IniFile.SavingMode.FULL));
         } catch (FileFormatException ex) {
             System.err.println("This file is not valid ini file.");
         }

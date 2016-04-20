@@ -22,14 +22,13 @@ public class ValueSigned implements Value {
         try {
             this.value = (long) (value);
         } catch (ClassCastException ex) {
-            throw new InvalidValueFormat("TODO");
+            throw new InvalidValueFormat("Specified value is not correct signed value");
         }
 
     }
 
     @Override
     public Object get() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return value;
     }
-
 }

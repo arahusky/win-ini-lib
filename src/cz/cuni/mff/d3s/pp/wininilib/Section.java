@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
-import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
+import cz.cuni.mff.d3s.pp.wininilib.IniFile.SavingMode;
 import java.util.List;
 import java.util.Objects;
 
@@ -114,7 +114,7 @@ public class Section {
      */
     @Override
     public String toString() {
-        return toString(SaveType.FULL);
+        return toString(SavingMode.FULL);
     }
 
     /**
@@ -124,7 +124,7 @@ public class Section {
      * @param type save mode to be returned with.
      * @return a string representation of the current <code>Section</code>.
      */
-    public String toString(SaveType type) {
+    public String toString(SavingMode type) {
         StringBuilder result = new StringBuilder();
         result.append("[").append(identifier).append("]");
         if (!comment.isEmpty()) {
@@ -149,17 +149,17 @@ public class Section {
         if (!obj.getClass().equals(Section.class)) {
             return false;
         }
-        Section toComapre = (Section) obj;
-        if (!identifier.equals(toComapre.identifier)) {
+        Section other = (Section) obj;
+        if (!identifier.equals(other.identifier)) {
             return false;
         }
-        if (required != toComapre.required) {
+        if (required != other.required) {
             return false;
         }
 
         // Compare properties one by one
         for (Property prop1 : properties) {
-            for (Property prop2 : toComapre.properties) {
+            for (Property prop2 : other.properties) {
                 if (prop1.equals(prop2)) {
                     return false;
                 }

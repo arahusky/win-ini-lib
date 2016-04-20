@@ -20,11 +20,16 @@ public class ValueUnsigned implements Value {
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
     public ValueUnsigned(Object value) throws InvalidValueFormat {
-        // value = ...
+         try {
+            this.value = new BigDecimal(value.toString());
+        } catch (NumberFormatException ex) {
+            throw new InvalidValueFormat("Specified value is not correct signed value");
+        }
+
     }
 
     @Override
     public Object get() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return value;
     }
 }

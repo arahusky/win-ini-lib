@@ -11,14 +11,16 @@ import java.util.List;
  */
 public class ValueEnum implements Value {
 
+    Object value;
+
     /**
      * Initializes a new instance of <code>ValueEnum</code>.
      *
-     * @param options Possible values this instance can have.
+     * @param value value of some enum.
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueEnum(List<String> options) throws InvalidValueFormat {
-
+    public ValueEnum(Object value) throws InvalidValueFormat {
+        this.value = value;
     }
 
     @Override

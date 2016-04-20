@@ -12,10 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -110,7 +107,7 @@ public class IniFile {
      */
     @Override
     public String toString() {
-        return toString(SaveType.FULL);
+        return toString(SavingMode.FULL);
     }
 
     /**
@@ -122,7 +119,7 @@ public class IniFile {
      * @return a string representation of the current ini file with the
      * specified type.
      */
-    public String toString(SaveType type) {
+    public String toString(SavingMode type) {
         StringBuilder sb = new StringBuilder();
         for (Section section : sections) {
             sb.append(section.toString(type));
@@ -141,7 +138,7 @@ public class IniFile {
      * @return a representation of the current IniFile as a Stream with the
      * specified type.
      */
-    public Stream toStream(SaveType type) {
+    public Stream toStream(SavingMode type) {
 
         // TODO: tady moc nevim co s tim... resp. jak pouzit javosky stream
         String result = toString(type);
@@ -157,7 +154,7 @@ public class IniFile {
      * @param type type of ini file representantion.
      * @throws IOException if any IO operation could not be performed.
      */
-    public void saveToFile(String fileName, SaveType type) throws IOException {
+    public void saveToFile(String fileName, SavingMode type) throws IOException {
         File file = new File(fileName);
 
         // TODO: overridujeme stavajici file bez upozorneni?
@@ -182,7 +179,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded file does not have this ini
      * file structure or is not valid.
      */
-    public void loadDataFromFile(String fileName, LoadType type) throws FileFormatException, IOException {
+    public void loadDataFromFile(String fileName, LoadingMode type) throws FileFormatException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             List<String> data = new ArrayList<>();
             String line;
@@ -203,7 +200,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file from the stream does
      * not have this ini file structure or is not valid.
      */
-    public void loadDataFromStream(Stream stream, LoadType type) throws FileFormatException {
+    public void loadDataFromStream(Stream stream, LoadingMode type) throws FileFormatException {
         String[] data = (String[]) stream.toArray();
         validateAndFill(data, type);
     }
@@ -218,7 +215,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file from the string does
      * not have this ini file structure or is not valid.
      */
-    public void loadDataFromString(String iniFile, LoadType type) throws FileFormatException {
+    public void loadDataFromString(String iniFile, LoadingMode type) throws FileFormatException {
         String[] data = iniFile.split(NEW_LINE);
         validateAndFill(data, type);
     }
@@ -278,7 +275,7 @@ public class IniFile {
      * current ini file, no defaults. RELAXED tries to avoid errors as much as
      * possible.
      */
-    public enum LoadType {
+    public enum LoadingMode {
 
         STRICT,
         RELAXED
@@ -290,7 +287,7 @@ public class IniFile {
      * was loaded.
      *
      */
-    public enum SaveType {
+    public enum SavingMode {
 
         FULL,
         ORIGIN
@@ -306,7 +303,7 @@ public class IniFile {
      * @param data data to fill with.
      * @param type data load mode.
      */
-    private void validateAndFill(String[] data, LoadType type) throws FileFormatException {
+    private void validateAndFill(String[] data, LoadingMode type) throws FileFormatException {
         List<String> dataOfSections = divideToSections(data);
 
         for (Section section : sections) {
@@ -318,12 +315,12 @@ public class IniFile {
                     break;
                 }
             }
-            if (failedToCombine && type == LoadType.STRICT) {
+            if (failedToCombine && type == LoadingMode.STRICT) {
                 throw new FileFormatException("File is not applicable to the current IniFile instance.");
             }
         }
 
-        if (type == LoadType.RELAXED) {
+        if (type == LoadingMode.RELAXED) {
             // Remaining data from file... 
             for (String rawSection : dataOfSections) {
                 // TODO.
@@ -341,7 +338,7 @@ public class IniFile {
      * @param type loading mode type.
      * @return true if the specified section combination is right.
      */
-    private static boolean tryToCombineSection(Section section, String rawSection, LoadType type) {
+    private static boolean tryToCombineSection(Section section, String rawSection, LoadingMode type) {
         String[] parts = rawSection.split(COMMENT_DELIMITER, 2);
         String identif = parts[0].substring(1, parts[0].length());
         String comment = parts.length > 1 ? parts[1] : "";
@@ -351,9 +348,7 @@ public class IniFile {
         }
         section.setComment(comment);
 
-        
         // TODO.
-        
         return false;
     }
 

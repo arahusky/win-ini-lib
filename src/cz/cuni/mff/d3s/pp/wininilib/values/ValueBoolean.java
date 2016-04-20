@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
  */
 public class ValueBoolean implements Value {
 
-    private String value;
+    private final String value;
 
     /**
      * Initializes a new instance of <code>BooleanValue</code>.

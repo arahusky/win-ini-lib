@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
-import cz.cuni.mff.d3s.pp.wininilib.IniFile.SaveType;
+import cz.cuni.mff.d3s.pp.wininilib.IniFile.SavingMode;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
@@ -284,7 +284,7 @@ public class Property {
      */
     @Override
     public String toString() {
-        return toString(SaveType.FULL);
+        return toString(SavingMode.FULL);
     }
 
     /**
@@ -294,7 +294,7 @@ public class Property {
      * @param type save mode to be returned with.
      * @return a string representation of the current <code>Property</code>.
      */
-    public String toString(SaveType type) {
+    public String toString(SavingMode type) {
         StringBuilder result = new StringBuilder();
         result.append(key).append(IniFile.EQUAL_SIGN);
         for (int i = 0; i < values.size(); i++) {
@@ -329,8 +329,45 @@ public class Property {
      */
     @Override
     public boolean equals(Object obj) {
-        return hashCode() == obj.hashCode();
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Property other = (Property) obj;
+        if (this.required != other.required) {
+            return false;
+        }
+        if (this.isSingleValue != other.isSingleValue) {
+            return false;
+        }
+        if (!Objects.equals(this.key, other.key)) {
+            return false;
+        }
+        if (this.delimiter != other.delimiter) {
+            return false;
+        }
+        if (!Objects.equals(this.implicitValue, other.implicitValue)) {
+            return false;
+        }
+        if (!Objects.equals(this.valueRestriction, other.valueRestriction)) {
+            return false;
+        }
+        if (!Objects.equals(this.valueType, other.valueType)) {
+            return false;
+        }
+        if (!Objects.equals(this.values, other.values)) {
+            return false;
+        }
+        return true;
     }
+
+    
+    
 
     /**
      * Evaluates a hash code of the current property.
