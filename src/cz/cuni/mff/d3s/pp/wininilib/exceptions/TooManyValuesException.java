@@ -8,6 +8,8 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  */
 public class TooManyValuesException extends WinIniLibException {
 
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Creates a new instance of <code>TooManyValuesException</code> without
      * detail message.

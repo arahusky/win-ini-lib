@@ -5,11 +5,14 @@
 
 	<!-- source directories -->
 	<property name="src.dir" location="src" />
+
+	<property name="test.src.dir" location="test" />
 	
 	<!-- build directories -->
-	<property name="build.dir" location="out" />
+	<property name="build.dir" location="build" />
 	<property name="javadoc.build.dir" location="${build.dir}/javadoc" />
 	<property name="lib.build.dir" location="${build.dir}/classes/win-ini-lib" />
+	<property name="test.build.dir" location="${build.dir}/classes/test" />
 
 	<!-- test output directories -->
 	<property name="test.output.dir" location="${build.dir}/test" />
@@ -25,7 +28,7 @@
 	<property name="jars.build.dir" location="${build.dir}/jars" />
 	<property name="win-ini.jar" location="${jars.build.dir}/win-ini.jar"/>
 
-	<target name="main" depends="compile,refdoc,create-jar" description="Main target: compiles everything, creates documentation of the project and JAR files for the library.">
+	<target name="main" depends="compile,compile-test,refdoc,create-jar" description="Main target: compiles everything, creates documentation of the project and JAR files for the library.">
 	</target>	
 
 	<target name="compile" description="Compile the library.">
@@ -34,6 +37,20 @@
 				debug="true"
 				includeantruntime="false">
 			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
+
+	<target name="compile-test" description="Compile the test files.">
+		<mkdir dir="${test.build.dir}" />
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}"
+				debug="true"
+				includeantruntime="false">
+			<compilerarg value="-Xlint:all"/>
+			<classpath>
+				<pathelement path="${junit.jar}"/>
+				<pathelement path="${hamcrest.jar}"/>
+				<pathelement path="${lib.build.dir}"/>
+			</classpath>
 		</javac>
 	</target>
 			
@@ -66,7 +83,7 @@
 	</target>
 
 
- 	<target name="test" depends="compile" description="Run unit-tests.">
+ 	<target name="test" depends="compile,compile-test" description="Run unit-tests.">
   	  <mkdir dir="${test.output.dir}"/>
   	  <mkdir dir="${testtxtxml.output.dir}"/>
   	  <mkdir dir="${testhtml.output.dir}"/>
@@ -74,7 +91,9 @@
  	   <junit printsummary="yes">
     	   <classpath>
 				<pathelement path="${junit.jar}"/>
-				<pathelement path="${hamcrest.jar}"/>						
+				<pathelement path="${hamcrest.jar}"/>	
+				<pathelement path="${lib.build.dir}"/>		
+				<pathelement path="${test.build.dir}"/>				
 			</classpath>
 
 			<formatter type="plain"/>

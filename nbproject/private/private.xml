@@ -3,10 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Honkl/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/Property.java</file>
-            <file>file:/C:/Users/Honkl/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFile.java</file>
-            <file>file:/C:/Users/Honkl/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/Section.java</file>
-            <file>file:/C:/Users/Honkl/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/values/restrictions/ValueStringRestriction.java</file>
+            <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFile.java</file>
+            <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/IniFileTest.java</file>
         </group>
     </open-files>
 </project-private>

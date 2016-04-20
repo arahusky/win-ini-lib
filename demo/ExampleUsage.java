@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.pp.wininilib.examples;
+
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadingMode;

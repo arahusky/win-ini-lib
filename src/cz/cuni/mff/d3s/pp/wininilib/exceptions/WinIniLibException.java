@@ -7,6 +7,8 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  */
 public class WinIniLibException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Creates a new instance of <code>WinIniLibException</code> without detail
      * message.

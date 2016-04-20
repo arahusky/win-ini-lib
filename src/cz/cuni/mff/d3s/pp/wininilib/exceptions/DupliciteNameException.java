@@ -8,6 +8,8 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  */
 public class DupliciteNameException extends WinIniLibException {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Creates a new instance of <code>DupliciteNameException</code> without
      * detail message.

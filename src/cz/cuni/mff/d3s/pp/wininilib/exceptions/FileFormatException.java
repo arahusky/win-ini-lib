@@ -7,6 +7,8 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  */
 public class FileFormatException extends WinIniLibException {
 
+    private static final long serialVersionUID = 1L;
+    
     public WinIniLibException innerException = null;
 
     /**

@@ -8,6 +8,8 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  */
 public class InvalidValueFormat extends WinIniLibException {
 
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Creates a new instance of <code>InvalidValueFormat</code> without detail
      * message.
