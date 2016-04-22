@@ -23,11 +23,6 @@ import java.util.stream.Stream;
  */
 public class IniFile {
 
-    public static final String NEW_LINE = System.getProperty("line.separator");
-    public static final String CODING = "UTF-8";
-    public static final String COMMENT_DELIMITER = ";";
-    public static final String EQUAL_SIGN = "=";
-
     private final List<Section> sections;
 
     /**
@@ -123,8 +118,8 @@ public class IniFile {
         StringBuilder sb = new StringBuilder();
         for (Section section : sections) {
             sb.append(section.toString(type));
-            sb.append(NEW_LINE);
-            sb.append(NEW_LINE);
+            sb.append(Constants.NEW_LINE);
+            sb.append(Constants.NEW_LINE);
         }
         return sb.toString();
     }
@@ -162,7 +157,7 @@ public class IniFile {
             file.createNewFile();
         }
 
-        try (PrintWriter writer = new PrintWriter(fileName, CODING)) {
+        try (PrintWriter writer = new PrintWriter(fileName, Constants.CODING)) {
             writer.write(toString(type));
         }
 
@@ -216,7 +211,7 @@ public class IniFile {
      * not have this ini file structure or is not valid.
      */
     public void loadDataFromString(String iniFile, LoadingMode type) throws FileFormatException {
-        String[] data = iniFile.split(NEW_LINE);
+        String[] data = iniFile.split(Constants.NEW_LINE);
         validateAndFill(data, type);
     }
 
@@ -266,7 +261,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromString(String iniFile) throws FileFormatException {
-        String[] data = iniFile.split(NEW_LINE);
+        String[] data = iniFile.split(Constants.NEW_LINE);
         return createIniFile(data);
     }
 
@@ -339,7 +334,7 @@ public class IniFile {
      * @return true if the specified section combination is right.
      */
     private static boolean tryToCombineSection(Section section, String rawSection, LoadingMode type) {
-        String[] parts = rawSection.split(COMMENT_DELIMITER, 2);
+        String[] parts = rawSection.split(Constants.COMMENT_DELIMITER, 2);
         String identif = parts[0].substring(1, parts[0].length());
         String comment = parts.length > 1 ? parts[1] : "";
 
@@ -381,7 +376,7 @@ public class IniFile {
                 continue;
             }
 
-            String[] parts = data[i].split(COMMENT_DELIMITER, 2);
+            String[] parts = data[i].split(Constants.COMMENT_DELIMITER, 2);
             String identif = parts[0];
 
             if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
@@ -423,13 +418,13 @@ public class IniFile {
         Section result = null;
         boolean required = false;
 
-        String[] lines = section.split(NEW_LINE);
+        String[] lines = section.split(Constants.NEW_LINE);
         if (lines.length == 0) {
             throw new FileFormatException("Invalid format.");
         }
 
         for (int i = 0; i < lines.length; i++) {
-            String[] parts = lines[i].split(COMMENT_DELIMITER, 2);
+            String[] parts = lines[i].split(Constants.COMMENT_DELIMITER, 2);
             String value = parts[0];
             String comment = "";
             if (parts.length > 1) {
@@ -456,14 +451,14 @@ public class IniFile {
     private static Property parseProperty(String property) throws FileFormatException {
         Property prop;
 
-        String[] parts = property.split(COMMENT_DELIMITER, 2);
+        String[] parts = property.split(Constants.COMMENT_DELIMITER, 2);
         String leftSide = parts[0];
         String comment = "";
         if (parts.length > 1) {
             comment = parts[1];
         }
 
-        parts = leftSide.split(EQUAL_SIGN);
+        parts = leftSide.split(Constants.EQUAL_SIGN);
         Property.ValueDelimiter valueDelimiter = null;
         switch (parts.length) {
             // Using string-value type. 'Real' type can not be decided.

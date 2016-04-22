@@ -30,7 +30,7 @@ public class Property {
     private final boolean isSingleValue;
     private ValueDelimiter delimiter;
     private Value implicitValue;
-    private ValueRestriction valueRestriction;
+    private final ValueRestriction valueRestriction;
     private String comment;
     private Class<? extends Value> valueType;
     private List<Value> values;
@@ -296,7 +296,7 @@ public class Property {
      */
     public String toString(SavingMode type) {
         StringBuilder result = new StringBuilder();
-        result.append(key).append(IniFile.EQUAL_SIGN);
+        result.append(key).append(Constants.EQUAL_SIGN);
         for (int i = 0; i < values.size(); i++) {
             result.append(values.get(i).toString());
             if (i < values.size() - 1) {

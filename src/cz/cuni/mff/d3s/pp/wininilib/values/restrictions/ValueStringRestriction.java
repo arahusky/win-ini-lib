@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
-import cz.cuni.mff.d3s.pp.wininilib.IniFile;
+import cz.cuni.mff.d3s.pp.wininilib.Constants;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
@@ -68,7 +68,7 @@ public class ValueStringRestriction implements ValueRestriction {
                 case SEMICOLON:
                     return ";";
                 case NEW_LINE:
-                    return IniFile.NEW_LINE;
+                    return Constants.NEW_LINE;
                 default:
                     throw new InvalidOpenTypeException();
             }

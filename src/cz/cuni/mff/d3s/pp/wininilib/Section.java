@@ -130,7 +130,7 @@ public class Section {
         if (!comment.isEmpty()) {
             result.append(" ;").append(comment);
         }
-        result.append(IniFile.NEW_LINE);
+        result.append(Constants.NEW_LINE);
 
         for (Property property : properties) {
             result.append(property.toString(type));

@@ -90,7 +90,7 @@ public class ExampleUsage {
         Section sectionToBeModified = ini.getSection("Section1");
 
         Property prop = sectionToBeModified.getProperty("Option1");
-        prop.addValue(new ValueSigned(123));
+        prop.addValue(new ValueSigned("123"));
 
         ini.saveToFile(fileName, IniFile.SavingMode.FULL);
     }
