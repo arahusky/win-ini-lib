@@ -1,9 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
-import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
-import javax.management.openmbean.InvalidOpenTypeException;
 
 /**
  * Represents a <code>String</code> value of the property.
@@ -12,7 +10,6 @@ import javax.management.openmbean.InvalidOpenTypeException;
  */
 public class ValueString implements Value {
 
-    private final char escapeSymbol = '\\';
     private final String value;
 
     /**
@@ -22,48 +19,26 @@ public class ValueString implements Value {
      * @throws InvalidValueFormat if the specified string has no correct format.
      */
     public ValueString(String value) throws InvalidValueFormat {
-        for (ForbiddenSymbol symbol : ForbiddenSymbol.values()) {
-            for (int i = 0; i < value.length(); i++) {
-                if (symbol.equals(value.charAt(i))) {
-                    if ((i == 0) || (escapeSymbol != value.charAt(i - 1))) {
-                        throw new InvalidValueFormat("The specified string contains a forbidden symbol.");
-                    }
-                }
-            }
-        }
         this.value = value;
     }
 
+    /**
+     * Returns the inner value within the object.
+     *
+     * @return the inner value within the object.
+     */
     @Override
     public Object get() {
         return value;
     }
 
     /**
-     * List of symbols that must be escaped with '\'. Then can not be used in
-     * string within a <Code>ValueString</Code> independently.
+     * Returns a string representation of the curernt object.
+     *
+     * @return a string representation of the current object.
      */
-    public enum ForbiddenSymbol {
-        COMMA,
-        COLON,
-        SEMICOLON,
-        NEW_LINE;
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case COMMA:
-                    return ",";
-                case COLON:
-                    return ":";
-                case SEMICOLON:
-                    return ";";
-                case NEW_LINE:
-                    return IniFile.NEW_LINE;
-                default:
-                    throw new InvalidOpenTypeException();
-            }
-        }
+    @Override
+    public String toString() {
+        return value;
     }
-
 }

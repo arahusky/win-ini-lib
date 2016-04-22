@@ -2,7 +2,6 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
-import java.util.List;
 
 /**
  * Represents a <code>Enum</code> value of the property.
@@ -23,9 +22,24 @@ public class ValueEnum implements Value {
         this.value = value;
     }
 
+    /**
+     * Returns the inner value within the object.
+     *
+     * @return the inner value within the object.
+     */
     @Override
     public Object get() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return value;
+    }
+
+    /**
+     * Returns a string representation of the curernt object.
+     *
+     * @return a string representation of the current object.
+     */
+    @Override
+    public String toString() {
+        return value.toString();
     }
 
 }

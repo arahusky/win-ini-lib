@@ -28,12 +28,22 @@ public class ValueBoolean implements Value {
     }
 
     /**
-     * Returns the real value within the object.
+     * Returns the inner value within the object.
      *
-     * @return the real value within the object.
+     * @return the inner value within the object.
      */
     @Override
     public Object get() {
+        return value;
+    }
+
+    /**
+     * Returns a string representation of the curernt object.
+     *
+     * @return a string representation of the current object.
+     */
+    @Override
+    public String toString() {
         return value;
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class ValueBooleanRestriction implements ValueRestriction {
 
-    private static final List<String> falseValues = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
-    private static final List<String> trueValues = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
+    private static final List<String> FALSE_VALUES = Arrays.asList(new String[]{"0", "f", "n", "off", "no", "disabled"});
+    private static final List<String> TRUE_VALUES = Arrays.asList(new String[]{"1", "t", "y", "on", "yes", "enabled"});
 
     /**
      * Initializes a new instance of <code>ValueBooleanRestriction</code>.
@@ -37,8 +37,8 @@ public class ValueBooleanRestriction implements ValueRestriction {
         if (!(value instanceof ValueBoolean)) {
             throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
         }
-        Object innerValue = value.get();
-        if (!falseValues.contains(innerValue) && !trueValues.contains(innerValue)) {
+        String innerValue = value.get().toString();
+        if (!FALSE_VALUES.contains(innerValue) && !TRUE_VALUES.contains(innerValue)) {
             throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
         }
     }
@@ -51,7 +51,7 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllTrueValues() {
-        return trueValues;
+        return TRUE_VALUES;
     }
 
     /**
@@ -62,7 +62,7 @@ public class ValueBooleanRestriction implements ValueRestriction {
      * value.
      */
     public static List<String> getAllFalseValues() {
-        return falseValues;
+        return FALSE_VALUES;
     }
 
 }
