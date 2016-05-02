@@ -192,8 +192,9 @@ public class Property {
             addValue((ValueString) value);
         } else if (value instanceof ValueUnsigned) {
             addValue((ValueUnsigned) value);
+        } else {
+            throw new UnsupportedOperationException("Unsupported type of value.");
         }
-        throw new UnsupportedOperationException("Unsupported type of value.");
     }
 
     /**
@@ -237,7 +238,6 @@ public class Property {
      */
     public void setDelimiter(ValueDelimiter delimiter) {
         this.delimiter = delimiter;
-        // TODO: zkontrolovat jestli je delimiter nastavovan spravne z vnejsku!
     }
 
     /**
@@ -306,6 +306,9 @@ public class Property {
             }
         }
         if (type == SavingMode.FULL) {
+            if (values.isEmpty()) {
+                result.append(implicitValue);
+            }
             if (!comment.isEmpty()) {
                 result.append(" ").append(Constants.COMMENT_DELIMITER).append(comment);
             }

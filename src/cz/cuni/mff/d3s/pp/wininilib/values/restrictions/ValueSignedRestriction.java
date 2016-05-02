@@ -17,6 +17,15 @@ public class ValueSignedRestriction implements ValueRestriction {
     private final long upperBound;
 
     /**
+     * Initializes a new instance of <code>ValueSignedRestriction</code> with no
+     * interval restriction.
+     */
+    public ValueSignedRestriction() {
+        lowerBound = Long.MIN_VALUE;
+        upperBound = Long.MAX_VALUE;
+    }
+
+    /**
      * Initializes a new instance of <code>ValueSignedRestriction</code> with
      * the specified interval.
      *
