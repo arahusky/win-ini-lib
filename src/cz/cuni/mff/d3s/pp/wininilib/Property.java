@@ -15,6 +15,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueFloatRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueSignedRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueUnsignedRestriction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +50,9 @@ public class Property {
         this.key = key;
         this.isSingleValue = isSingleValue;
         this.valueRestriction = valueRestriction;
-
+        values = new ArrayList<>();
+        setComment("");
+        setDelimiter(ValueDelimiter.COMMA);
         setValueType(valueRestriction);
     }
 
@@ -65,12 +68,8 @@ public class Property {
      * Could be empty, but not null.
      */
     public Property(String key, boolean isSingleValue, Value implicitValue, ValueRestriction valueRestriction) {
-        this.key = key;
-        this.isSingleValue = isSingleValue;
+        this(key, isSingleValue, valueRestriction);
         this.implicitValue = implicitValue;
-        this.valueRestriction = valueRestriction;
-
-        setValueType(valueRestriction);
     }
 
     /**
@@ -89,8 +88,9 @@ public class Property {
             valueType = ValueString.class;
         } else if (restriction instanceof ValueUnsignedRestriction) {
             valueType = ValueUnsigned.class;
+        } else {
+            throw new UnsupportedOperationException("Unsupported type of restriction.");
         }
-        throw new UnsupportedOperationException("Unsupported type of restriction.");
     }
 
     /**
@@ -298,25 +298,17 @@ public class Property {
         StringBuilder result = new StringBuilder();
         result.append(key).append(Constants.EQUAL_SIGN);
         for (int i = 0; i < values.size(); i++) {
-            result.append(values.get(i).toString());
-            if (i < values.size() - 1) {
-                result.append(delimiter.toString());
+            if ((type == SavingMode.FULL) || (type == SavingMode.ORIGIN && values.get(i).writeToIniFile())) {
+                result.append(values.get(i));
+                if (i < values.size() - 1) {
+                    result.append(delimiter.toString());
+                }
             }
         }
-        switch (type) {
-            case FULL:
-                if (values.isEmpty()) {
-                    result.append(implicitValue.toString());
-                }
-                if (!comment.isEmpty()) {
-                    result.append(" ;").append(comment);
-                }
-                break;
-            case ORIGIN:
-                // TODO: jak udelat ORIGIN?
-                break;
-            default:
-                throw new AssertionError();
+        if (type == SavingMode.FULL) {
+            if (!comment.isEmpty()) {
+                result.append(" ").append(Constants.COMMENT_DELIMITER).append(comment);
+            }
         }
         return result.toString();
     }
@@ -328,7 +320,8 @@ public class Property {
      * @return true if objects are same; otherwise false.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj
+    ) {
         if (this == obj) {
             return true;
         }
@@ -365,9 +358,6 @@ public class Property {
         }
         return true;
     }
-
-    
-    
 
     /**
      * Evaluates a hash code of the current property.

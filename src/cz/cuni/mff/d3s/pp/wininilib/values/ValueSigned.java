@@ -12,17 +12,21 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 public class ValueSigned implements Value {
 
     private final long value;
+    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueSigned</code>.
      *
      * @param value value to be parsed.
+     * @param writeToIniFile a flag that determines whether the current value
+     * has been written or will be written to INI file.
      * @throws InvalidValueFormat if the specified value is not correct.
      *
      */
-    public ValueSigned(String value) throws InvalidValueFormat {
+    public ValueSigned(String value, boolean writeToIniFile) throws InvalidValueFormat {
         try {
             this.value = Long.parseLong(value, getRadix(value));
+            this.writeToIniFile = writeToIniFile;
         } catch (NumberFormatException ex) {
             throw new InvalidValueFormat("Specified value is not correct number.");
         }
@@ -49,6 +53,18 @@ public class ValueSigned implements Value {
     }
 
     /**
+     * Returns a flag value that determines whether this value has already been
+     * written or will be written in INI file. Used only in ORIGIN saving mode.
+     *
+     * @return a flag value that determines whether this value has already been
+     * written or will be written in INI file.
+     */
+    @Override
+    public boolean writeToIniFile() {
+        return writeToIniFile;
+    }
+
+    /**
      * Determines and returns numeric system (radix). Possible number systems
      * are "0x" for hex, "0" for oct, "0b" for binary.
      *
@@ -72,4 +88,5 @@ public class ValueSigned implements Value {
         }
         return dec;
     }
+
 }

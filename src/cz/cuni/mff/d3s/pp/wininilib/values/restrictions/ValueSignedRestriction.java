@@ -13,8 +13,8 @@ import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
  */
 public class ValueSignedRestriction implements ValueRestriction {
 
-    private final double lowerBound;
-    private final double upperBound;
+    private final long lowerBound;
+    private final long upperBound;
 
     /**
      * Initializes a new instance of <code>ValueSignedRestriction</code> with
@@ -24,7 +24,7 @@ public class ValueSignedRestriction implements ValueRestriction {
      * @param upperBound upper bound of the interval.
      * @throws InvalidValueFormat if any of bounds is not correct value.
      */
-    public ValueSignedRestriction(double lowerBound, double upperBound) throws InvalidValueFormat {
+    public ValueSignedRestriction(long lowerBound, long upperBound) throws InvalidValueFormat {
         if (lowerBound > upperBound) {
             throw new InvalidValueFormat("Upper bound must be greater or equal than lower bound.");
         }
@@ -46,7 +46,7 @@ public class ValueSignedRestriction implements ValueRestriction {
             throw new ViolatedRestrictionException("Invalid signed value.");
         }
 
-        double innerValue = (double) (value.get());
+        double innerValue = (long) (value.get());
         if ((lowerBound > innerValue) || (upperBound < innerValue)) {
             throw new ViolatedRestrictionException("Value is not in correct interval.");
         }

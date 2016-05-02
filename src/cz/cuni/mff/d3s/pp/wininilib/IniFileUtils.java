@@ -15,7 +15,7 @@ import java.util.List;
  * @author xxx
  */
 public class IniFileUtils {
-        
+
     /**
      * Validates and fills the current instance of IniFile with the specified
      * data.
@@ -24,12 +24,12 @@ public class IniFileUtils {
      * @param type data load mode.
      */
     public static void parseAndValidate(IniFile iniFile, String text, IniFile.LoadingMode type) throws FileFormatException {
-        
+
         List<Section> iniFileSections = new ArrayList<>();
-        for (int i = 0; i<iniFile.getNumberOfSections(); i++) {
+        for (int i = 0; i < iniFile.getNumberOfSections(); i++) {
             iniFileSections.add(iniFile.getSection(i));
         }
-        
+
         String[] data = text.split(Constants.NEW_LINE);
         List<String> dataOfSections = divideToSections(data);
 
@@ -53,8 +53,8 @@ public class IniFileUtils {
                 // TODO.
             }
         }
-    }    
-    
+    }
+
     private static List<String> divideToSections(String[] data) throws FileFormatException {
         List<String> result = new ArrayList<>();
         List<String> identifiers = new ArrayList<>(); // Used for check duplicities
@@ -96,7 +96,7 @@ public class IniFileUtils {
         result.add(section.toString());
         return result;
     }
-    
+
     /**
      * Try to fit Section with the specified string-represented section. Returns
      * true if combination is specified property. In this case, the specified
@@ -120,7 +120,7 @@ public class IniFileUtils {
         // TODO.
         return false;
     }
-    
+
     /**
      * Creates an INI file using the specified data.
      *
@@ -138,7 +138,7 @@ public class IniFileUtils {
         }
         return iniFile;
     }
-    
+
     /**
      * As a parameter gets a section a parses it to a instance of Section class.
      * Always used in RELAXED mode.
@@ -214,7 +214,7 @@ public class IniFileUtils {
                 prop = new Property(parts[0], isSingleValue, new ValueStringRestriction());
                 try {
                     for (String val : values) {
-                        prop.addValue(new ValueString(val));
+                        prop.addValue(new ValueString(val, true)); // @TODO.
                     }
                 } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormat ex) {
                     throw new FileFormatException("Invalid file format.", ex);

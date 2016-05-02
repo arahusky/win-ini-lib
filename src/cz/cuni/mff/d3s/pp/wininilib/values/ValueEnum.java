@@ -10,16 +10,20 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
  */
 public class ValueEnum implements Value {
 
-    Object value;
+    private final Object value;
+    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueEnum</code>.
      *
      * @param value value of some enum.
+     * @param writeToIniFile a flag value that determines whether this value has
+     * already been written or will be written in INI file.
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueEnum(Object value) throws InvalidValueFormat {
+    public ValueEnum(Object value, boolean writeToIniFile) throws InvalidValueFormat {
         this.value = value;
+        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -40,6 +44,18 @@ public class ValueEnum implements Value {
     @Override
     public String toString() {
         return value.toString();
+    }
+
+    /**
+     * Returns a flag value that determines whether this value has already been
+     * written or will be written in INI file. Used only in ORIGIN saving mode.
+     *
+     * @return a flag value that determines whether this value has already been
+     * written or will be written in INI file.
+     */
+    @Override
+    public boolean writeToIniFile() {
+        return writeToIniFile;
     }
 
 }

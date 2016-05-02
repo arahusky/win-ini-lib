@@ -12,16 +12,19 @@ import java.math.BigInteger;
  */
 public class ValueUnsigned implements Value {
 
-    private BigInteger value;
+    private final BigInteger value;
+    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueUnsigned</code>. Represents an
      * non-negative integer.
      *
      * @param value value to be parsed.
+     * @param writeToIniFile a flag value that determines whether this value has
+     * already been written or will be written in INI file.
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueUnsigned(String value) throws InvalidValueFormat {
+    public ValueUnsigned(String value, boolean writeToIniFile) throws InvalidValueFormat {
         try {
             this.value = new BigInteger(value, getRadix(value));
             if (this.value.signum() == -1) {
@@ -30,6 +33,7 @@ public class ValueUnsigned implements Value {
         } catch (NumberFormatException ex) {
             throw new InvalidValueFormat("Specified value is not correct signed value");
         }
+        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -53,6 +57,18 @@ public class ValueUnsigned implements Value {
     }
 
     /**
+     * Returns a flag value that determines whether this value has already been
+     * written or will be written in INI file. Used only in ORIGIN saving mode.
+     *
+     * @return a flag value that determines whether this value has already been
+     * written or will be written in INI file.
+     */
+    @Override
+    public boolean writeToIniFile() {
+        return writeToIniFile;
+    }
+
+    /**
      * Determines and returns numeric system (radix). Possible number systems
      * are "0x" for hex, "0" for oct, "0b" for binary.
      *
@@ -64,7 +80,7 @@ public class ValueUnsigned implements Value {
         final int bin = 2;
         final int oct = 8;
         final int dec = 10;
-        
+
         if (value.substring(0, 2).equals(Constants.HEX_PREFIX)) {
             return hex;
         }
