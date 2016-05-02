@@ -4,7 +4,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  * This exception is thrown when there is an attept to create multiple sections
  * or properties with the same identifiers (keys).
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class DupliciteNameException extends WinIniLibException {
 

@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Represents a section of the IniFile.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class Section {
 

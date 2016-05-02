@@ -4,7 +4,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  * This exception is thrown when there is an attept to add multiple values to
  * single value property.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class TooManyValuesException extends WinIniLibException {
 

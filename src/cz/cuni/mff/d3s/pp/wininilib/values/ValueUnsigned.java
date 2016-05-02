@@ -8,7 +8,7 @@ import java.math.BigInteger;
 /**
  * Represents a <code>Unsigned</code> value of the property.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueUnsigned implements Value {
 

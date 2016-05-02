@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 /**
  * Provides restriction rules for enum type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueEnumRestriction implements ValueRestriction {
 

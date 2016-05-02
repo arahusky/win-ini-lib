@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib;
 /**
  * Stores all public constants used within the library.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class Constants {
 

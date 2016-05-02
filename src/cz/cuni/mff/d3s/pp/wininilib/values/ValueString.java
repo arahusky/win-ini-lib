@@ -6,7 +6,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 /**
  * Represents a <code>String</code> value of the property.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueString implements Value {
 

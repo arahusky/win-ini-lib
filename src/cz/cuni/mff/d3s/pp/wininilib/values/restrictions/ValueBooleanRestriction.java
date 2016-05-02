@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Provides restriction rules for boolean type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueBooleanRestriction implements ValueRestriction {
 

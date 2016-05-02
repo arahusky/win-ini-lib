@@ -5,9 +5,9 @@ import org.junit.Test;
 
 /**
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
-public class IniFileTest {
+public class IniFileTests {
 
     @Test
     public void testBasicNothing() {

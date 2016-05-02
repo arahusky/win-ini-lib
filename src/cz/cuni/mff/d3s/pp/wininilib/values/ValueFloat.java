@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
  * Represents a <code>Float</code> value of the property. Internally represented
  * by more precise double.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueFloat implements Value {
 

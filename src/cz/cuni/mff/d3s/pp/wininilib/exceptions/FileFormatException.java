@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 /**
  * Bad file format.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class FileFormatException extends WinIniLibException {
 

@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Represents a property of a Section.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class Property {
 

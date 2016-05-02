@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
 /**
  * Represents a <code>Boolean</code> value of the property.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueBoolean implements Value {
 

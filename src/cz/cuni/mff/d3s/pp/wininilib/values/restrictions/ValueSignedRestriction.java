@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 /**
  * Provides restriction rules for signed type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueSignedRestriction implements ValueRestriction {
 

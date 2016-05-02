@@ -6,7 +6,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
  * Each value restriction must be derived from this interface. Provides a basic
  * behaviour of restrictions.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public interface ValueRestriction {
 

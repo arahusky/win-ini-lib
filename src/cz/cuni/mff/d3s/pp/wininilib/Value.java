@@ -4,7 +4,7 @@ package cz.cuni.mff.d3s.pp.wininilib;
  * Each value of any property is derived from this interface. Provides a basic
  * behaviour for values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public interface Value {
 

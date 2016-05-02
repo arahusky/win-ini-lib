@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 /**
  * Provides a basic wrapper for WinIniLib exceptions.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class WinIniLibException extends Exception {
 

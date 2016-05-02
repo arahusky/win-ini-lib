@@ -10,7 +10,7 @@ import javax.management.openmbean.InvalidOpenTypeException;
 /**
  * Provides restriction rules for string type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueStringRestriction implements ValueRestriction {
 

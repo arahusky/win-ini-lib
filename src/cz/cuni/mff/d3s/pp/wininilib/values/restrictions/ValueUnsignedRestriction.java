@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * Provides restriction rules for string type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueUnsignedRestriction implements ValueRestriction {
 

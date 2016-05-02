@@ -3,7 +3,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
 /**
  * Some of the restrictions have been violated.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ViolatedRestrictionException extends WinIniLibException {
 

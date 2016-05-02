@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * This class shows basic examples of the library usage.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ExampleUsage {
 

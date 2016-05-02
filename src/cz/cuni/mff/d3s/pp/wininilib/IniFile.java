@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 /**
  * Provides a representation for .ini configuration file.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class IniFile {
 

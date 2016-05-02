@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
 /**
  * Provides restriction rules for float type values.
  *
- * @author Jakub Naplava; Jan Kluj
+ * @author xxx
  */
 public class ValueFloatRestriction implements ValueRestriction {
 
