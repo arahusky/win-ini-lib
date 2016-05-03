@@ -1,0 +1,7 @@
+[section1]
+Option1 = asd
+
+[section2]
+
+[section1]
+Option2 = abraxas

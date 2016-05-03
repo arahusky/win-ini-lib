@@ -1,0 +1,8 @@
+[section1]
+Option1 = asd
+
+[section2]
+
+[section3]
+Option2 = abraxas
+Option2 = 12

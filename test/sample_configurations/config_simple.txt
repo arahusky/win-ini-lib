@@ -1,0 +1,7 @@
+[Sekce 1]
+Option 1 = value 1  ; volba 'Option 1' ma hodnotu 'value 1'
+oPtion 1 = 15 
+
+[Cisla]
+cele = -1285
+cele_bin = 0b01101001

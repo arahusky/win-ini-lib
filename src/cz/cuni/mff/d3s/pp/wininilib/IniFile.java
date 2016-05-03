@@ -226,12 +226,12 @@ public class IniFile {
      */
     public static IniFile loadIniFromFile(String fileName) throws FileFormatException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            List<String> data = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                data.add(line);
+                sb.append(line);
             }
-            return IniFileUtils.createIniFile(data.toArray(new String[0]));
+            return IniFileUtils.createIniFile(sb.toString());
 
             // TODO: poresit EXCEPTIONY, jake se budou pouzivat ... nase, nebo 
             // teda nechame nekdy IOEX... pokud treba nejde najit soubor nebo tak...
@@ -248,8 +248,11 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromStream(Stream stream) throws FileFormatException {
-        String[] data = (String[]) stream.toArray();
-        return IniFileUtils.createIniFile(data);
+        //String[] data = (String[]) stream.toArray();
+        //return IniFileUtils.createIniFile(data);
+        
+        //TODO nevim jak
+        return null;
     }
 
     /**
@@ -262,8 +265,7 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromString(String iniFile) throws FileFormatException {
-        String[] data = iniFile.split(Constants.NEW_LINE);
-        return IniFileUtils.createIniFile(data);
+        return IniFileUtils.createIniFile(iniFile);
     }
 
     /**
