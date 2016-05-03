@@ -12,15 +12,19 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 public class ValueFloat implements Value {
 
     private final double value;
+    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueFloat</code>.
      *
      * @param value value to be parsed.
+     * @param writeToIniFile a flag value that determines whether this value has
+     * already been written or will be written in INI file.
      * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueFloat(double value) throws InvalidValueFormat {
+    public ValueFloat(double value, boolean writeToIniFile) throws InvalidValueFormat {
         this.value = value;
+        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -41,5 +45,17 @@ public class ValueFloat implements Value {
     @Override
     public String toString() {
         return Double.toString(value);
+    }
+
+    /**
+     * Returns a flag value that determines whether this value has already been
+     * written or will be written in INI file. Used only in ORIGIN saving mode.
+     *
+     * @return a flag value that determines whether this value has already been
+     * written or will be written in INI file.
+     */
+    @Override
+    public boolean writeToIniFile() {
+        return writeToIniFile;
     }
 }

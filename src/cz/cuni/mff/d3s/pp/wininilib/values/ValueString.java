@@ -11,15 +11,19 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 public class ValueString implements Value {
 
     private final String value;
+    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueString</code>.
      *
      * @param value string to be parsed.
+     * @param writeToIniFile flag value that determines whether this value has
+     * already been written or will be written in INI file.
      * @throws InvalidValueFormat if the specified string has no correct format.
      */
-    public ValueString(String value) throws InvalidValueFormat {
+    public ValueString(String value, boolean writeToIniFile) throws InvalidValueFormat {
         this.value = value;
+        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -40,5 +44,17 @@ public class ValueString implements Value {
     @Override
     public String toString() {
         return value;
+    }
+
+    /**
+     * Returns a flag value that determines whether this value has already been
+     * written or will be written in INI file. Used only in ORIGIN saving mode.
+     *
+     * @return a flag value that determines whether this value has already been
+     * written or will be written in INI file.
+     */
+    @Override
+    public boolean writeToIniFile() {
+        return writeToIniFile;
     }
 }

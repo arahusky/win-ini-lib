@@ -236,7 +236,7 @@ public class IniFileUtils {
                 prop = new Property(parts[0], isSingleValue, new ValueStringRestriction());
                 try {
                     for (String val : values) {
-                        prop.addValue(new ValueString(val));
+                        prop.addValue(new ValueString(val, true)); // @TODO.
                     }
                 } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormat ex) {
                     throw new FileFormatException("Invalid file format.", ex);

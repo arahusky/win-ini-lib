@@ -7,10 +7,15 @@ import org.junit.Test;
  *
  * @author xxx
  */
-public class IniFileTests {
+public class IniFileTest {
 
     @Test
-    public void testBasicNothing() {
+    public void testToString1() {
         Assert.assertTrue(1 == 1);
+    }
+    
+    @Test
+    public void testToString2() {
+        
     }
 }

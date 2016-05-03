@@ -17,6 +17,15 @@ public class ValueFloatRestriction implements ValueRestriction {
     private final double upperBound;
 
     /**
+     * Initializes a new instance of <code>ValueFloatRestriction</code> with no
+     * interval restriction.
+     */
+    public ValueFloatRestriction() {
+        lowerBound = Double.MIN_VALUE;
+        upperBound = Double.MAX_VALUE;
+    }
+
+    /**
      * Initializes a new instance of <code>ValueFloatRestriction</code> with the
      * specified interval.
      *

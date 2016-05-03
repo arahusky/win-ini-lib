@@ -16,6 +16,19 @@ public class ValueUnsignedRestriction implements ValueRestriction {
 
     private final BigDecimal lowerBound;
     private final BigDecimal upperBound;
+    private final boolean hasRestriction;
+
+    /**
+     * Initializes a new instance of <code>ValueUnsignedRestriction</code> with
+     * no interval restriction.
+     */
+    public ValueUnsignedRestriction() {
+        hasRestriction = false;
+
+        // Just any constants - doesn't matter
+        lowerBound = BigDecimal.ZERO;
+        upperBound = BigDecimal.ZERO;
+    }
 
     /**
      * Initializes a new instance of <code>ValueUnsignedRestriction</code> with
@@ -26,6 +39,7 @@ public class ValueUnsignedRestriction implements ValueRestriction {
      * @throws InvalidValueFormat if any of bounds is not correct value.
      */
     public ValueUnsignedRestriction(BigDecimal lowerBound, BigDecimal upperBound) throws InvalidValueFormat {
+        hasRestriction = true;
         if ((lowerBound.signum() == -1) || (upperBound.signum() == -1)) {
             throw new InvalidValueFormat("Unsigned values can be only non-negative integers.");
         }
@@ -50,9 +64,11 @@ public class ValueUnsignedRestriction implements ValueRestriction {
             throw new ViolatedRestrictionException("Invalid unsigned value.");
         }
 
-        BigDecimal innerValue = (BigDecimal) (value.get());
-        if ((innerValue.compareTo(lowerBound) == -1) || (innerValue.compareTo(upperBound) == 1)) {
-            throw new ViolatedRestrictionException("Value is not in correct interval.");
+        if (hasRestriction) {
+            BigDecimal innerValue = (BigDecimal) (value.get());
+            if ((innerValue.compareTo(lowerBound) == -1) || (innerValue.compareTo(upperBound) == 1)) {
+                throw new ViolatedRestrictionException("Value is not in correct interval.");
+            }
         }
     }
 }
