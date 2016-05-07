@@ -38,8 +38,13 @@ public class ValueStringRestriction implements ValueRestriction {
 
         String innerValue = (String) value.get();
         for (ForbiddenSymbol symbol : ForbiddenSymbol.values()) {
+            if (symbol == ForbiddenSymbol.NEW_LINE) {
+                if (innerValue.contains(symbol.toString())) {
+                    throw new ViolatedRestrictionException("The specified string contains a forbidden symbol.");
+                }
+            }
             for (int i = 0; i < innerValue.length(); i++) {
-                if (symbol.equals(innerValue.charAt(i))) {
+                if (symbol.toString().equals(innerValue.substring(i, i + 1))) {
                     if ((i == 0) || (escapeSymbol != innerValue.charAt(i - 1))) {
                         throw new ViolatedRestrictionException("The specified string contains a forbidden symbol.");
                     }

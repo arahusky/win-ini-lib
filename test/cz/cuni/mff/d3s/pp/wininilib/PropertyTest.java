@@ -1,6 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
@@ -19,7 +19,7 @@ import org.junit.Test;
 public class PropertyTest {
 
     @Test
-    public void testToString1() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat {
+    public void testToString1() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
         String key = "Key";
         String equalSign = "=";
         String value = "128";
@@ -31,7 +31,7 @@ public class PropertyTest {
     }
 
     @Test
-    public void testToString2() throws InvalidValueFormat, TooManyValuesException, ViolatedRestrictionException {
+    public void testToString2() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException {
         String key = "Key";
         String equalSign = "=";
         String value1 = "128";
@@ -55,7 +55,7 @@ public class PropertyTest {
     }
 
     @Test
-    public void testToString3() throws InvalidValueFormat, TooManyValuesException, ViolatedRestrictionException {
+    public void testToString3() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException {
         String key = "Key";
         String equalSign = "=";
         ValueSigned implicit = new ValueSigned("42", true);
@@ -64,12 +64,12 @@ public class PropertyTest {
 
         Assert.assertEquals(expected, p.toString());
         Assert.assertEquals(expected, p.toString(IniFile.SavingMode.FULL));
-        Assert.assertEquals(key + equalSign, p.toString(IniFile.SavingMode.ORIGIN));
+        Assert.assertEquals(key + equalSign, p.toString(IniFile.SavingMode.ORIGINAL));
     }
     
     
     @Test
-    public void testToString4() throws InvalidValueFormat, TooManyValuesException, ViolatedRestrictionException {
+    public void testToString4() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException {
         String key = "Key";
         String equalSign = "=";
         String comment = "this is comment";
@@ -82,11 +82,11 @@ public class PropertyTest {
         
         Assert.assertEquals(expectedWithComment, p.toString());
         Assert.assertEquals(expectedWithComment, p.toString(IniFile.SavingMode.FULL));
-        Assert.assertEquals(expectedNoComment, p.toString(IniFile.SavingMode.ORIGIN));
+        Assert.assertEquals(expectedNoComment, p.toString(IniFile.SavingMode.ORIGINAL));
     }
 
     @Test(expected = TooManyValuesException.class)
-    public void testSingleValue() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat {
+    public void testSingleValue() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
         boolean isSingleValue = true;
         Property p = new Property("key", isSingleValue, new ValueStringRestriction());
         ValueString value = new ValueString("Hi.", true);

@@ -3,9 +3,9 @@ import cz.cuni.mff.d3s.pp.wininilib.IniFile;
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.LoadingMode;
 import cz.cuni.mff.d3s.pp.wininilib.Property;
 import cz.cuni.mff.d3s.pp.wininilib.Section;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
@@ -28,7 +28,7 @@ public class ExampleUsage {
      *
      * @return created ini-file format.
      */
-    public static IniFile getBasicFormat() throws TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException, DupliciteNameException {
+    public static IniFile getBasicFormat() throws TooManyValuesException, InvalidValueFormatException, ViolatedRestrictionException, DuplicateNameException {
         //First, we have to define the format
         IniFile format = new IniFile();
 
@@ -60,9 +60,9 @@ public class ExampleUsage {
      *
      * @throws TooManyValuesException
      * @throws ViolatedRestrictionException
-     * @throws InvalidValueFormat
+     * @throws InvalidValueFormatException
      */
-    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormat, DupliciteNameException, IOException {
+    public static void loadIniFileAndCheckItAgainstGivenFormat() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, DuplicateNameException, IOException {
         String fileName = "sampleFile.ini";
 
         IniFile ini = getBasicFormat();
@@ -80,7 +80,7 @@ public class ExampleUsage {
      * save it back.
      *
      */
-    public static void loadModifyAndSaveIniFile() throws FileFormatException, TooManyValuesException, InvalidValueFormat, ViolatedRestrictionException, DupliciteNameException, FileNotFoundException, IOException {
+    public static void loadModifyAndSaveIniFile() throws FileFormatException, TooManyValuesException, InvalidValueFormatException, ViolatedRestrictionException, DuplicateNameException, FileNotFoundException, IOException {
         String fileName = "sampleFile.ini";
         IniFile ini = getBasicFormat();
 

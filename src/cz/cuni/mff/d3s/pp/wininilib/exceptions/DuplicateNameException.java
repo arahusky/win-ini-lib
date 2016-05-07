@@ -6,7 +6,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  *
  * @author xxx
  */
-public class DupliciteNameException extends WinIniLibException {
+public class DuplicateNameException extends WinIniLibException {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,7 +14,7 @@ public class DupliciteNameException extends WinIniLibException {
      * Creates a new instance of <code>DupliciteNameException</code> without
      * detail message.
      */
-    public DupliciteNameException() {
+    public DuplicateNameException() {
     }
 
     /**
@@ -23,7 +23,7 @@ public class DupliciteNameException extends WinIniLibException {
      *
      * @param msg the detail message.
      */
-    public DupliciteNameException(String msg) {
+    public DuplicateNameException(String msg) {
         super(msg);
     }
 }

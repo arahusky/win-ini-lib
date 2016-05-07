@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Constants;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import java.math.BigInteger;
 
 /**
@@ -22,16 +22,30 @@ public class ValueUnsigned implements Value {
      * @param value value to be parsed.
      * @param writeToIniFile a flag value that determines whether this value has
      * already been written or will be written in INI file.
-     * @throws InvalidValueFormat if the specified value can not be parsed.
+     * @throws InvalidValueFormatException if the specified value can not be parsed.
      */
-    public ValueUnsigned(String value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueUnsigned(String value, boolean writeToIniFile) throws InvalidValueFormatException {
         try {
-            this.value = new BigInteger(value, getRadix(value));
+            int prefixLength = 0;
+            int radix = getRadix(value);
+            switch (radix) {
+                case 2:
+                    prefixLength = Constants.BINARY_PREFIX.length();
+                    break;
+                case 8:
+                    prefixLength = Constants.OCT_PREFIX.length();
+                    break;
+                case 16:
+                    prefixLength = Constants.HEX_PREFIX.length();
+                    break;
+            }
+            value = value.substring(prefixLength);
+            this.value = new BigInteger(value, radix);
             if (this.value.signum() == -1) {
-                throw new InvalidValueFormat("Specified value must be non-negative.");
+                throw new InvalidValueFormatException("Specified value must be non-negative.");
             }
         } catch (NumberFormatException ex) {
-            throw new InvalidValueFormat("Specified value is not correct signed value");
+            throw new InvalidValueFormatException("Specified value is not correct signed value");
         }
         this.writeToIniFile = writeToIniFile;
     }

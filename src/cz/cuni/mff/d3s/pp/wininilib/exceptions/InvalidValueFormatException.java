@@ -6,7 +6,7 @@ package cz.cuni.mff.d3s.pp.wininilib.exceptions;
  *
  * @author xxx
  */
-public class InvalidValueFormat extends WinIniLibException {
+public class InvalidValueFormatException extends WinIniLibException {
 
     private static final long serialVersionUID = 1L;
     
@@ -14,7 +14,7 @@ public class InvalidValueFormat extends WinIniLibException {
      * Creates a new instance of <code>InvalidValueFormat</code> without detail
      * message.
      */
-    public InvalidValueFormat() {
+    public InvalidValueFormatException() {
     }
 
     /**
@@ -23,7 +23,7 @@ public class InvalidValueFormat extends WinIniLibException {
      *
      * @param msg the detail message.
      */
-    public InvalidValueFormat(String msg) {
+    public InvalidValueFormatException(String msg) {
         super(msg);
     }
 }

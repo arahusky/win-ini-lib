@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 
 /**
  * Represents a <code>String</code> value of the property.
@@ -19,9 +19,9 @@ public class ValueString implements Value {
      * @param value string to be parsed.
      * @param writeToIniFile flag value that determines whether this value has
      * already been written or will be written in INI file.
-     * @throws InvalidValueFormat if the specified string has no correct format.
+     * @throws InvalidValueFormatException if the specified string has no correct format.
      */
-    public ValueString(String value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueString(String value, boolean writeToIniFile) throws InvalidValueFormatException {
         this.value = value;
         this.writeToIniFile = writeToIniFile;
     }

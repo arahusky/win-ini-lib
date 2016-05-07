@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
 
@@ -31,11 +31,11 @@ public class ValueFloatRestriction implements ValueRestriction {
      *
      * @param lowerBound lower bound of the interval.
      * @param upperBound upper bound of the interval.
-     * @throws InvalidValueFormat if any of bounds is not correct value.
+     * @throws InvalidValueFormatException if any of bounds is not correct value.
      */
-    public ValueFloatRestriction(double lowerBound, double upperBound) throws InvalidValueFormat {
+    public ValueFloatRestriction(double lowerBound, double upperBound) throws InvalidValueFormatException {
         if (lowerBound > upperBound) {
-            throw new InvalidValueFormat("Upper bound must be greater or equal than lower bound.");
+            throw new InvalidValueFormatException("Upper bound must be greater or equal than lower bound.");
         }
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;

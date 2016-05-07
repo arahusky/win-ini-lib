@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 
 /**
  * Represents a <code>Enum</code> value of the property.
@@ -19,9 +18,8 @@ public class ValueEnum implements Value {
      * @param value value of some enum.
      * @param writeToIniFile a flag value that determines whether this value has
      * already been written or will be written in INI file.
-     * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueEnum(Object value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueEnum(Object value, boolean writeToIniFile) {
         this.value = value;
         this.writeToIniFile = writeToIniFile;
     }

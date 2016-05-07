@@ -1,12 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.DupliciteNameException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
-import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
-import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -63,13 +58,13 @@ public class IniFile {
      * Adds the specified element to the end of sections.
      *
      * @param section section to be added to sections.
-     * @throws DupliciteNameException if there is already section with current
+     * @throws DuplicateNameException if there is already section with current
      * name.
      */
-    public void addSection(Section section) throws DupliciteNameException {
+    public void addSection(Section section) throws DuplicateNameException {
         for (Section s : sections) {
             if (s.getIdentifier().equals(section.getIdentifier())) {
-                throw new DupliciteNameException("Section with name " + section.getIdentifier() + " is already defined.");
+                throw new DuplicateNameException("Section with name " + section.getIdentifier() + " is already defined.");
             }
         }
         sections.add(section);
@@ -288,6 +283,6 @@ public class IniFile {
     public enum SavingMode {
 
         FULL,
-        ORIGIN
+        ORIGINAL
     }
 }

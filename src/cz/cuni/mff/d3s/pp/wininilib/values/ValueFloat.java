@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
 
 /**
  * Represents a <code>Float</code> value of the property. Internally represented
@@ -20,9 +19,8 @@ public class ValueFloat implements Value {
      * @param value value to be parsed.
      * @param writeToIniFile a flag value that determines whether this value has
      * already been written or will be written in INI file.
-     * @throws InvalidValueFormat if the specified value can not be parsed.
      */
-    public ValueFloat(double value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueFloat(double value, boolean writeToIniFile) {
         this.value = value;
         this.writeToIniFile = writeToIniFile;
     }

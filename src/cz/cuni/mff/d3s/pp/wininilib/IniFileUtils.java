@@ -1,15 +1,13 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -168,7 +166,7 @@ public class IniFileUtils {
      * @param section section to be parsed.
      * @return a parsed section.
      */
-    private static Section parseSection(String section) throws FileFormatException {
+    private static Section parseSection(String section) throws FileFormatException, InvalidValueFormatException {
         Section result = null;
         boolean required = false;
 
@@ -202,7 +200,7 @@ public class IniFileUtils {
      * @param property
      * @return
      */
-    private static Property parseProperty(String property) throws FileFormatException {
+    private static Property parseProperty(String property) throws FileFormatException, InvalidValueFormatException {
         Property prop;
 
         String[] parts = property.split(Constants.COMMENT_DELIMITER, 2);
@@ -238,7 +236,7 @@ public class IniFileUtils {
                     for (String val : values) {
                         prop.addValue(new ValueString(val, true)); // @TODO.
                     }
-                } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormat ex) {
+                } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormatException ex) {
                     throw new FileFormatException("Invalid file format.", ex);
                 }
                 break;

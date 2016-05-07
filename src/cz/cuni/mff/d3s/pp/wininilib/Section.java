@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.SavingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,8 +13,8 @@ import java.util.Objects;
 public class Section {
 
     private final String identifier;
-    private final boolean required;
-    private List<Property> properties;
+    private final boolean isRequired;
+    private final List<Property> properties;
     private String comment;
 
     /**
@@ -24,7 +25,8 @@ public class Section {
      */
     public Section(String identifier, boolean required) {
         this.identifier = identifier;
-        this.required = required;
+        this.isRequired = required;
+        properties = new ArrayList<>();
     }
 
     /**
@@ -80,7 +82,7 @@ public class Section {
     }
 
     /**
-     * Removes first occurrence of given property.
+     * Removes given property.
      *
      * @param property property to be removed.
      * @return true if any property was removed; otherwise false.
@@ -127,13 +129,20 @@ public class Section {
     public String toString(SavingMode type) {
         StringBuilder result = new StringBuilder();
         result.append("[").append(identifier).append("]");
-        if (!comment.isEmpty()) {
+        boolean hasComment = (comment != null && !comment.isEmpty());
+        if (hasComment) {
             result.append(" ;").append(comment);
         }
         result.append(Constants.NEW_LINE);
 
-        for (Property property : properties) {
-            result.append(property.toString(type));
+        for (int i = 0; i < properties.size(); i++) {
+            result.append(properties.get(i).toString(type));
+            if (i != properties.size() - 1) {
+                result.append(Constants.NEW_LINE);
+            }
+        }
+        if (properties.isEmpty() && !hasComment) {
+            result.append(Constants.NEW_LINE);
         }
         return result.toString();
     }
@@ -153,7 +162,7 @@ public class Section {
         if (!identifier.equals(other.identifier)) {
             return false;
         }
-        if (required != other.required) {
+        if (isRequired != other.isRequired) {
             return false;
         }
 
@@ -178,7 +187,7 @@ public class Section {
         // This is automatically generated hashCode by NetBeans IDE.
         int hash = 7;
         hash = 71 * hash + Objects.hashCode(this.identifier);
-        hash = 71 * hash + (this.required ? 1 : 0);
+        hash = 71 * hash + (this.isRequired ? 1 : 0);
         hash = 71 * hash + Objects.hashCode(this.properties);
         return hash;
         //

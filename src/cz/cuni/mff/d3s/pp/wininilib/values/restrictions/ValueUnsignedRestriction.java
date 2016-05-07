@@ -2,10 +2,10 @@ package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Provides restriction rules for string type values.
@@ -14,8 +14,8 @@ import java.math.BigDecimal;
  */
 public class ValueUnsignedRestriction implements ValueRestriction {
 
-    private final BigDecimal lowerBound;
-    private final BigDecimal upperBound;
+    private final BigInteger lowerBound;
+    private final BigInteger upperBound;
     private final boolean hasRestriction;
 
     /**
@@ -26,8 +26,8 @@ public class ValueUnsignedRestriction implements ValueRestriction {
         hasRestriction = false;
 
         // Just any constants - doesn't matter
-        lowerBound = BigDecimal.ZERO;
-        upperBound = BigDecimal.ZERO;
+        lowerBound = BigInteger.ZERO;
+        upperBound = BigInteger.ZERO;
     }
 
     /**
@@ -36,15 +36,15 @@ public class ValueUnsignedRestriction implements ValueRestriction {
      *
      * @param lowerBound lower bound of the interval.
      * @param upperBound upper bound of the interval.
-     * @throws InvalidValueFormat if any of bounds is not correct value.
+     * @throws InvalidValueFormatException if any of bounds is not correct value.
      */
-    public ValueUnsignedRestriction(BigDecimal lowerBound, BigDecimal upperBound) throws InvalidValueFormat {
+    public ValueUnsignedRestriction(BigInteger lowerBound, BigInteger upperBound) throws InvalidValueFormatException {
         hasRestriction = true;
         if ((lowerBound.signum() == -1) || (upperBound.signum() == -1)) {
-            throw new InvalidValueFormat("Unsigned values can be only non-negative integers.");
+            throw new InvalidValueFormatException("Unsigned values can be only non-negative integers.");
         }
         if (lowerBound.compareTo(upperBound) == 1) {
-            throw new InvalidValueFormat("Upper bound must be greater or equal than lower bound.");
+            throw new InvalidValueFormatException("Upper bound must be greater or equal than lower bound.");
         }
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
@@ -65,7 +65,7 @@ public class ValueUnsignedRestriction implements ValueRestriction {
         }
 
         if (hasRestriction) {
-            BigDecimal innerValue = (BigDecimal) (value.get());
+            BigInteger innerValue = (BigInteger) (value.get());
             if ((innerValue.compareTo(lowerBound) == -1) || (innerValue.compareTo(upperBound) == 1)) {
                 throw new ViolatedRestrictionException("Value is not in correct interval.");
             }

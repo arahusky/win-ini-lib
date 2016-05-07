@@ -2,7 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Constants;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 
 /**
  * Represents a <code>Signed</code> value of the property.
@@ -20,15 +20,29 @@ public class ValueSigned implements Value {
      * @param value value to be parsed.
      * @param writeToIniFile a flag that determines whether the current value
      * has been written or will be written to INI file.
-     * @throws InvalidValueFormat if the specified value is not correct.
+     * @throws InvalidValueFormatException if the specified value is not correct.
      *
      */
-    public ValueSigned(String value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueSigned(String value, boolean writeToIniFile) throws InvalidValueFormatException {
         try {
-            this.value = Long.parseLong(value, getRadix(value));
+            int prefixLength = 0;
+            int radix = getRadix(value);
+            switch (radix) {
+                case 2:
+                    prefixLength = Constants.BINARY_PREFIX.length();
+                    break;
+                case 8:
+                    prefixLength = Constants.OCT_PREFIX.length();
+                    break;
+                case 16:
+                    prefixLength = Constants.HEX_PREFIX.length();
+                    break;
+            }
+            value = value.substring(prefixLength);
+            this.value = Long.parseLong(value, radix);
             this.writeToIniFile = writeToIniFile;
         } catch (NumberFormatException ex) {
-            throw new InvalidValueFormat("Specified value is not correct number.");
+            throw new InvalidValueFormatException("Specified value is not correct number.");
         }
     }
 

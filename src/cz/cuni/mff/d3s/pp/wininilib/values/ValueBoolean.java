@@ -1,7 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
-import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormat;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
 
 /**
@@ -20,12 +20,12 @@ public class ValueBoolean implements Value {
      * @param value value to be parsed.
      * @param writeToIniFile a flag value that determines whether this value has
      * already been written or will be written in INI file.
-     * @throws InvalidValueFormat if the specified value can not be parsed.
+     * @throws InvalidValueFormatException if the specified value can not be parsed.
      */
-    public ValueBoolean(String value, boolean writeToIniFile) throws InvalidValueFormat {
+    public ValueBoolean(String value, boolean writeToIniFile) throws InvalidValueFormatException {
         if (!ValueBooleanRestriction.getAllTrueValues().contains(value)
                 && !ValueBooleanRestriction.getAllFalseValues().contains(value)) {
-            throw new InvalidValueFormat("Invalid format of the specified value (" + value + ")");
+            throw new InvalidValueFormatException("Invalid format of the specified value (" + value + ")");
         }
         this.value = value;
         this.writeToIniFile = writeToIniFile;
