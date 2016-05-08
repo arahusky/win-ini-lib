@@ -13,8 +13,9 @@ public class Main {
          * representation for Formats. They contains some sections, which
          * consists of properties. Property is key-value pair, basically.
          * Property can be multi-valued. The library reflects the actual/real
-         * Windows .ini files. For more informations about .ini files visit
-         * https://en.wikipedia.org/wiki/INI_file.
+         * Windows .ini files. For more information about .ini files visit
+         * https://en.wikipedia.org/wiki/INI_file. For more information about
+         * usage of this library, visit ExampleUsage.java file.
          * 
          * Format, Section and Property provides methods for basic operations
          * with them. Value of the property is always instance of some class
@@ -36,13 +37,13 @@ public class Main {
          * 
          * USAGE OF WINDOWS INI LIBRARY (example):
          * Create new format:
-         * Format format = new Format();
+         * IniFile iniFile = new IniFile();
          * 
          * or load it from the file (stream or string):
-         * format = Format.loadFormatFromFile(...);
+         * iniFile = iniFile.loadFormatFromFile(...);
          * 
          * then modify it:
-         * Section s = format.getSection(index);
+         * Section s = iniFile.getSection(index);
          * Property p = new Property(...);
          * p.addValue(new ValueFloat(...));
          * 
@@ -50,7 +51,7 @@ public class Main {
          * s.setComment(...);
          * 
          * Save back to the file:
-         * format.saveToFile(...);
+         * iniFile.saveToFile(...);
          * 
          * For debugging purposes you can use toString or toStream methods to
          * get representation (output) of the current format, without saving it

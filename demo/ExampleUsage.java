@@ -11,6 +11,8 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueEnumRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueFloatRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,14 +46,34 @@ public class ExampleUsage {
         //second arbitrary property has identifier "Option2" and its values are of type boolean
         Property property2 = new Property("Option2", false, new ValueBooleanRestriction());
         property2.setComment("Option2 has value 'true'");
-
+        
+        //add Enum property
+        Property property3 = new Property("Key", true, new ValueEnumRestriction(TestEnum.class));
+        property3.addValue(TestEnum.ONE);
+        
+        //add float value property with interval restriction
+        Property property4 = new Property("number", true, new ValueFloatRestriction(0, 1000));
+        double value = 500;
+        property4.addValue(value); // value out of the specified interval causes an exception
+        
         section1.addProperty(property1);
         section1.addProperty(property2);
+        section1.addProperty(property3);
+        section1.addProperty(property4);
 
         format.addSection(section1);
         return format;
     }
 
+    /**
+     * Basic enum for test purposes.
+     */
+    enum TestEnum {
+        ONE,
+        TWO,
+        THREE
+    }
+    
     /**
      * This method generates basic ini-file format and tries to fill it in with
      * configuration from a file. If the file contains configuration, which does

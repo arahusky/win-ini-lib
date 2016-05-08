@@ -3,11 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/values/ValueSigned.java</file>
-            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/values/ValueString.java</file>
-            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/values/ValueUnsigned.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFile.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/exceptions/DuplicateNameException.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/Property.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/Section.java</file>
             <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/ValueAndRestrictionTest.java</file>
-            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/values/restrictions/ValueSignedRestriction.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/exceptions/InvalidValueFormatException.java</file>
+            <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFileUtils.java</file>
             <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/PropertyTest.java</file>
             <file>file:/C:/Users/Jan/Documents/GitHub/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/SectionTest.java</file>
         </group>
