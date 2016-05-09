@@ -211,21 +211,20 @@ public class IniFileUtils {
             Class<? extends Value> valueType = property.getValueType();
             String[] values = bodyNoComment.split(property.getDelimiter().toString());
 
-            //TODO what is the second parameter (what should I fill in?)
             for (String value : values) {
                 value = value.trim();
                 if (valueType.equals(ValueBoolean.class)) {
-                    property.addValue(new ValueBoolean(value, true));
+                    property.addValue(new ValueBoolean(value));
                 } else if (valueType.equals(ValueEnum.class)) {
-                    property.addValue(new ValueEnum(value, true));
+                    property.addValue(new ValueEnum(value));
                 } else if (valueType.equals(ValueFloat.class)) {
-                    property.addValue(new ValueFloat(Double.parseDouble(value), true));
+                    property.addValue(new ValueFloat(Double.parseDouble(value)));
                 } else if (valueType.equals(ValueSigned.class)) {
-                    property.addValue(new ValueSigned(value, true));
+                    property.addValue(new ValueSigned(value));
                 } else if (valueType.equals(ValueString.class)) {
-                    property.addValue(new ValueString(value, true));
+                    property.addValue(new ValueString(value));
                 } else if (valueType.equals(ValueUnsigned.class)) {
-                    property.addValue(new ValueUnsigned(value, true));
+                    property.addValue(new ValueUnsigned(value));
                 } else {
                     throw new UnsupportedOperationException("Unsupported type of value.");
                 }
@@ -330,7 +329,7 @@ public class IniFileUtils {
                 prop = new Property(parts[0], isSingleValue, new ValueStringRestriction());
                 try {
                     for (String val : values) {
-                        prop.addValue(new ValueString(val, true)); // @TODO.
+                        prop.addValue(new ValueString(val)); // @TODO.
                     }
                 } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormatException ex) {
                     throw new FileFormatException("Invalid file format.", ex);

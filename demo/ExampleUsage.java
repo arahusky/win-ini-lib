@@ -41,7 +41,7 @@ public class ExampleUsage {
         //let's create a required property named "Option1", whose values can be of type string and have no further restriction 
         Property property1 = new Property("Option1", true, new ValueStringRestriction());
         //and fill in the property with the one value "value1"
-        property1.addValue(new ValueString("value1", true));
+        property1.addValue(new ValueString("value1"));
 
         //second arbitrary property has identifier "Option2" and its values are of type boolean
         Property property2 = new Property("Option2", false, new ValueBooleanRestriction());
@@ -111,7 +111,7 @@ public class ExampleUsage {
         Section sectionToBeModified = ini.getSection("Section1");
 
         Property prop = sectionToBeModified.getProperty("Option1");
-        prop.addValue(new ValueSigned("123", true));
+        prop.addValue(new ValueSigned("123"));
 
         ini.saveToFile(fileName, IniFile.SavingMode.FULL);
     }

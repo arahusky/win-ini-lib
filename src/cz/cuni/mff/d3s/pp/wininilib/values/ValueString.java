@@ -12,19 +12,15 @@ import java.util.Objects;
 public class ValueString implements Value {
 
     private final String value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueString</code>.
      *
      * @param value string to be parsed.
-     * @param writeToIniFile flag value that determines whether this value has
-     * already been written or will be written in INI file.
      * @throws InvalidValueFormatException if the specified string has no correct format.
      */
-    public ValueString(String value, boolean writeToIniFile) throws InvalidValueFormatException {
+    public ValueString(String value) throws InvalidValueFormatException {
         this.value = value;
-        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -47,23 +43,10 @@ public class ValueString implements Value {
         return value;
     }
 
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
-    }
-
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 13 * hash + Objects.hashCode(this.value);
-        hash = 13 * hash + (this.writeToIniFile ? 1 : 0);
         return hash;
     }
 
@@ -77,9 +60,6 @@ public class ValueString implements Value {
         }
         final ValueString other = (ValueString) obj;
         if (!Objects.equals(this.value, other.value)) {
-            return false;
-        }
-        if (this.writeToIniFile != other.writeToIniFile) {
             return false;
         }
         return true;

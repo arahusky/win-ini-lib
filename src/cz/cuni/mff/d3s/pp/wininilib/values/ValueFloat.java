@@ -11,18 +11,14 @@ import cz.cuni.mff.d3s.pp.wininilib.Value;
 public class ValueFloat implements Value {
 
     private final double value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueFloat</code>.
      *
      * @param value value to be parsed.
-     * @param writeToIniFile a flag value that determines whether this value has
-     * already been written or will be written in INI file.
      */
-    public ValueFloat(double value, boolean writeToIniFile) {
+    public ValueFloat(double value) {
         this.value = value;
-        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -45,23 +41,10 @@ public class ValueFloat implements Value {
         return Double.toString(value);
     }
 
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
-    }
-
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 79 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));
-        hash = 79 * hash + (this.writeToIniFile ? 1 : 0);
         return hash;
     }
 
@@ -75,9 +58,6 @@ public class ValueFloat implements Value {
         }
         final ValueFloat other = (ValueFloat) obj;
         if (Double.doubleToLongBits(this.value) != Double.doubleToLongBits(other.value)) {
-            return false;
-        }
-        if (this.writeToIniFile != other.writeToIniFile) {
             return false;
         }
         return true;

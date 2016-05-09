@@ -30,6 +30,15 @@ public class Section {
     }
 
     /**
+     * Removes all values within the properties in the current section.
+     */
+    public void clearSection() {
+        for (Property property : properties) {
+            property.clearProperty();
+        }
+    }
+
+    /**
      * Returns identifier of the current section.
      *
      * @return identifier of the current section.
@@ -108,10 +117,10 @@ public class Section {
     public void addProperty(Property property) {
         properties.add(property);
     }
-    
+
     /**
      * Check, whether this section is mandatory.
-     * 
+     *
      * @return true, if the section is required, otherwise false.
      */
     public boolean isRequired() {

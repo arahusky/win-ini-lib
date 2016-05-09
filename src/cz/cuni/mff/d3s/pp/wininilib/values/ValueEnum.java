@@ -10,18 +10,14 @@ import cz.cuni.mff.d3s.pp.wininilib.Value;
 public class ValueEnum implements Value {
 
     private final Object value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueEnum</code>.
      *
      * @param value value of some enum.
-     * @param writeToIniFile a flag value that determines whether this value has
-     * already been written or will be written in INI file.
      */
-    public ValueEnum(Object value, boolean writeToIniFile) {
+    public ValueEnum(Object value) {
         this.value = value;
-        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -43,17 +39,4 @@ public class ValueEnum implements Value {
     public String toString() {
         return value.toString();
     }
-
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
-    }
-
 }

@@ -24,7 +24,7 @@ public class PropertyTest {
         String equalSign = "=";
         String value = "128";
         Property p = new Property(key, true, new ValueSignedRestriction());
-        p.addValue(new ValueSigned(value, false));
+        p.addValue(new ValueSigned(value));
         String expected = key + equalSign + value;
 
         Assert.assertEquals(expected, p.toString());
@@ -39,9 +39,9 @@ public class PropertyTest {
         String value3 = "451";
 
         Property p = new Property(key, false, new ValueSignedRestriction());
-        p.addValue(new ValueSigned(value1, true));
-        p.addValue(new ValueSigned(value2, true));
-        p.addValue(new ValueSigned(value3, true));
+        p.addValue(new ValueSigned(value1));
+        p.addValue(new ValueSigned(value2));
+        p.addValue(new ValueSigned(value3));
         p.setDelimiter(Property.ValueDelimiter.COMMA);
 
         String expected = key
@@ -58,7 +58,7 @@ public class PropertyTest {
     public void testToString3() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException {
         String key = "Key";
         String equalSign = "=";
-        ValueSigned implicit = new ValueSigned("42", true);
+        ValueSigned implicit = new ValueSigned("42");
         Property p = new Property(key, true, implicit, new ValueSignedRestriction());
         String expected = key + equalSign + implicit.toString();
 
@@ -66,8 +66,7 @@ public class PropertyTest {
         Assert.assertEquals(expected, p.toString(IniFile.SavingMode.FULL));
         Assert.assertEquals(key + equalSign, p.toString(IniFile.SavingMode.ORIGINAL));
     }
-    
-    
+
     @Test
     public void testToString4() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException {
         String key = "Key";
@@ -75,11 +74,11 @@ public class PropertyTest {
         String comment = "this is comment";
         String value = "42";
         Property p = new Property(key, true, new ValueSignedRestriction());
-        p.addValue(new ValueSigned(value, true));
+        p.addValue(new ValueSigned(value));
         p.setComment(comment);
         String expectedWithComment = key + equalSign + value + " " + Constants.COMMENT_DELIMITER + comment;
         String expectedNoComment = key + equalSign + value;
-        
+
         Assert.assertEquals(expectedWithComment, p.toString());
         Assert.assertEquals(expectedWithComment, p.toString(IniFile.SavingMode.FULL));
         Assert.assertEquals(expectedNoComment, p.toString(IniFile.SavingMode.ORIGINAL));
@@ -89,7 +88,7 @@ public class PropertyTest {
     public void testSingleValue() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
         boolean isSingleValue = true;
         Property p = new Property("key", isSingleValue, new ValueStringRestriction());
-        ValueString value = new ValueString("Hi.", true);
+        ValueString value = new ValueString("Hi.");
         p.addValue(value);
         p.addValue(value);
     }

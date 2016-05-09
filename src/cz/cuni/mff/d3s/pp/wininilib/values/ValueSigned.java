@@ -12,18 +12,15 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 public class ValueSigned implements Value {
 
     private final long value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueSigned</code>.
      *
      * @param value value to be parsed.
-     * @param writeToIniFile a flag that determines whether the current value
-     * has been written or will be written to INI file.
      * @throws InvalidValueFormatException if the specified value is not correct.
      *
      */
-    public ValueSigned(String value, boolean writeToIniFile) throws InvalidValueFormatException {
+    public ValueSigned(String value) throws InvalidValueFormatException {
         try {
             value = value.trim();
             int prefixLength = 0;
@@ -41,7 +38,6 @@ public class ValueSigned implements Value {
             }
             value = value.substring(prefixLength);
             this.value = Long.parseLong(value, radix);
-            this.writeToIniFile = writeToIniFile;
         } catch (NumberFormatException ex) {
             throw new InvalidValueFormatException("Specified value is not correct number.");
         }
@@ -65,18 +61,6 @@ public class ValueSigned implements Value {
     @Override
     public String toString() {
         return Long.toString(value);
-    }
-
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
     }
 
     /**
@@ -108,7 +92,6 @@ public class ValueSigned implements Value {
     public int hashCode() {
         int hash = 3;
         hash = 47 * hash + (int) (this.value ^ (this.value >>> 32));
-        hash = 47 * hash + (this.writeToIniFile ? 1 : 0);
         return hash;
     }
 
@@ -122,9 +105,6 @@ public class ValueSigned implements Value {
         }
         final ValueSigned other = (ValueSigned) obj;
         if (this.value != other.value) {
-            return false;
-        }
-        if (this.writeToIniFile != other.writeToIniFile) {
             return false;
         }
         return true;

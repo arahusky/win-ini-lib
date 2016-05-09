@@ -3,13 +3,16 @@ package cz.cuni.mff.d3s.pp.wininilib;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Provides a representation for .ini configuration file.
@@ -28,6 +31,15 @@ public class IniFile {
         sections = new ArrayList<>();
     }
 
+    /**
+     * Clears all values within all properties of all sections.
+     */
+    public void clearIniFile() {
+        for (Section section : sections) {
+            section.clearSection();
+        }
+    }
+    
     /**
      * Returns the section at the specified position.
      *
@@ -128,13 +140,10 @@ public class IniFile {
      * @return a representation of the current IniFile as a Stream with the
      * specified type.
      */
-    public Stream toStream(SavingMode type) {
-
-        // TODO: tady moc nevim co s tim... resp. jak pouzit javosky stream
-        String result = toString(type);
-        Stream stream = sections.stream();
-
-        return null;
+    public OutputStream toStream(SavingMode type) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        output.write(toString(type).getBytes());
+        return output;        
     }
 
     /**
@@ -147,7 +156,6 @@ public class IniFile {
     public void saveToFile(String fileName, SavingMode type) throws IOException {
         File file = new File(fileName);
 
-        // TODO: overridujeme stavajici file bez upozorneni?
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -155,8 +163,6 @@ public class IniFile {
         try (PrintWriter writer = new PrintWriter(fileName, Constants.CODING)) {
             writer.write(toString(type));
         }
-
-        // TODO: vyhazujeme IOException, original Java, budeme to obalovat nasi IOEx???
     }
 
     /**
@@ -191,10 +197,14 @@ public class IniFile {
      * @throws FileFormatException if the loaded ini file from the stream does
      * not have this ini file structure or is not valid.
      */
-    public void loadDataFromStream(Stream stream, LoadingMode type) throws FileFormatException {
-        //TODO netusim
-        //String[] data = (String[]) stream.toArray();
-        //IniFileParser.parseAndValidate(this, iniFile, type);
+    public void loadDataFromStream(InputStream stream, LoadingMode type) throws FileFormatException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        StringBuilder data = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            data.append(line);
+        }
+        loadDataFromString(data.toString(), type);
     }
 
     /**
@@ -227,9 +237,6 @@ public class IniFile {
                 sb.append(line);
             }
             return IniFileUtils.createIniFile(sb.toString());
-
-            // TODO: poresit EXCEPTIONY, jake se budou pouzivat ... nase, nebo 
-            // teda nechame nekdy IOEX... pokud treba nejde najit soubor nebo tak...
         }
     }
 
@@ -242,12 +249,14 @@ public class IniFile {
      * of load.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
-    public static IniFile loadIniFromStream(Stream stream) throws FileFormatException {
-        //String[] data = (String[]) stream.toArray();
-        //return IniFileUtils.createIniFile(data);
-        
-        //TODO nevim jak
-        return null;
+    public static IniFile loadIniFromStream(InputStream stream) throws FileFormatException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        StringBuilder data = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            data.append(line);
+        }
+        return IniFile.loadIniFromString(data.toString());
     }
 
     /**

@@ -99,22 +99,22 @@ public class IniFileUtilsTest {
          Section section1 = iniFile.getSection(0);
          Property section1Property1 = section1.getProperty(0);
          Assert.assertEquals(section1Property1.getNumberOfValues(),1);
-         Assert.assertEquals(section1Property1.getValue(0),new ValueString("value 1", true));
+         Assert.assertEquals(section1Property1.getValue(0),new ValueString("value 1"));
          Assert.assertEquals("volba 'Option 1' ma hodnotu 'value 1'", section1Property1.getComment());
          
          Property section1Property2 = section1.getProperty(1);
          Assert.assertEquals(section1Property2.getNumberOfValues(),2);
-         Assert.assertEquals(section1Property2.getValue(0),new ValueUnsigned("15", true));
-         Assert.assertEquals(section1Property2.getValue(1),new ValueUnsigned("16", true));
+         Assert.assertEquals(section1Property2.getValue(0),new ValueUnsigned("15"));
+         Assert.assertEquals(section1Property2.getValue(1),new ValueUnsigned("16"));
          
          Section section2 = iniFile.getSection(1);
          Property section2Property1 = section2.getProperty(0);
          Assert.assertEquals(section2Property1.getNumberOfValues(),2);
-         Assert.assertEquals(section2Property1.getValue(0),new ValueSigned("-1285", true));
-         Assert.assertEquals(section2Property1.getValue(1),new ValueSigned("134", true));
+         Assert.assertEquals(section2Property1.getValue(0),new ValueSigned("-1285"));
+         Assert.assertEquals(section2Property1.getValue(1),new ValueSigned("134"));
          
          Property section2Property2 = section2.getProperty(1);
          Assert.assertEquals(section2Property2.getNumberOfValues(),1);
-         Assert.assertEquals(section2Property2.getValue(0),new ValueSigned("0b01101001", true));
+         Assert.assertEquals(section2Property2.getValue(0),new ValueSigned("0b01101001"));
     }
 }
