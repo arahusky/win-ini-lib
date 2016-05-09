@@ -4,10 +4,16 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueEnum;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 
 /**
  *
@@ -30,17 +36,15 @@ public class IniFileUtils {
         }
 
         List<RawSection> dataOfSections = divideToSections(text);
+        List<Pair<Section, String>> pairedSections = pairSections(iniFileSections, dataOfSections, type);
 
-        for (Section section : iniFileSections) {
-            boolean failedToCombine = true;
-            for (int i = 0; i < dataOfSections.size(); i++) {
-                /*if (tryToCombineSection(section, dataOfSections.get(i), type)) {
-                    failedToCombine = false;
-                    dataOfSections.remove(i); // Each section is usable only once
-                    break;
-                }*/
-            }
-            if (failedToCombine && type == IniFile.LoadingMode.STRICT) {
+        for (Pair<Section, String> pair : pairedSections) {
+            Section iniFileSection = pair.getKey();
+            String rawSection = pair.getValue();
+
+            try {
+                combineSections(iniFileSection, rawSection, type);
+            } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
                 throw new FileFormatException("File is not applicable to the current IniFile instance.");
             }
         }
@@ -48,8 +52,8 @@ public class IniFileUtils {
         if (type == IniFile.LoadingMode.RELAXED) {
             // Remaining data from file... 
             /*for (String rawSection : dataOfSections) {
-                // TODO.
-            }*/
+             // TODO.
+             }*/
         }
     }
 
@@ -66,11 +70,11 @@ public class IniFileUtils {
         String[] data = text.split(Constants.NEW_LINE);
         List<RawSection> result = new ArrayList<>();
         boolean sectionStarted = false;
-                
+
         StringBuilder sectionBody = new StringBuilder();
         String sectionIdentifier = "";
-        
-        for (int i = 0; i < data.length; i++) {            
+
+        for (int i = 0; i < data.length; i++) {
             //ignore empty lines
             if (data[i].trim().isEmpty()) {
                 continue;
@@ -82,7 +86,7 @@ public class IniFileUtils {
 
             if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
                 // new section found
-                if (!sectionIdentifier.isEmpty()) {                    
+                if (!sectionIdentifier.isEmpty()) {
                     result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
                 }
                 sectionBody = new StringBuilder();
@@ -93,52 +97,143 @@ public class IniFileUtils {
             }
 
             if (sectionStarted) {
-                if (! sectionBody.toString().isEmpty()) {
+                if (!sectionBody.toString().isEmpty()) {
                     sectionBody.append(Constants.NEW_LINE);
                 }
-                
-                sectionBody.append(data[i].trim());       
+
+                sectionBody.append(data[i].trim());
             } else {
                 throw new FileFormatException("Invalid file format.");
             }
         }
         result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
-        
+
         // every section must have an unique identifier       
         List<String> sectionIdentifiers = new ArrayList<>();
         for (RawSection rs : result) {
             if (sectionIdentifiers.contains(rs.getIdentifier())) {
                 throw new FileFormatException("Duplicite section ID in file detected.");
             }
-            
+
             sectionIdentifiers.add(rs.getIdentifier());
         }
-        
+
+        return result;
+    }
+
+    /**
+     * TODO test me!!!
+     *
+     * TODO comment me!!!
+     *
+     *
+     * @param sections
+     * @param rawSections
+     * @return
+     * @throws FileFormatException
+     */
+    protected static List<Pair<Section, String>> pairSections(List<Section> sections, List<RawSection> rawSections, IniFile.LoadingMode type) throws FileFormatException {
+        List<String> rawSectionIdentifiers = new ArrayList<>();
+        for (RawSection rs : rawSections) {
+            String identifier = rs.getIdentifier();
+
+            //in strict mode, there may not be any previously undefined section
+            if (type == IniFile.LoadingMode.STRICT) {
+                boolean isSectionDefined = false;
+                for (Section section : sections) {
+                    if (section.getIdentifier().equals(identifier)) {
+                        isSectionDefined = true;
+                        break;
+                    }
+                }
+
+                if (!isSectionDefined) {
+                    throw new FileFormatException("Given file contains section, which does not exist in the specified format.");
+                }
+            }
+
+            rawSectionIdentifiers.add(rs.getIdentifier());
+        }
+
+        List<Pair<Section, String>> result = new ArrayList<>();
+
+        for (Section section : sections) {
+            int rawSectionPosition = rawSectionIdentifiers.indexOf(section.getIdentifier());
+
+            if (rawSectionPosition == -1) {
+                if (section.isRequired()) {
+                    throw new FileFormatException("Given file does not contain mandatory section with given ID: " + section.getIdentifier());
+                }
+
+                continue;
+            }
+
+            result.add(new Pair<>(section, rawSections.get(rawSectionPosition).body));
+        }
+
         return result;
     }
 
     /**
      * Try to fit Section with the specified string-represented section. Returns
-     * true if combination is specified property. In this case, the specified
+     * true if combination is specified properly. In this case, the specified
      * section is also filled with data from string-represented section.
      *
      * @param section Section to fit.
-     * @param rawSection A string-represented section.
+     * @param rawSection A string-represented section body (without first line
+     * containing identifier).
      * @param type loading mode type.
      * @return true if the specified section combination is right.
      */
-    private static boolean tryToCombineSection(Section section, String rawSection, IniFile.LoadingMode type) {
-        String[] parts = rawSection.split(Constants.COMMENT_DELIMITER, 2);
-        String identif = parts[0].substring(1, parts[0].length());
-        String comment = parts.length > 1 ? parts[1] : "";
+    private static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
 
-        if (!section.getIdentifier().equals(identif)) {
-            return false;
+        String[] lines = rawSection.split(Constants.NEW_LINE);
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = lines[i].trim();
         }
-        section.setComment(comment);
 
-        // TODO.
-        return false;
+        for (int i = 0; i < lines.length; i++) {
+            //the first line may contain section comment
+            if (i == 0 && lines[0].charAt(0) == ';') {
+                String comment = lines[0].substring(1);
+                section.setComment(comment);
+                continue;
+            }
+            String[] propertyParts = lines[i].split("=", 2);
+            String propertyID = propertyParts[0];
+            String propertyBody = propertyParts[1];
+
+            String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
+            String bodyNoComment = bodyParts[0];
+            String comment = propertyParts.length > 1 ? propertyParts[1] : "";
+
+            Property property = section.getProperty(propertyID);
+            Class<? extends Value> valueType = property.getValueType();
+            String[] values = bodyNoComment.split(property.getDelimiter().toString());
+
+            //TODO what is the second parameter (what should I fill in?)
+            for (String value : values) {
+                if (valueType.equals(ValueBoolean.class)) {
+                    property.addValue(new ValueBoolean(value, true));
+                } else if (valueType.equals(ValueEnum.class)) {
+                    property.addValue(new ValueEnum(value, true));
+                } else if (valueType.equals(ValueFloat.class)) {
+                    property.addValue(new ValueFloat(Double.parseDouble(value), true));
+                } else if (valueType.equals(ValueSigned.class)) {
+                    property.addValue(new ValueSigned(value, true));
+                } else if (valueType.equals(ValueString.class)) {
+                    property.addValue(new ValueString(value, true));
+                } else if (valueType.equals(ValueUnsigned.class)) {
+                    property.addValue(new ValueUnsigned(value, true));
+                } else {
+                    throw new UnsupportedOperationException("Unsupported type of value.");
+                }
+            }
+
+            property.setComment(comment);
+        }
+
+        return true;
     }
 
     /**
@@ -150,12 +245,12 @@ public class IniFileUtils {
     public static IniFile createIniFile(String data) throws FileFormatException {
         IniFile iniFile = new IniFile();
         /*try {
-            for (String section : divideToSections(data)) {
-                iniFile.addSection(parseSection(section));
-            }
-        } catch (DupliciteNameException ex) {
-            throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
-        }*/
+         for (String section : divideToSections(data)) {
+         iniFile.addSection(parseSection(section));
+         }
+         } catch (DupliciteNameException ex) {
+         throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
+         }*/
         return iniFile;
     }
 

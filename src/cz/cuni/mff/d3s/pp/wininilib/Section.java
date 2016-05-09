@@ -108,6 +108,15 @@ public class Section {
     public void addProperty(Property property) {
         properties.add(property);
     }
+    
+    /**
+     * Check, whether this section is mandatory.
+     * 
+     * @return true, if the section is required, otherwise false.
+     */
+    public boolean isRequired() {
+        return isRequired;
+    }
 
     /**
      * Returns a string representation of the current <code>Section</code>.
@@ -155,24 +164,21 @@ public class Section {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!obj.getClass().equals(Section.class)) {
+        if (obj == null) {
             return false;
         }
-        Section other = (Section) obj;
-        if (!identifier.equals(other.identifier)) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
-        if (isRequired != other.isRequired) {
+        final Section other = (Section) obj;
+        if (!Objects.equals(this.identifier, other.identifier)) {
             return false;
         }
-
-        // Compare properties one by one
-        for (Property prop1 : properties) {
-            for (Property prop2 : other.properties) {
-                if (prop1.equals(prop2)) {
-                    return false;
-                }
-            }
+        if (this.isRequired != other.isRequired) {
+            return false;
+        }
+        if (!Objects.equals(this.properties, other.properties)) {
+            return false;
         }
         return true;
     }
