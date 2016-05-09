@@ -56,4 +56,30 @@ public class ValueFloat implements Value {
     public boolean writeToIniFile() {
         return writeToIniFile;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));
+        hash = 79 * hash + (this.writeToIniFile ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ValueFloat other = (ValueFloat) obj;
+        if (Double.doubleToLongBits(this.value) != Double.doubleToLongBits(other.value)) {
+            return false;
+        }
+        if (this.writeToIniFile != other.writeToIniFile) {
+            return false;
+        }
+        return true;
+    }
 }

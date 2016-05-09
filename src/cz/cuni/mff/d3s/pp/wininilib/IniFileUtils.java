@@ -185,7 +185,7 @@ public class IniFileUtils {
      * @param type loading mode type.
      * @return true if the specified section combination is right.
      */
-    private static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
+    protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
 
         String[] lines = rawSection.split(Constants.NEW_LINE);
         for (int i = 0; i < lines.length; i++) {
@@ -205,14 +205,15 @@ public class IniFileUtils {
 
             String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
             String bodyNoComment = bodyParts[0];
-            String comment = propertyParts.length > 1 ? propertyParts[1] : "";
+            String comment = bodyParts.length > 1 ? bodyParts[1] : "";
 
-            Property property = section.getProperty(propertyID);
+            Property property = section.getProperty(propertyID.trim());
             Class<? extends Value> valueType = property.getValueType();
             String[] values = bodyNoComment.split(property.getDelimiter().toString());
 
             //TODO what is the second parameter (what should I fill in?)
             for (String value : values) {
+                value = value.trim();
                 if (valueType.equals(ValueBoolean.class)) {
                     property.addValue(new ValueBoolean(value, true));
                 } else if (valueType.equals(ValueEnum.class)) {
@@ -230,7 +231,7 @@ public class IniFileUtils {
                 }
             }
 
-            property.setComment(comment);
+            property.setComment(comment.trim());
         }
 
         return true;

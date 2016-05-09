@@ -30,11 +30,16 @@ public class SampleConfigurationsLoader {
         
         Section section1 = new Section("Sekce 1", true);
         section1.addProperty(new Property("Option 1", true, new ValueStringRestriction()));
-        section1.addProperty(new Property("oPtion", true, new ValueUnsignedRestriction()));
+        Property multivalued1 = new Property("oPtion 1", false, new ValueUnsignedRestriction());
+        multivalued1.setDelimiter(Property.ValueDelimiter.COMMA);
+        section1.addProperty(multivalued1);
+        
         iniFile.addSection(section1);
         
         Section section2 = new Section("Cisla", true);
-        section2.addProperty(new Property("cele", true, new ValueSignedRestriction()));
+        Property multivalued2 = new Property("cele", false, new ValueSignedRestriction());
+        multivalued2.setDelimiter(Property.ValueDelimiter.COLON);
+        section2.addProperty(multivalued2);
         section2.addProperty(new Property("cele_bin", true, new ValueSignedRestriction()));
         iniFile.addSection(section2);
         

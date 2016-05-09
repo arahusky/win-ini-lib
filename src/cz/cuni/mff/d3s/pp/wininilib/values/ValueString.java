@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
+import java.util.Objects;
 
 /**
  * Represents a <code>String</code> value of the property.
@@ -56,5 +57,31 @@ public class ValueString implements Value {
     @Override
     public boolean writeToIniFile() {
         return writeToIniFile;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.value);
+        hash = 13 * hash + (this.writeToIniFile ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ValueString other = (ValueString) obj;
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        if (this.writeToIniFile != other.writeToIniFile) {
+            return false;
+        }
+        return true;
     }
 }

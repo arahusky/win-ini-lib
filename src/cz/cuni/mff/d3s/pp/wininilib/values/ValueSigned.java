@@ -25,6 +25,7 @@ public class ValueSigned implements Value {
      */
     public ValueSigned(String value, boolean writeToIniFile) throws InvalidValueFormatException {
         try {
+            value = value.trim();
             int prefixLength = 0;
             int radix = getRadix(value);
             switch (radix) {
@@ -103,4 +104,29 @@ public class ValueSigned implements Value {
         return dec;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 47 * hash + (int) (this.value ^ (this.value >>> 32));
+        hash = 47 * hash + (this.writeToIniFile ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ValueSigned other = (ValueSigned) obj;
+        if (this.value != other.value) {
+            return false;
+        }
+        if (this.writeToIniFile != other.writeToIniFile) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -4,6 +4,7 @@ import cz.cuni.mff.d3s.pp.wininilib.Constants;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Represents a <code>Unsigned</code> value of the property.
@@ -39,7 +40,7 @@ public class ValueUnsigned implements Value {
                     prefixLength = Constants.HEX_PREFIX.length();
                     break;
             }
-            value = value.substring(prefixLength);
+            value = value.substring(prefixLength).trim();
             this.value = new BigInteger(value, radix);
             if (this.value.signum() == -1) {
                 throw new InvalidValueFormatException("Specified value must be non-negative.");
@@ -106,4 +107,30 @@ public class ValueUnsigned implements Value {
         }
         return dec;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.value);
+        hash = 37 * hash + (this.writeToIniFile ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ValueUnsigned other = (ValueUnsigned) obj;
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        if (this.writeToIniFile != other.writeToIniFile) {
+            return false;
+        }
+        return true;
+    }    
 }
