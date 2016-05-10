@@ -1,0 +1,13 @@
+[Sekce 1]
+Option 1 = value 1  ; volba 'Option 1' ma hodnotu 'value 1'
+oPtion 1 = 15, 16 
+
+[Cisla]
+cele = -1285:134
+cele_bin = 0b01101001
+
+[Obrazky]
+zero = simple ; simple comment
+first = dog:cat
+second = house with windows, another house
+third = ball \: cat,dog 

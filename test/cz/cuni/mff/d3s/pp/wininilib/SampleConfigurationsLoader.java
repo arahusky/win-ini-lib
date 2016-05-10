@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 public class SampleConfigurationsLoader {
     
     private static final String CONFIG_SIMPLE = "test/sample_configurations/config_simple.txt";
+    private static final String CONFIG_SIMPLE_MORE_SECTIONS = "test/sample_configurations/config_simple_more_sections.txt";
     private static final String CONFIG_MUSTER = "test/sample_configurations/config_muster.txt";
     
     private static final String CONFIG_DUPLICITE_ID_SECTION = "test/sample_configurations/config_duplicite_id_section.txt";
@@ -44,6 +45,10 @@ public class SampleConfigurationsLoader {
         iniFile.addSection(section2);
         
         return iniFile;
+    }
+    
+    public static String getConfigSimpleMoreSections() throws IOException {
+        return getFileContents(CONFIG_SIMPLE_MORE_SECTIONS);
     }
     
     public static String getConfigMuster() throws IOException {

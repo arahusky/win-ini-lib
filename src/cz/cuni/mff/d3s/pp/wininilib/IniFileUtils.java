@@ -50,12 +50,28 @@ public class IniFileUtils {
             }
         }
 
-        //in RELAXED mode, we must also process unknown sections
+        //in RELAXED mode, we must also process unknown sections (i.e. those rawsections that were not paired)
         if (type == IniFile.LoadingMode.RELAXED) {
             // Remaining data from file... 
-            /*for (String rawSection : dataOfSections) {
-             // TODO.
-             }*/
+            for (RawSection rs : dataOfSections) {
+                boolean isPaired = false;
+                for (Section section : iniFileSections) {
+                    if (section.getIdentifier().equals(rs.getIdentifier())) {
+                        isPaired = true;
+                        break;
+                    }
+                }
+
+                if (!isPaired) {
+                    try {
+                        iniFile.addSection(parseSection(rs));
+                    } catch (DuplicateNameException ex) {
+                        throw new FileFormatException("File contains multiple section with same ID.");
+                    } catch (InvalidValueFormatException ex) {
+                        throw new FileFormatException("File contains property in bad format.");
+                    }
+                }
+            }
         }
     }
 
@@ -89,7 +105,7 @@ public class IniFileUtils {
             if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
                 // new section found
                 if (!sectionIdentifier.isEmpty()) {
-                    result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
+                    result.add(new RawSection(sectionIdentifier.trim(), sectionBody.toString()));
                 }
                 sectionBody = new StringBuilder();
                 sectionIdentifier = identif.substring(1, identif.length() - 1);
@@ -108,7 +124,7 @@ public class IniFileUtils {
                 throw new FileFormatException("Invalid file format.");
             }
         }
-        result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
+        result.add(new RawSection(sectionIdentifier.trim(), sectionBody.toString()));
 
         // every section must have an unique identifier       
         List<String> sectionIdentifiers = new ArrayList<>();
@@ -303,7 +319,7 @@ public class IniFileUtils {
      */
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
-        String propertyID = propertyParts[0];
+        String propertyID = propertyParts[0].trim();
         String propertyBody = propertyParts[1];
 
         String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
@@ -323,7 +339,7 @@ public class IniFileUtils {
                 values = valuesPart.split(Property.ValueDelimiter.COLON.toString());
                 valueDelimiter = Property.ValueDelimiter.COLON;
             } else {
-                values = new String[] {valuesPart};
+                values = new String[]{valuesPart};
             }
 
             if (values.length > 1) {
@@ -333,18 +349,22 @@ public class IniFileUtils {
                 property = new Property(propertyID, true, new ValueStringRestriction());
             }
 
-            try {
-                for (String value : values) {
+            for (String value : values) {
+                value = value.trim();
+                try {
                     property.addValue(new ValueString(value));
+                } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
+                    System.out.println(valueDelimiter.toString());
+                    System.out.println(value);
+                    throw new FileFormatException("Invalid file format.", e);
                 }
-            } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
-                throw new FileFormatException("Invalid file format.", e);
             }
+
         } else {
             property = new Property(propertyID, true, new ValueStringRestriction());
         }
-        
-        property.setComment(comment);
+
+        property.setComment(comment.trim());
         return property;
     }
 
