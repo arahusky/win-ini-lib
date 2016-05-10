@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
@@ -49,6 +50,7 @@ public class IniFileUtils {
             }
         }
 
+        //in RELAXED mode, we must also process unknown sections
         if (type == IniFile.LoadingMode.RELAXED) {
             // Remaining data from file... 
             /*for (String rawSection : dataOfSections) {
@@ -137,7 +139,7 @@ public class IniFileUtils {
         for (RawSection rs : rawSections) {
             String identifier = rs.getIdentifier();
 
-            //in strict mode, there may not be any previously undefined section
+            //in STRICT mode, there may not be any undefined section
             if (type == IniFile.LoadingMode.STRICT) {
                 boolean isSectionDefined = false;
                 for (Section section : sections) {
@@ -185,7 +187,7 @@ public class IniFileUtils {
      * @param type loading mode type.
      * @return true if the specified section combination is right.
      */
-    protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
+    protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, FileFormatException {
 
         String[] lines = rawSection.split(Constants.NEW_LINE);
         for (int i = 0; i < lines.length; i++) {
@@ -208,6 +210,18 @@ public class IniFileUtils {
             String comment = bodyParts.length > 1 ? bodyParts[1] : "";
 
             Property property = section.getProperty(propertyID.trim());
+
+            if (property == null) {
+                //if we met uknown property in STRICT mode, it will lead to exception
+                if (type == IniFile.LoadingMode.STRICT) {
+                    throw new FileFormatException("Uknown property detected in STRICT mode.");
+                }
+
+                //otherwise (RELAXED mode), we create new String property
+                property = new Property(propertyID.trim(), true, new ValueStringRestriction());
+                section.addProperty(property);
+            }
+
             Class<? extends Value> valueType = property.getValueType();
             String[] values = bodyNoComment.split(property.getDelimiter().toString());
 
@@ -245,13 +259,13 @@ public class IniFileUtils {
      */
     public static IniFile createIniFile(String data) throws FileFormatException {
         IniFile iniFile = new IniFile();
-        /*try {
-         for (String section : divideToSections(data)) {
-         iniFile.addSection(parseSection(section));
-         }
-         } catch (DupliciteNameException ex) {
-         throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
-         }*/
+        try {
+            for (RawSection rs : divideToSections(data)) {
+                iniFile.addSection(parseSection(rs));
+            }
+        } catch (DuplicateNameException | InvalidValueFormatException ex) {
+            throw new FileFormatException("Invalid file format. Duplicite name detected,", ex);
+        }
         return iniFile;
     }
 
@@ -262,28 +276,20 @@ public class IniFileUtils {
      * @param section section to be parsed.
      * @return a parsed section.
      */
-    private static Section parseSection(String section) throws FileFormatException, InvalidValueFormatException {
-        Section result = null;
-        boolean required = false;
+    private static Section parseSection(RawSection section) throws InvalidValueFormatException, FileFormatException {
+        String identifier = section.getIdentifier();
+        String rawBody = section.getBody();
+        Section result = new Section(identifier, true);
 
-        String[] lines = section.split(Constants.NEW_LINE);
-        if (lines.length == 0) {
-            throw new FileFormatException("Invalid format.");
-        }
-
+        String[] lines = rawBody.split(Constants.NEW_LINE);
         for (int i = 0; i < lines.length; i++) {
-            String[] parts = lines[i].split(Constants.COMMENT_DELIMITER, 2);
-            String value = parts[0];
-            String comment = "";
-            if (parts.length > 1) {
-                comment = parts[1];
-            }
-
-            if (i == 0) {
-                result = new Section(value.substring(1, value.length()), required);
+            //the first line may contain section comment
+            if (i == 0 && lines[0].charAt(0) == ';') {
+                String comment = lines[0].substring(1);
                 result.setComment(comment);
                 continue;
             }
+
             result.addProperty(parseProperty(lines[i]));
         }
         return result;
@@ -296,59 +302,51 @@ public class IniFileUtils {
      * @param property
      * @return
      */
-    private static Property parseProperty(String property) throws FileFormatException, InvalidValueFormatException {
-        Property prop;
+    private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
+        String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
+        String propertyID = propertyParts[0];
+        String propertyBody = propertyParts[1];
 
-        String[] parts = property.split(Constants.COMMENT_DELIMITER, 2);
-        String leftSide = parts[0];
-        String comment = "";
-        if (parts.length > 1) {
-            comment = parts[1];
-        }
+        String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
+        String valuesPart = bodyParts[0];
+        String comment = bodyParts.length > 1 ? bodyParts[1] : "";
 
-        parts = leftSide.split(Constants.EQUAL_SIGN);
         Property.ValueDelimiter valueDelimiter = null;
-        switch (parts.length) {
-            // Using string-value type. 'Real' type can not be decided.
-            case 2:
-                String[] values = null;
+        Property property = null;
+        if (valuesPart.length() > 0) {
+            String[] values = null;
 
-                // If we have both 'comma' and 'colon' in line, we use comma as delimiter
-                if (parts[1].contains(Property.ValueDelimiter.COLON.toString())) {
-                    values = parts[1].split(Property.ValueDelimiter.COLON.toString());
-                    valueDelimiter = Property.ValueDelimiter.COLON;
-                }
-                if (parts[1].contains(Property.ValueDelimiter.COMMA.toString())) {
-                    values = parts[1].split(Property.ValueDelimiter.COMMA.toString());
-                    valueDelimiter = Property.ValueDelimiter.COMMA;
-                }
-
-                boolean isSingleValue = true;
-                if (values.length > 1) {
-                    isSingleValue = false;
-                }
-                prop = new Property(parts[0], isSingleValue, new ValueStringRestriction());
-                try {
-                    for (String val : values) {
-                        prop.addValue(new ValueString(val, true)); // @TODO.
-                    }
-                } catch (TooManyValuesException | ViolatedRestrictionException | InvalidValueFormatException ex) {
-                    throw new FileFormatException("Invalid file format.", ex);
-                }
-                break;
-            case 1:
-                prop = new Property(parts[0], true, new ValueStringRestriction());
+            // If we have both 'comma' and 'colon' in line, we use comma as delimiter
+            if (valuesPart.contains(Property.ValueDelimiter.COMMA.toString())) {
+                values = valuesPart.split(Property.ValueDelimiter.COMMA.toString());
                 valueDelimiter = Property.ValueDelimiter.COMMA;
-            default:
-                throw new FileFormatException("Invalid file format.");
-        }
+            } else if (valuesPart.contains(Property.ValueDelimiter.COLON.toString())) {
+                values = valuesPart.split(Property.ValueDelimiter.COLON.toString());
+                valueDelimiter = Property.ValueDelimiter.COLON;
+            } else {
+                values = new String[] {valuesPart};
+            }
 
-        if (!comment.isEmpty()) {
-            prop.setComment(comment);
-        }
-        prop.setDelimiter(valueDelimiter);
+            if (values.length > 1) {
+                property = new Property(propertyID, false, new ValueStringRestriction());
+                property.setDelimiter(valueDelimiter);
+            } else {
+                property = new Property(propertyID, true, new ValueStringRestriction());
+            }
 
-        return prop;
+            try {
+                for (String value : values) {
+                    property.addValue(new ValueString(value, true));
+                }
+            } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
+                throw new FileFormatException("Invalid file format.", e);
+            }
+        } else {
+            property = new Property(propertyID, true, new ValueStringRestriction());
+        }
+        
+        property.setComment(comment);
+        return property;
     }
 
     /**
