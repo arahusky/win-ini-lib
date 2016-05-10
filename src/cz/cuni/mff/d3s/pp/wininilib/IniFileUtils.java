@@ -351,6 +351,79 @@ public class IniFileUtils {
     }
 
     /**
+     * This method returns a copy of the string, with leading and trailing
+     * whitespace omitted. Whitespace will be saved only if it's
+     * pre-backslashed.
+     *
+     * @param toTrim string to be trimmed.
+     * @return This method returns a copy of the string, with leading and
+     * trailing whitespace omitted. Whitespace will be saved only if it's
+     * pre-backslashed.
+     */
+    protected static String trim(String toTrim) {
+        if (toTrim.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        int startIndex = -1;
+        int endIndex = -1;
+        for (int i = 0; i < toTrim.length() - 1; i++) {
+            char ch = toTrim.charAt(i);
+            char next = toTrim.charAt(i + 1);
+            if (Character.isWhitespace(ch)
+                    || (ch == Constants.ESCAPE_SYMBOL && Character.isWhitespace(next))) {
+                continue;
+            }
+            startIndex = i;
+            break;
+        }
+
+        for (int i = toTrim.length() - 1; i > 0; i--) {
+            char ch = toTrim.charAt(i);
+            if (Character.isWhitespace(ch)) {
+                continue;
+            }
+            if (i == toTrim.length() - 1) {
+                endIndex = i;
+                break;
+            }
+            char next = toTrim.charAt(i + 1);
+            if (ch != Constants.ESCAPE_SYMBOL || !Character.isWhitespace(next)) {
+                endIndex = i;
+                break;
+            }
+        }
+
+        // Append backslashed spaces at the beginning
+        result.append(getSpacesToWrite(toTrim.substring(0, startIndex)));
+        // Append body
+        result.append(toTrim.substring(startIndex, endIndex + 1));
+        // Append backslashed spaces at the end
+        result.append(getSpacesToWrite(toTrim.substring(endIndex + 1, toTrim.length())));
+
+        return result.toString();
+    }
+
+    /**
+     * Counts all escaped whitespaces and returns them in a new
+     * <code>String</code>.
+     *
+     * @param str to be analyzed.
+     * @return all escaped whitespaces in a new <code>String</code>.
+     */
+    protected static String getSpacesToWrite(String str) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < str.length() - 1; i++) {
+            if ((str.charAt(i) == Constants.ESCAPE_SYMBOL) && (Character.isWhitespace(str.charAt(i + 1)))) {
+                result.append(" ");
+            }
+        }
+        return result.toString();
+
+    }
+
+    /**
      * Immutable class, which represents each section as an identifier and a
      * (String) body.
      */

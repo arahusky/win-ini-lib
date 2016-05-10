@@ -14,8 +14,6 @@ import javax.management.openmbean.InvalidOpenTypeException;
  */
 public class ValueStringRestriction implements ValueRestriction {
 
-    private final char escapeSymbol = '\\';
-
     /**
      * Initializes a new instance of <code>ValueStringRestriction</code>.
      */
@@ -45,7 +43,7 @@ public class ValueStringRestriction implements ValueRestriction {
             }
             for (int i = 0; i < innerValue.length(); i++) {
                 if (symbol.toString().equals(innerValue.substring(i, i + 1))) {
-                    if ((i == 0) || (escapeSymbol != innerValue.charAt(i - 1))) {
+                    if ((i == 0) || (Constants.ESCAPE_SYMBOL != innerValue.charAt(i - 1))) {
                         throw new ViolatedRestrictionException("The specified string contains a forbidden symbol.");
                     }
                 }

@@ -35,4 +35,9 @@ public class Constants {
      * Prefix of a number in octal format.
      */
     public static final String OCT_PREFIX = "0";
+    /**
+     * Escape symbol in strings.
+     */
+    public static final char ESCAPE_SYMBOL = '\\';
+
 }

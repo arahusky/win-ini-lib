@@ -117,4 +117,60 @@ public class IniFileUtilsTest {
          Assert.assertEquals(section2Property2.getNumberOfValues(),1);
          Assert.assertEquals(section2Property2.getValue(0),new ValueSigned("0b01101001"));
     }
+    
+    @Test
+    public void testGetWhiteSpaces() {
+        Assert.assertEquals("    ", IniFileUtils.getSpacesToWrite(" \\  \\ \\ \\ "));
+        Assert.assertEquals("", IniFileUtils.getSpacesToWrite("     \\"));
+        Assert.assertEquals("  ", IniFileUtils.getSpacesToWrite("\\ \\ \\"));
+    }
+    
+    @Test
+    public void testTrim1() {
+        String value = "  \\ value 2\\ \\ \\        ";
+        String expected =  " value 2   ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim2() {
+        String value = "This is test string";
+        Assert.assertEquals(value, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim3() {
+        String value = " This is test";
+        String expected = "This is test";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim4() {
+        String value = "Test ";
+        String expected = "Test";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim5() {
+        String value = " Test\\";
+        String expected = "Test\\";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim6() {
+        String value = "Test\\ ";
+        String expected = "Test ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
+    @Test
+    public void testTrim7() {
+        String value = "\\ \\      Test\\ string\". \\ ";
+        String expected = "  Test\\ string\". ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+    
 }
