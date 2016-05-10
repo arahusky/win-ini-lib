@@ -24,14 +24,14 @@ public class SectionTest {
         String comment = "this is comment";
 
         Property p1 = new Property(key, true, new ValueSignedRestriction());
-        p1.addValue(new ValueSigned(value1, false));
+        p1.addValue(new ValueSigned(value1));
         p1.setComment(comment);
         String expected = key + equalSign + value1 + " " + Constants.COMMENT_DELIMITER + comment;
         Assert.assertEquals(expected, p1.toString());
 
         Property p2 = new Property(key, false, new ValueSignedRestriction());
-        p2.addValue(new ValueSigned(value1, true));
-        p2.addValue(new ValueSigned(value2, true));
+        p2.addValue(new ValueSigned(value1));
+        p2.addValue(new ValueSigned(value2));
         p2.setDelimiter(Property.ValueDelimiter.COMMA);
 
         expected = key

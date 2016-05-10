@@ -2,6 +2,7 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group>
             <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/SampleConfigurationsLoader.java</file>
             <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFile.java</file>
@@ -13,5 +14,8 @@
             <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/src/cz/cuni/mff/d3s/pp/wininilib/IniFileUtils.java</file>
             <file>file:/C:/Users/arahusky/Google%20Drive/MFF/Mgr/1.rocnik/LS/Doporucene_postupy_v_programovani/HW02/win-ini-lib/test/cz/cuni/mff/d3s/pp/wininilib/IniFileUtilsTest.java</file>
         </group>
+=======
+        <group/>
+>>>>>>> 1a26b3e795bf37e03394bbd33abbc8b694bc4785
     </open-files>
 </project-private>

@@ -14,18 +14,16 @@ import java.util.Objects;
 public class ValueUnsigned implements Value {
 
     private final BigInteger value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>ValueUnsigned</code>. Represents an
      * non-negative integer.
      *
      * @param value value to be parsed.
-     * @param writeToIniFile a flag value that determines whether this value has
-     * already been written or will be written in INI file.
-     * @throws InvalidValueFormatException if the specified value can not be parsed.
+     * @throws InvalidValueFormatException if the specified value can not be
+     * parsed.
      */
-    public ValueUnsigned(String value, boolean writeToIniFile) throws InvalidValueFormatException {
+    public ValueUnsigned(String value) throws InvalidValueFormatException {
         try {
             int prefixLength = 0;
             int radix = getRadix(value);
@@ -48,7 +46,6 @@ public class ValueUnsigned implements Value {
         } catch (NumberFormatException ex) {
             throw new InvalidValueFormatException("Specified value is not correct signed value");
         }
-        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -69,18 +66,6 @@ public class ValueUnsigned implements Value {
     @Override
     public String toString() {
         return value.toString();
-    }
-
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
     }
 
     /**
@@ -112,7 +97,6 @@ public class ValueUnsigned implements Value {
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.value);
-        hash = 37 * hash + (this.writeToIniFile ? 1 : 0);
         return hash;
     }
 
@@ -128,9 +112,6 @@ public class ValueUnsigned implements Value {
         if (!Objects.equals(this.value, other.value)) {
             return false;
         }
-        if (this.writeToIniFile != other.writeToIniFile) {
-            return false;
-        }
         return true;
-    }    
+    }
 }

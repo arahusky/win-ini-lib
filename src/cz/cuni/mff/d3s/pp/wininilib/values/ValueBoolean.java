@@ -12,23 +12,19 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
 public class ValueBoolean implements Value {
 
     private final String value;
-    private final boolean writeToIniFile;
 
     /**
      * Initializes a new instance of <code>BooleanValue</code>.
      *
      * @param value value to be parsed.
-     * @param writeToIniFile a flag value that determines whether this value has
-     * already been written or will be written in INI file.
      * @throws InvalidValueFormatException if the specified value can not be parsed.
      */
-    public ValueBoolean(String value, boolean writeToIniFile) throws InvalidValueFormatException {
+    public ValueBoolean(String value) throws InvalidValueFormatException {
         if (!ValueBooleanRestriction.getAllTrueValues().contains(value)
                 && !ValueBooleanRestriction.getAllFalseValues().contains(value)) {
             throw new InvalidValueFormatException("Invalid format of the specified value (" + value + ")");
         }
         this.value = value;
-        this.writeToIniFile = writeToIniFile;
     }
 
     /**
@@ -49,17 +45,5 @@ public class ValueBoolean implements Value {
     @Override
     public String toString() {
         return value;
-    }
-
-    /**
-     * Returns a flag value that determines whether this value has already been
-     * written or will be written in INI file. Used only in ORIGIN saving mode.
-     *
-     * @return a flag value that determines whether this value has already been
-     * written or will be written in INI file.
-     */
-    @Override
-    public boolean writeToIniFile() {
-        return writeToIniFile;
     }
 }

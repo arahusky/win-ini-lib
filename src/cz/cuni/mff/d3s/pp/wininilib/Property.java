@@ -94,6 +94,13 @@ public class Property {
     }
 
     /**
+     * Removes all values from the current property.
+     */
+    public void clearProperty() {
+        values.clear();
+    }
+
+    /**
      * Returns type of the current property value (or values).
      *
      * @return type of the current property value (or values).
@@ -294,11 +301,9 @@ public class Property {
         StringBuilder result = new StringBuilder();
         result.append(key).append(Constants.EQUAL_SIGN);
         for (int i = 0; i < values.size(); i++) {
-            if ((type == SavingMode.FULL) || (type == SavingMode.ORIGINAL && values.get(i).writeToIniFile())) {
-                result.append(values.get(i));
-                if (i < values.size() - 1) {
-                    result.append(delimiter.toString());
-                }
+            result.append(values.get(i));
+            if (i < values.size() - 1) {
+                result.append(delimiter.toString());
             }
         }
         if (type == SavingMode.FULL) {
