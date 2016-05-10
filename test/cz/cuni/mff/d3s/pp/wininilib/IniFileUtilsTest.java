@@ -124,6 +124,14 @@ public class IniFileUtilsTest {
         
         testRelaxedSimpleMoreSectionsAgainstSimple(iniFile);
     }
+    
+    @Test
+    public void testStaticSimpleConfiguration() throws IOException, WinIniLibException{
+        String config1 = SampleConfigurationsLoader.getConfigSimple();
+        IniFile iniFile = IniFileUtils.createIniFile(config1);
+        
+        testStaticSimpleConfiguration(iniFile);
+    }
 
     private void testSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
         Section section1 = iniFile.getSection(0);
@@ -178,5 +186,28 @@ public class IniFileUtilsTest {
         //TODO delete escape characters
         Assert.assertEquals(new ValueString("ball \\: cat"), section3Property4.getValue(0));
         Assert.assertEquals(new ValueString("dog"), section3Property4.getValue(1));
+    }
+    
+    private void testStaticSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
+        Section section1 = iniFile.getSection(0);
+        Property section1Property1 = section1.getProperty(0);
+        Assert.assertEquals(1, section1Property1.getNumberOfValues());
+        Assert.assertEquals(new ValueString("value 1"), section1Property1.getValue(0));
+        Assert.assertEquals("volba 'Option 1' ma hodnotu 'value 1'", section1Property1.getComment());
+
+        Property section1Property2 = section1.getProperty(1);
+        Assert.assertEquals(2, section1Property2.getNumberOfValues());
+        Assert.assertEquals(new ValueString("15"), section1Property2.getValue(0));
+        Assert.assertEquals(new ValueString("16"), section1Property2.getValue(1));
+
+        Section section2 = iniFile.getSection(1);
+        Property section2Property1 = section2.getProperty(0);
+        Assert.assertEquals(2, section2Property1.getNumberOfValues());
+        Assert.assertEquals(new ValueString("-1285"), section2Property1.getValue(0));
+        Assert.assertEquals(new ValueString("134"), section2Property1.getValue(1));
+
+        Property section2Property2 = section2.getProperty(1);
+        Assert.assertEquals(1, section2Property2.getNumberOfValues());
+        Assert.assertEquals(new ValueString("0b01101001"), section2Property2.getValue(0));
     }
 }

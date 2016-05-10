@@ -31,6 +31,9 @@ public class IniFileUtils {
      * @param type data load mode.
      */
     public static void parseAndValidate(IniFile iniFile, String text, IniFile.LoadingMode type) throws FileFormatException {
+        //clear all previously loaded data
+        iniFile.clearIniFile();
+        
         List<Section> iniFileSections = new ArrayList<>();
         for (int i = 0; i < iniFile.getNumberOfSections(); i++) {
             iniFileSections.add(iniFile.getSection(i));
