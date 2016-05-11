@@ -74,7 +74,7 @@
 	</target>	
 	
 	<target name="create-jar" depends="compile" description="Creates JAR file for the library.">
-		<jar destfile="${win-ini.jar}" basedir="${build.dir}">
+		<jar destfile="${win-ini.jar}" basedir="${lib.build.dir}">
         </jar>
 	</target>
 
