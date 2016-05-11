@@ -11,20 +11,25 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueBooleanRestriction;
  */
 public class ValueBoolean implements Value {
 
-    private final String value;
+    private final String valueDescriptor;
+    private final boolean value;
 
     /**
      * Initializes a new instance of <code>BooleanValue</code>.
      *
      * @param value value to be parsed.
-     * @throws InvalidValueFormatException if the specified value can not be parsed.
+     * @throws InvalidValueFormatException if the specified value can not be
+     * parsed.
      */
     public ValueBoolean(String value) throws InvalidValueFormatException {
-        if (!ValueBooleanRestriction.getAllTrueValues().contains(value)
-                && !ValueBooleanRestriction.getAllFalseValues().contains(value)) {
+        if (ValueBooleanRestriction.getAllTrueValues().contains(value)) {
+            this.value = true;
+        } else if (ValueBooleanRestriction.getAllFalseValues().contains(value)) {
+            this.value = false;
+        } else {
             throw new InvalidValueFormatException("Invalid format of the specified value (" + value + ")");
         }
-        this.value = value;
+        this.valueDescriptor = value;
     }
 
     /**
@@ -44,6 +49,6 @@ public class ValueBoolean implements Value {
      */
     @Override
     public String toString() {
-        return value;
+        return valueDescriptor;
     }
 }

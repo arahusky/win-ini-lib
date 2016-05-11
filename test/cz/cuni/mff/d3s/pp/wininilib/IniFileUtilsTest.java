@@ -183,7 +183,7 @@ public class IniFileUtilsTest {
         Property section3Property4 = section3.getProperty(3);
         Assert.assertEquals("third", section3Property4.getKey());
         Assert.assertEquals(2, section3Property4.getNumberOfValues());
-        //TODO delete escape characters
+        
         Assert.assertEquals(new ValueString("ball \\: cat"), section3Property4.getValue(0));
         Assert.assertEquals(new ValueString("dog"), section3Property4.getValue(1));
     }

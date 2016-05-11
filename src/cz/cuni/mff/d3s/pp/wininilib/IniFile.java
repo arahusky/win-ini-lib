@@ -39,7 +39,7 @@ public class IniFile {
             section.clearSection();
         }
     }
-    
+
     /**
      * Returns the section at the specified position.
      *
@@ -143,7 +143,7 @@ public class IniFile {
     public OutputStream toStream(SavingMode type) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         output.write(toString(type).getBytes());
-        return output;        
+        return output;
     }
 
     /**
@@ -222,8 +222,8 @@ public class IniFile {
     }
 
     /**
-     * Loads the ini file from the specified file with the specified type of
-     * load. Always loaded in RELAXED mode.
+     * Loads the ini file from the specified file. Always loaded in RELAXED
+     * mode.
      *
      * @param fileName name of the file to load from.
      * @return Loaded ini file from the file with the specified type of load.
@@ -241,8 +241,8 @@ public class IniFile {
     }
 
     /**
-     * Loads the ini file from the specified stream with the specified type of
-     * load. Always loaded in RELAXED mode.
+     * Loads the ini file from the specified stream. Always loaded in RELAXED
+     * mode.
      *
      * @param stream stream from which the IniFile will be loaded.
      * @return Loaded ini file from the specified stream with the specified type

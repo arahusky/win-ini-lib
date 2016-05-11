@@ -6,6 +6,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueEnum;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueReference;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
@@ -218,11 +219,16 @@ public class Property {
      * property has been violated.
      */
     public void addValue(IniFile iniFile, String identifier, String nameOfProperty) throws TooManyValuesException, ViolatedRestrictionException {
-        List<Value> referencedValues = iniFile.getSection(identifier).getProperty(nameOfProperty).values;
-        for (Value v : referencedValues) {
-            // Restriction is checked in differend addValue method.
-            addValue(v);
+        Property referenced = iniFile.getSection(identifier).getProperty(nameOfProperty);
+        if (!referenced.isSingleValue && this.isSingleValue) {
+            throw new TooManyValuesException("Referencing to multi-value property from single-value property.");
         }
+
+        // check restriction if referenced value can be in the current property
+        for (Value value : referenced.values) {
+            valueRestriction.checkRestriction(value);
+        }
+        values.add(new ValueReference(iniFile, identifier, nameOfProperty, valueRestriction));
     }
 
     /**
@@ -311,7 +317,7 @@ public class Property {
         StringBuilder result = new StringBuilder();
         result.append(key).append(Constants.EQUAL_SIGN);
         for (int i = 0; i < values.size(); i++) {
-            result.append(values.get(i));
+            result.append(values.get(i).toString());
             if (i < values.size() - 1) {
                 result.append(delimiter.toString());
             }
@@ -391,6 +397,7 @@ public class Property {
         hash = 73 * hash + Objects.hashCode(this.valueType);
         hash = 73 * hash + Objects.hashCode(this.values);
         return hash;
+
     }
 
     /**

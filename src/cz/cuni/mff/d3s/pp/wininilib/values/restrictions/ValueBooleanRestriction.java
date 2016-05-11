@@ -37,7 +37,7 @@ public class ValueBooleanRestriction implements ValueRestriction {
         if (!(value instanceof ValueBoolean)) {
             throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
         }
-        String innerValue = value.get().toString();
+        String innerValue = value.toString();
         if (!FALSE_VALUES.contains(innerValue) && !TRUE_VALUES.contains(innerValue)) {
             throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
         }

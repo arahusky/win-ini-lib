@@ -32,7 +32,8 @@ public class ValueAndRestrictionTest {
     public void testBoolean1() throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException {
         String value = "1";
         ValueBoolean vb = new ValueBoolean(value);
-        Assert.assertEquals(value, vb.get().toString());
+        Assert.assertEquals(value, vb.toString());
+        Assert.assertTrue((boolean)vb.get());
         ValueBooleanRestriction vbr = new ValueBooleanRestriction();
         vbr.checkRestriction(vb);
     }
