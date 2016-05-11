@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Constants;
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 
@@ -22,7 +23,7 @@ public class ValueSigned implements Value {
      */
     public ValueSigned(String value) throws InvalidValueFormatException {
         try {
-            value = value.trim();
+            value = IniFileUtils.trim(value);
             int prefixLength = 0;
             int radix = getRadix(value);
             switch (radix) {

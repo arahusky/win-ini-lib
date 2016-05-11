@@ -19,6 +19,7 @@ public class SampleConfigurationsLoader {
     private static final String CONFIG_SIMPLE_MORE_SECTIONS = "test/sample_configurations/config_simple_more_sections.txt";
     private static final String CONFIG_MUSTER = "test/sample_configurations/config_muster.txt";
     
+    private static final String CONFIG_MALFORMED = "test/sample_configurations/config_malformed.txt";
     private static final String CONFIG_DUPLICITE_ID_SECTION = "test/sample_configurations/config_duplicite_id_section.txt";
     private static final String CONFIG_DUPLICITE_ID_PROPERTY = "test/sample_configurations/config_duplicite_id_property.txt";
     
@@ -53,6 +54,10 @@ public class SampleConfigurationsLoader {
     
     public static String getConfigMuster() throws IOException {
         return getFileContents(CONFIG_MUSTER);
+    }
+    
+    public static String getConfigMalformed() throws IOException {
+        return getFileContents(CONFIG_MALFORMED);
     }
     
     public static String getConfigDupliciteIDSection() throws IOException {

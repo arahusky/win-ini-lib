@@ -133,7 +133,7 @@ public class IniFileUtilsTest {
         testStaticSimpleConfiguration(iniFile);
     }
 
-    private void testSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
+    protected static void testSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
         Section section1 = iniFile.getSection(0);
         Property section1Property1 = section1.getProperty(0);
         Assert.assertEquals(1, section1Property1.getNumberOfValues());
@@ -156,7 +156,7 @@ public class IniFileUtilsTest {
         Assert.assertEquals(new ValueSigned("0b01101001"), section2Property2.getValue(0));
     }
     
-    private void testRelaxedSimpleMoreSectionsAgainstSimple(IniFile iniFile) throws InvalidValueFormatException {
+    protected static void testRelaxedSimpleMoreSectionsAgainstSimple(IniFile iniFile) throws InvalidValueFormatException {
         testSimpleConfiguration(iniFile);
         
         Section section3 = iniFile.getSection(2);
@@ -188,7 +188,7 @@ public class IniFileUtilsTest {
         Assert.assertEquals(new ValueString("dog"), section3Property4.getValue(1));
     }
     
-    private void testStaticSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
+    protected static void testStaticSimpleConfiguration(IniFile iniFile) throws InvalidValueFormatException {
         Section section1 = iniFile.getSection(0);
         Property section1Property1 = section1.getProperty(0);
         Assert.assertEquals(1, section1Property1.getNumberOfValues());

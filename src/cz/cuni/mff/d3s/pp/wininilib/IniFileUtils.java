@@ -33,7 +33,7 @@ public class IniFileUtils {
     public static void parseAndValidate(IniFile iniFile, String text, IniFile.LoadingMode type) throws FileFormatException {
         //clear all previously loaded data
         iniFile.clearIniFile();
-        
+
         List<Section> iniFileSections = new ArrayList<>();
         for (int i = 0; i < iniFile.getNumberOfSections(); i++) {
             iniFileSections.add(iniFile.getSection(i));
@@ -79,8 +79,8 @@ public class IniFileUtils {
     }
 
     /**
-     * Splits given text into sections. Each section is represented by String
-     * instance.
+     * Splits given text into sections. Each section is represented as an
+     * identifier and properties part.
      *
      * @param text
      * @return
@@ -101,17 +101,17 @@ public class IniFileUtils {
                 continue;
             }
 
-            //each line may contain one or more comment signs
+            //each line may contain one or more comment symbols
             String[] parts = data[i].split(Constants.COMMENT_DELIMITER, 2);
-            String identif = parts[0].trim();
+            String identif = IniFileUtils.trim(parts[0]);
 
             if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
                 // new section found
                 if (!sectionIdentifier.isEmpty()) {
-                    result.add(new RawSection(sectionIdentifier.trim(), sectionBody.toString()));
+                    result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
                 }
                 sectionBody = new StringBuilder();
-                sectionIdentifier = identif.substring(1, identif.length() - 1);
+                sectionIdentifier = IniFileUtils.trim(identif.substring(1, identif.length() - 1));
 
                 sectionStarted = true;
                 continue;
@@ -122,12 +122,12 @@ public class IniFileUtils {
                     sectionBody.append(Constants.NEW_LINE);
                 }
 
-                sectionBody.append(data[i].trim());
+                sectionBody.append(IniFileUtils.trim(data[i]));
             } else {
                 throw new FileFormatException("Invalid file format.");
             }
         }
-        result.add(new RawSection(sectionIdentifier.trim(), sectionBody.toString()));
+        result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
 
         // every section must have an unique identifier       
         List<String> sectionIdentifiers = new ArrayList<>();
@@ -143,15 +143,18 @@ public class IniFileUtils {
     }
 
     /**
-     * TODO test me!!!
-     *
-     * TODO comment me!!!
+     * Pairs sections with rawSections. This means that for each section in
+     * sections, we try to find corresponding (with same section identifier)
+     * rawSection and return all such pairs.
      *
      *
      * @param sections
      * @param rawSections
+     * @param type
      * @return
-     * @throws FileFormatException
+     * @throws FileFormatException when the rawSections do not contain some
+     * mandatory section from sections or if in STRICT mode and there is a
+     * rawSection with ID that cannot be found in sections.
      */
     protected static List<Pair<Section, String>> pairSections(List<Section> sections, List<RawSection> rawSections, IniFile.LoadingMode type) throws FileFormatException {
         List<String> rawSectionIdentifiers = new ArrayList<>();
@@ -205,12 +208,18 @@ public class IniFileUtils {
      * containing identifier).
      * @param type loading mode type.
      * @return true if the specified section combination is right.
+     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException
+     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException
+     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException
+     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException
      */
     protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, FileFormatException {
+        //used to check, whether rawSection contains multiple properties with same ID -> error
+        List<String> usedPropertyIDs = new ArrayList<>();
 
         String[] lines = rawSection.split(Constants.NEW_LINE);
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = lines[i].trim();
+            lines[i] = IniFileUtils.trim(lines[i]);
         }
 
         for (int i = 0; i < lines.length; i++) {
@@ -221,14 +230,20 @@ public class IniFileUtils {
                 continue;
             }
             String[] propertyParts = lines[i].split("=", 2);
-            String propertyID = propertyParts[0];
+            String propertyID = IniFileUtils.trim(propertyParts[0]);
+            if (usedPropertyIDs.contains(propertyID)) {
+                throw new FileFormatException("Duplicite property identifier in one section.");
+            }
+            usedPropertyIDs.add(propertyID);
+
             String propertyBody = propertyParts[1];
 
             String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
             String bodyNoComment = bodyParts[0];
             String comment = bodyParts.length > 1 ? bodyParts[1] : "";
+            comment = IniFileUtils.trim(comment);
 
-            Property property = section.getProperty(propertyID.trim());
+            Property property = section.getProperty(propertyID);
 
             if (property == null) {
                 //if we met uknown property in STRICT mode, it will lead to exception
@@ -237,7 +252,7 @@ public class IniFileUtils {
                 }
 
                 //otherwise (RELAXED mode), we create new String property
-                property = new Property(propertyID.trim(), true, new ValueStringRestriction());
+                property = new Property(propertyID, true, new ValueStringRestriction());
                 section.addProperty(property);
             }
 
@@ -245,7 +260,7 @@ public class IniFileUtils {
             String[] values = bodyNoComment.split(property.getDelimiter().toString());
 
             for (String value : values) {
-                value = value.trim();
+                value = IniFileUtils.trim(value);
                 if (valueType.equals(ValueBoolean.class)) {
                     property.addValue(new ValueBoolean(value));
                 } else if (valueType.equals(ValueEnum.class)) {
@@ -263,7 +278,7 @@ public class IniFileUtils {
                 }
             }
 
-            property.setComment(comment.trim());
+            property.setComment(comment);
         }
 
         return true;
@@ -274,6 +289,7 @@ public class IniFileUtils {
      *
      * @param data data of the ini file.
      * @return an INI file using the specified data.
+     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException
      */
     public static IniFile createIniFile(String data) throws FileFormatException {
         IniFile iniFile = new IniFile();
@@ -299,6 +315,9 @@ public class IniFileUtils {
         String rawBody = section.getBody();
         Section result = new Section(identifier, true);
 
+        //used to check, whether section contains multiple properties with same ID -> error
+        List<String> usedPropertyIDs = new ArrayList<>();
+
         String[] lines = rawBody.split(Constants.NEW_LINE);
         for (int i = 0; i < lines.length; i++) {
             //the first line may contain section comment
@@ -308,7 +327,13 @@ public class IniFileUtils {
                 continue;
             }
 
-            result.addProperty(parseProperty(lines[i]));
+            Property prop = parseProperty(lines[i]);
+            if (usedPropertyIDs.contains(prop.getKey())) {
+                throw new FileFormatException("Duplicite property identifier in one section.");
+            }
+            usedPropertyIDs.add(prop.getKey());
+
+            result.addProperty(prop);
         }
         return result;
     }
@@ -322,12 +347,13 @@ public class IniFileUtils {
      */
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
-        String propertyID = propertyParts[0].trim();
+        String propertyID = IniFileUtils.trim(propertyParts[0]);
         String propertyBody = propertyParts[1];
 
         String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
         String valuesPart = bodyParts[0];
         String comment = bodyParts.length > 1 ? bodyParts[1] : "";
+        comment = IniFileUtils.trim(comment);
 
         Property.ValueDelimiter valueDelimiter = null;
         Property property = null;
@@ -353,7 +379,7 @@ public class IniFileUtils {
             }
 
             for (String value : values) {
-                value = value.trim();
+                value = IniFileUtils.trim(value);
                 try {
                     property.addValue(new ValueString(value));
                 } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
@@ -367,7 +393,7 @@ public class IniFileUtils {
             property = new Property(propertyID, true, new ValueStringRestriction());
         }
 
-        property.setComment(comment.trim());
+        property.setComment(comment);
         return property;
     }
 
@@ -381,7 +407,7 @@ public class IniFileUtils {
      * trailing whitespace omitted. Whitespace will be saved only if it's
      * pre-backslashed.
      */
-    protected static String trim(String toTrim) {
+    public static String trim(String toTrim) {
         if (toTrim.isEmpty()) {
             return "";
         }

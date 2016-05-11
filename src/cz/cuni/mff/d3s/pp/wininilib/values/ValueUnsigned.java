@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values;
 
 import cz.cuni.mff.d3s.pp.wininilib.Constants;
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import java.math.BigInteger;
@@ -38,7 +39,7 @@ public class ValueUnsigned implements Value {
                     prefixLength = Constants.HEX_PREFIX.length();
                     break;
             }
-            value = value.substring(prefixLength).trim();
+            value = IniFileUtils.trim(value.substring(prefixLength));
             this.value = new BigInteger(value, radix);
             if (this.value.signum() == -1) {
                 throw new InvalidValueFormatException("Specified value must be non-negative.");
