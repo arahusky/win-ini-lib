@@ -14,14 +14,22 @@ import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.util.Pair;
 
 /**
+ * This class provides static methods (mainly) for file parsing, validating and
+ * combining with IniFile.
  *
  * @author xxx
  */
 public class IniFileUtils {
 
+    //regex for matching identifier
+    private static final String identifierRegex = "[a-zA-Z\\.,\\$\\:][a-zA-Z0-9_~\\-\\.\\:\\$ ]*";
+    private static final Pattern identifierPattern = Pattern.compile(identifierRegex);
+    
     /**
      * Validates and fills the current instance of IniFile with the specified
      * data.
@@ -47,7 +55,7 @@ public class IniFileUtils {
             String rawSection = pair.getValue();
 
             try {
-                combineSections(iniFileSection, rawSection, type);
+                combineSections(iniFile, iniFileSection, rawSection, type);
             } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
                 throw new FileFormatException("File is not applicable to the current IniFile instance.");
             }
@@ -203,6 +211,7 @@ public class IniFileUtils {
      * true if combination is specified properly. In this case, the specified
      * section is also filled with data from string-represented section.
      *
+     * @param iniFile
      * @param section Section to fit.
      * @param rawSection A string-represented section body (without first line
      * containing identifier).
@@ -215,7 +224,7 @@ public class IniFileUtils {
      * cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException
      * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException
      */
-    protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, FileFormatException {
+    protected static boolean combineSections(IniFile iniFile, Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, FileFormatException {
         //used to check, whether rawSection contains multiple properties with same ID -> error
         List<String> usedPropertyIDs = new ArrayList<>();
 
@@ -233,6 +242,9 @@ public class IniFileUtils {
             }
             String[] propertyParts = lines[i].split("=", 2);
             String propertyID = IniFileUtils.trim(propertyParts[0]);
+            if (!checkIdentifierValidity(propertyID)) {
+                throw new FileFormatException("Malformed property identifier.");
+            }
             if (usedPropertyIDs.contains(propertyID)) {
                 throw new FileFormatException("Duplicite property identifier in one section.");
             }
@@ -269,7 +281,11 @@ public class IniFileUtils {
 
             for (String value : values) {
                 value = IniFileUtils.trim(value);
-                if (valueType.equals(ValueBoolean.class)) {
+                if (isReference(value)) {
+                    String referenceBody = value.substring(2, value.length() - 1);
+                    String[] parts = referenceBody.split("#");
+                    property.addValue(iniFile, parts[0], parts[1]);
+                } else if (valueType.equals(ValueBoolean.class)) {
                     property.addValue(new ValueBoolean(value));
                 } else if (valueType.equals(ValueEnum.class)) {
                     property.addValue(new ValueEnum(value));
@@ -291,7 +307,7 @@ public class IniFileUtils {
 
         return true;
     }
-
+    
     /**
      * Creates an INI file using the specified data.
      *
@@ -320,6 +336,11 @@ public class IniFileUtils {
      */
     private static Section parseSection(RawSection section) throws InvalidValueFormatException, FileFormatException {
         String identifier = section.getIdentifier();
+        
+        if (!checkIdentifierValidity(identifier)) {
+            throw new FileFormatException("File contains malformed section identifier");
+        }
+        
         String rawBody = section.getBody();
         Section result = new Section(identifier, true);
 
@@ -355,7 +376,11 @@ public class IniFileUtils {
      */
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
-        String propertyID = IniFileUtils.trim(propertyParts[0]);
+        String propertyID = IniFileUtils.trim(propertyParts[0]);        
+        if (!checkIdentifierValidity(propertyID)) {
+            throw new FileFormatException("File contains malformed property ID");
+        }
+        
         String propertyBody = propertyParts[1];
 
         String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
@@ -475,6 +500,14 @@ public class IniFileUtils {
         return result.toString();
     }
 
+    /**
+     * Splits given string according to given delimiter that cannot be preceded
+     * by an 'unbacklashed backslash'.
+     *
+     * @param str string to be split
+     * @param delimiter
+     * @return array containing splitted parts
+     */
     protected static String[] split(String str, char delimiter) {
         List<String> result = new ArrayList<>();
         StringBuilder currentString = new StringBuilder();
@@ -504,6 +537,41 @@ public class IniFileUtils {
         result.add(currentString.toString());
 
         return result.toArray(new String[result.size()]);
+    }
+
+    protected static boolean checkIdentifierValidity(String identifier) {
+        Matcher identifierMatcher = identifierPattern.matcher(identifier);
+        
+        return identifierMatcher.matches();
+    }
+    
+    /**
+     * Checks whether given string represents a reference to some other field.
+     *
+     * @param str
+     * @return true, if str is a reference to other property; otherwise false.
+     */
+    protected static boolean isReference(String str) {
+        if (str == null || str.length() < 3) {
+            return false;
+        }
+
+        if (!str.startsWith("${") || !str.endsWith("}")) {
+            return false;
+        }
+        
+        String body = str.substring(2, str.length() - 1);
+        String[] parts = body.split("#");
+        
+        if (parts.length != 2) {
+            return false;
+        }
+                
+        if (!checkIdentifierValidity(parts[0]) || !checkIdentifierValidity(parts[1])) {
+            return false;
+        }
+        
+        return true;        
     }
 
     /**
