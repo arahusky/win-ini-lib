@@ -266,4 +266,21 @@ public class IniFileUtilsTest {
         Assert.assertEquals(expected, IniFileUtils.trim(value));
     }
     
+    @Test
+    public void testSplitNoSplit() {
+        String str = "aaa";
+        Assert.assertArrayEquals(new String[] {str},IniFileUtils.split(str, ','));
+    }
+    
+    @Test
+    public void testSplitCommaSimple() {
+        String str = "aa a , b ,c";
+        Assert.assertArrayEquals(new String[] {"aa a ", " b ", "c"}, IniFileUtils.split(str, ','));
+    }
+    
+    @Test
+    public void testSplitCommaWithBackslashes() {
+        String str = "aa a \\, b ,c,d\\,e";
+        Assert.assertArrayEquals(new String[] {"aa a \\, b ", "c", "d\\,e"}, IniFileUtils.split(str, ','));
+    }
 }

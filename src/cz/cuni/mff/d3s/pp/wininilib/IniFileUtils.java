@@ -209,8 +209,10 @@ public class IniFileUtils {
      * @param type loading mode type.
      * @return true if the specified section combination is right.
      * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException
-     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException
-     * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException
+     * @throws
+     * cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException
+     * @throws
+     * cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException
      * @throws cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException
      */
     protected static boolean combineSections(Section section, String rawSection, IniFile.LoadingMode type) throws TooManyValuesException, ViolatedRestrictionException, InvalidValueFormatException, FileFormatException {
@@ -257,7 +259,13 @@ public class IniFileUtils {
             }
 
             Class<? extends Value> valueType = property.getValueType();
-            String[] values = bodyNoComment.split(property.getDelimiter().toString());
+
+            String[] values = null;
+            if (property.isSingleValue()) {
+                values = new String[]{bodyNoComment};
+            } else {
+                values = split(bodyNoComment, property.getDelimiter().toString().charAt(0));
+            }
 
             for (String value : values) {
                 value = IniFileUtils.trim(value);
@@ -361,11 +369,11 @@ public class IniFileUtils {
             String[] values = null;
 
             // If we have both 'comma' and 'colon' in line, we use comma as delimiter
-            if (valuesPart.contains(Property.ValueDelimiter.COMMA.toString())) {
-                values = valuesPart.split(Property.ValueDelimiter.COMMA.toString());
+            if (valuesPart.matches(".*[^\\\\]" + Property.ValueDelimiter.COMMA.toString() + ".*")) {
+                values = split(valuesPart, Property.ValueDelimiter.COMMA.toString().charAt(0));
                 valueDelimiter = Property.ValueDelimiter.COMMA;
-            } else if (valuesPart.contains(Property.ValueDelimiter.COLON.toString())) {
-                values = valuesPart.split(Property.ValueDelimiter.COLON.toString());
+            } else if (valuesPart.matches(".*[^\\\\]" + Property.ValueDelimiter.COLON.toString() + ".*")) {
+                values = split(valuesPart, Property.ValueDelimiter.COLON.toString().charAt(0));
                 valueDelimiter = Property.ValueDelimiter.COLON;
             } else {
                 values = new String[]{valuesPart};
@@ -383,8 +391,6 @@ public class IniFileUtils {
                 try {
                     property.addValue(new ValueString(value));
                 } catch (InvalidValueFormatException | TooManyValuesException | ViolatedRestrictionException e) {
-                    System.out.println(valueDelimiter.toString());
-                    System.out.println(value);
                     throw new FileFormatException("Invalid file format.", e);
                 }
             }
@@ -467,7 +473,37 @@ public class IniFileUtils {
             }
         }
         return result.toString();
+    }
 
+    protected static String[] split(String str, char delimiter) {
+        List<String> result = new ArrayList<>();
+        StringBuilder currentString = new StringBuilder();
+
+        boolean lastSymbolBackslash = false;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '\\') {
+                if (lastSymbolBackslash) {
+                    // backslash is backlashed -> normal symbol backlash
+                    currentString.append('\\');
+                    lastSymbolBackslash = false;
+                } else {
+                    lastSymbolBackslash = true;
+                }
+            } else if (str.charAt(i) == delimiter && !lastSymbolBackslash) {
+                result.add(currentString.toString());
+                currentString = new StringBuilder();
+            } else {
+                if (lastSymbolBackslash) {
+                    currentString.append("\\"); //backslash must be written back
+                }
+                currentString.append(str.charAt(i));
+                lastSymbolBackslash = false;
+            }
+        }
+
+        result.add(currentString.toString());
+
+        return result.toArray(new String[result.size()]);
     }
 
     /**

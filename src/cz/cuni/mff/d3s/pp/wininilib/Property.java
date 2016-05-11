@@ -271,6 +271,16 @@ public class Property {
     }
 
     /**
+     * Returns whether this property may contain only one value.
+     *
+     * @return true, if this property may contain only one value; otherwise
+     * false
+     */
+    public boolean isSingleValue() {
+        return isSingleValue;
+    }
+
+    /**
      * Sets new comment of the current property.
      *
      * @param comment new comment of the current property.
@@ -387,6 +397,7 @@ public class Property {
      * Value delimiter that is used for multi-valued properties.
      */
     public enum ValueDelimiter {
+
         COMMA,
         COLON;
 
