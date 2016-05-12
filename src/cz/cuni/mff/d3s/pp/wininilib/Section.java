@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.SavingMode;
+import static cz.cuni.mff.d3s.pp.wininilib.IniFileUtils.checkIdentifierValidity;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +25,12 @@ public class Section {
      * @param identifier identifier of the section.
      * @param required determines whether the section is required.
      */
-    public Section(String identifier, boolean required) {
+    public Section(String identifier, boolean required) throws InvalidValueFormatException {
         this.identifier = identifier;
+        if (!checkIdentifierValidity(identifier)) {
+            throw new InvalidValueFormatException("Malformed section identifier.");
+        }
+        
         this.isRequired = required;
         properties = new ArrayList<>();
     }

@@ -242,9 +242,6 @@ public class IniFileUtils {
             }
             String[] propertyParts = lines[i].split("=", 2);
             String propertyID = IniFileUtils.trim(propertyParts[0]);
-            if (!checkIdentifierValidity(propertyID)) {
-                throw new FileFormatException("Malformed property identifier.");
-            }
             if (usedPropertyIDs.contains(propertyID)) {
                 throw new FileFormatException("Duplicite property identifier in one section.");
             }
@@ -336,11 +333,7 @@ public class IniFileUtils {
      */
     private static Section parseSection(RawSection section) throws InvalidValueFormatException, FileFormatException {
         String identifier = section.getIdentifier();
-        
-        if (!checkIdentifierValidity(identifier)) {
-            throw new FileFormatException("File contains malformed section identifier");
-        }
-        
+                
         String rawBody = section.getBody();
         Section result = new Section(identifier, true);
 
@@ -377,10 +370,7 @@ public class IniFileUtils {
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
         String propertyID = IniFileUtils.trim(propertyParts[0]);        
-        if (!checkIdentifierValidity(propertyID)) {
-            throw new FileFormatException("File contains malformed property ID");
-        }
-        
+                
         String propertyBody = propertyParts[1];
 
         String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
@@ -539,7 +529,7 @@ public class IniFileUtils {
         return result.toArray(new String[result.size()]);
     }
 
-    protected static boolean checkIdentifierValidity(String identifier) {
+    public static boolean checkIdentifierValidity(String identifier) {
         Matcher identifierMatcher = identifierPattern.matcher(identifier);
         
         return identifierMatcher.matches();

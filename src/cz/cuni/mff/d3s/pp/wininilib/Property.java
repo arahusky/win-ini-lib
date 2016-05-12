@@ -1,6 +1,9 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.IniFile.SavingMode;
+import static cz.cuni.mff.d3s.pp.wininilib.IniFileUtils.checkIdentifierValidity;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
@@ -46,9 +49,16 @@ public class Property {
      * single-valued; otherwise is multi-valued.
      * @param valueRestriction provides a value restriction for the property.
      * Could be empty, but not null.
+     * @throws
+     * cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException when
+     * the provided key does not meet regex requirement
      */
-    public Property(String key, boolean isSingleValue, ValueRestriction valueRestriction) {
+    public Property(String key, boolean isSingleValue, ValueRestriction valueRestriction) throws InvalidValueFormatException {
         this.key = key;
+        if (!checkIdentifierValidity(key)) {
+            throw new InvalidValueFormatException("Malformed property identifier.");
+        }
+
         this.isSingleValue = isSingleValue;
         this.valueRestriction = valueRestriction;
         values = new ArrayList<>();
@@ -68,7 +78,7 @@ public class Property {
      * @param valueRestriction provides a value restriction for the property.
      * Could be empty, but not null.
      */
-    public Property(String key, boolean isSingleValue, Value implicitValue, ValueRestriction valueRestriction) {
+    public Property(String key, boolean isSingleValue, Value implicitValue, ValueRestriction valueRestriction) throws InvalidValueFormatException {
         this(key, isSingleValue, valueRestriction);
         this.implicitValue = implicitValue;
     }
