@@ -223,6 +223,15 @@ public class ValueAndRestrictionTest {
         ValueStringRestriction restr = new ValueStringRestriction();
         restr.checkRestriction(vstr);
     }
+    
+    @Test
+    public void testString5() throws InvalidValueFormatException {
+        String value = "\\ value 2 \\ \\ ";
+        ValueString vstr = new ValueString(IniFileUtils.trim(value));
+        String expected = "\\ value 2\\ \\ ";
+        
+        Assert.assertEquals(expected, vstr.toString());
+    }
 
     //
     // ValueReference test methods

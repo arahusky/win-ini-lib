@@ -40,7 +40,23 @@ public class ValueString implements Value {
      */
     @Override
     public String toString() {
-        return value;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < value.length(); i++) {
+            if (Character.isWhitespace(value.charAt(i))) {
+                sb.append("\\ ");
+            } else {
+                break;
+            }
+        }
+        sb.append(value.trim());
+        for (int i = value.length() - 1; i >= 0; i--) {
+            if (Character.isWhitespace(value.charAt(i))) {
+                sb.append("\\ ");
+            } else {
+                break;
+            }
+        }
+        return sb.toString();
     }
 
     @Override
