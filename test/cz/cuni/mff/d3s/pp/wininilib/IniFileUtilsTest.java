@@ -48,7 +48,7 @@ public class IniFileUtilsTest {
     }
 
     @Test
-    public void testPairSectionsSimple() throws IOException, DuplicateNameException, FileFormatException {
+    public void testPairSectionsSimple() throws IOException, DuplicateNameException, FileFormatException, InvalidValueFormatException {
         String config1 = SampleConfigurationsLoader.getConfigSimple();
         IniFile iniFile = SampleConfigurationsLoader.getIniFileSimple();
         List<Section> iniFileSections = new ArrayList<>();

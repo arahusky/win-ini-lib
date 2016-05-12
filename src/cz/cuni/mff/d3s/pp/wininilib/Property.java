@@ -172,6 +172,15 @@ public class Property {
     }
 
     /**
+     * Returns a restriction of the current property.
+     *
+     * @return a restriction of the current property.
+     */
+    public ValueRestriction getRestriction() {
+        return valueRestriction;
+    }
+
+    /**
      * Adds the specified value to the current property.
      *
      * @param value value to be added.
@@ -181,6 +190,23 @@ public class Property {
      * property has been violated.
      */
     public void addValue(Value value) throws TooManyValuesException, ViolatedRestrictionException {
+        if (value instanceof ValueReference) {
+            ValueReference reference = (ValueReference)value;
+            IniFile iniFile = reference.getIniFile();
+            String identifier = reference.getIdentifier();
+            String nameOfProperty = reference.getNameOfProperty();
+            Property referenced = iniFile.getSection(identifier).getProperty(nameOfProperty);
+            if (!referenced.isSingleValue && this.isSingleValue) {
+                throw new TooManyValuesException("Referencing to multi-value property from single-value property.");
+            }
+
+            // check restriction if referenced value can be in the current property
+            for (Value referencedValue : referenced.values) {
+                valueRestriction.checkRestriction(referencedValue);
+            }
+            values.add(new ValueReference(iniFile, identifier, nameOfProperty, valueRestriction));
+            return;
+        }
         valueRestriction.checkRestriction(value);
         if ((isSingleValue) && (values.size() > 0)) {
             throw new TooManyValuesException("Too many values in single value property.");

@@ -1,11 +1,13 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueEnum;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueReference;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
@@ -16,6 +18,7 @@ import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueSignedRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueUnsignedRestriction;
 import java.math.BigInteger;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +36,7 @@ public class ValueAndRestrictionTest {
         String value = "1";
         ValueBoolean vb = new ValueBoolean(value);
         Assert.assertEquals(value, vb.toString());
-        Assert.assertTrue((boolean)vb.get());
+        Assert.assertTrue((boolean) vb.get());
         ValueBooleanRestriction vbr = new ValueBooleanRestriction();
         vbr.checkRestriction(vb);
     }
@@ -220,4 +223,87 @@ public class ValueAndRestrictionTest {
         ValueStringRestriction restr = new ValueStringRestriction();
         restr.checkRestriction(vstr);
     }
+
+    //
+    // ValueReference test methods
+    //
+    @Test
+    public void testValueReference1() throws InvalidValueFormatException, DuplicateNameException, TooManyValuesException, ViolatedRestrictionException {
+        IniFile iniFile = new IniFile();
+        String sectionIdentifier = "section 1";
+        Section s = new Section(sectionIdentifier, true);
+
+        String propertyName = "Energy";
+        boolean isSingleValue = true;
+        Property p1 = new Property(propertyName, isSingleValue, new ValueFloatRestriction());
+        p1.addValue(new ValueFloat(8.2));
+        s.addProperty(p1);
+
+        iniFile.addSection(s);
+
+        String name = "InheritedEnergy";
+        Property p2 = new Property(name, isSingleValue, new ValueFloatRestriction());
+        p2.addValue(new ValueReference(iniFile, sectionIdentifier, propertyName, p2.getRestriction()));
+
+        Property p3 = new Property(name, isSingleValue, new ValueFloatRestriction());
+        p3.addValue(iniFile, sectionIdentifier, propertyName);
+
+        String expected = name + "=" + "${" + sectionIdentifier + "#" + propertyName + "}";
+
+        Assert.assertEquals(expected, p2.toString());
+        Assert.assertEquals(expected, p3.toString());
+
+        List<Value> values = (List<Value>) p2.getValue(0).get();
+        Assert.assertEquals(8.2, values.get(0).get());
+
+        p1.setValue(0, new ValueFloat(10));
+
+        Assert.assertEquals(expected, p2.toString());
+        Assert.assertEquals(expected, p3.toString());
+
+        values = (List<Value>) p2.getValue(0).get();
+        Assert.assertEquals(10.0, values.get(0).get());
+    }
+
+    @Test(expected = ViolatedRestrictionException.class)
+    public void testValueReference2() throws InvalidValueFormatException, DuplicateNameException, TooManyValuesException, ViolatedRestrictionException {
+        IniFile iniFile = new IniFile();
+        String sectionIdentifier = "section 1";
+        Section s = new Section(sectionIdentifier, true);
+
+        String propertyName = "Energy";
+        boolean isSingleValue = true;
+        Property p1 = new Property(propertyName, isSingleValue, new ValueFloatRestriction());
+        p1.addValue(new ValueFloat(8.2));
+        s.addProperty(p1);
+
+        iniFile.addSection(s);
+
+        String name = "InheritedEnergy";
+        Property p2 = new Property(name, isSingleValue, new ValueFloatRestriction(-10, 0));
+        p2.addValue(iniFile, sectionIdentifier, propertyName);
+    }
+
+    @Test
+    public void testValueReference3() throws InvalidValueFormatException, DuplicateNameException, TooManyValuesException, ViolatedRestrictionException {
+        IniFile iniFile = new IniFile();
+        String sectionIdentifier = "section 1";
+        Section s = new Section(sectionIdentifier, true);
+
+        String propertyName = "Energy";
+        Property p1 = new Property(propertyName, true, new ValueFloatRestriction());
+        p1.addValue(new ValueFloat(8.2));
+        s.addProperty(p1);
+
+        iniFile.addSection(s);
+
+        String name = "InheritedEnergy";
+        Property p2 = new Property(name, false, new ValueFloatRestriction(-100, 100));
+        p2.addValue(iniFile, sectionIdentifier, propertyName);
+        p2.addValue(new ValueFloat(42));
+
+        String expected = name + "=" + "${" + sectionIdentifier + "#" + propertyName + "}," + 42.0;
+        Assert.assertEquals(expected, p2.toString());
+    }
+
 }

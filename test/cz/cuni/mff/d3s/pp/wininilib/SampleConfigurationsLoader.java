@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib;
 
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.DuplicateNameException;
+import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueSignedRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueUnsignedRestriction;
@@ -27,7 +28,7 @@ public class SampleConfigurationsLoader {
         return getFileContents(CONFIG_SIMPLE);
     }
     
-    public static IniFile getIniFileSimple() throws DuplicateNameException {
+    public static IniFile getIniFileSimple() throws DuplicateNameException, InvalidValueFormatException {
         IniFile iniFile = new IniFile();
         
         Section section1 = new Section("Sekce 1", true);

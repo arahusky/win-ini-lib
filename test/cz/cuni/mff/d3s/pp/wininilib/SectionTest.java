@@ -54,7 +54,7 @@ public class SectionTest {
     }
 
     @Test
-    public void testToString2() {
+    public void testToString2() throws InvalidValueFormatException {
         String identifier = "hi";
         String comment = "this is comment";
 

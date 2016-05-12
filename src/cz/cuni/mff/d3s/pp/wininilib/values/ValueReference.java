@@ -37,6 +37,40 @@ public class ValueReference implements Value {
     }
 
     /**
+     * Returns an IniFile where the current <code>ValueReference</code>
+     * references.
+     *
+     * @return an IniFile where the current <code>ValueReference</code>
+     * references.
+     */
+    public IniFile getIniFile() {
+        return iniFile;
+    }
+
+    /**
+     * Returns a identifier of section where the current
+     * <code>ValueReference</code> references.
+     *
+     * @return a identifier of section where the current
+     * <code>ValueReference</code> references.
+     *
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * Returns a name of property where the current <code>ValueReference</code>
+     * references.
+     *
+     * @return a name of property where the current <code>ValueReference</code>
+     * references.
+     */
+    public String getNameOfProperty() {
+        return nameOfProperty;
+    }
+
+    /**
      * Retruns values that are referenced by the current reference.
      *
      * @return values that are references by the current reference.

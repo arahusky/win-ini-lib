@@ -94,7 +94,7 @@ public class PropertyTest {
     }
 
     @Test
-    public void testValueType() {
+    public void testValueType() throws InvalidValueFormatException {
         Property p = new Property("key", true, new ValueFloatRestriction());
         Assert.assertEquals(ValueFloat.class, p.getValueType());
     }
