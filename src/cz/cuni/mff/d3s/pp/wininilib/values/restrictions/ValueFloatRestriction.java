@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
@@ -21,8 +22,8 @@ public class ValueFloatRestriction implements ValueRestriction {
      * interval restriction.
      */
     public ValueFloatRestriction() {
-        lowerBound = Double.MIN_VALUE;
-        upperBound = Double.MAX_VALUE;
+        lowerBound = Double.NEGATIVE_INFINITY;
+        upperBound = Double.POSITIVE_INFINITY;
     }
 
     /**
@@ -51,6 +52,8 @@ public class ValueFloatRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
+        IniFileUtils.checkRestrictionRecursive(value, this);
+        
         if (!(value instanceof ValueFloat)) {
             throw new ViolatedRestrictionException("Invalid float value.");
         }

@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.InvalidValueFormatException;
@@ -60,6 +61,8 @@ public class ValueUnsignedRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
+        IniFileUtils.checkRestrictionRecursive(value, this);
+        
         if (!(value instanceof ValueUnsigned)) {
             throw new ViolatedRestrictionException("Invalid unsigned value.");
         }

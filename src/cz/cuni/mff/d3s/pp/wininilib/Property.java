@@ -255,16 +255,7 @@ public class Property {
      * property has been violated.
      */
     public void addValue(IniFile iniFile, String identifier, String nameOfProperty) throws TooManyValuesException, ViolatedRestrictionException {
-        Property referenced = iniFile.getSection(identifier).getProperty(nameOfProperty);
-        if (!referenced.isSingleValue && this.isSingleValue) {
-            throw new TooManyValuesException("Referencing to multi-value property from single-value property.");
-        }
-
-        // check restriction if referenced value can be in the current property
-        for (Value value : referenced.values) {
-            valueRestriction.checkRestriction(value);
-        }
-        values.add(new ValueReference(iniFile, identifier, nameOfProperty, valueRestriction));
+        addValue(new ValueReference(iniFile, identifier, nameOfProperty, valueRestriction));
     }
 
     /**

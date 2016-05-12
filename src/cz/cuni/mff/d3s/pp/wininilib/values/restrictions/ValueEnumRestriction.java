@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
@@ -32,6 +33,8 @@ public class ValueEnumRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
+        IniFileUtils.checkRestrictionRecursive(value, this);
+        
         for (Enum enumValue : clazz.getEnumConstants()) {
             if (enumValue.equals(value) || enumValue.toString().equals(value.toString())) {
                 return;

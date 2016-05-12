@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
@@ -34,6 +35,8 @@ public class ValueBooleanRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
+        IniFileUtils.checkRestrictionRecursive(value, this);
+
         if (!(value instanceof ValueBoolean)) {
             throw new ViolatedRestrictionException("Specified value is not valid boolean value.");
         }

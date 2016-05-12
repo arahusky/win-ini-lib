@@ -74,21 +74,25 @@ public class SampleConfigurationsLoader {
 
         section1.addProperty(p11);
         section1.addProperty(p12);
+        iniFile.addSection(section1);
 
         // section 2
         Section section2 = new Section("$Sekce::podsekce", true);
+        iniFile.addSection(section2);
         Property p21 = new Property("Option 2", false, new ValueStringRestriction());
         p21.setDelimiter(Property.ValueDelimiter.COLON);
         p21.addValue(new ValueString("value 1"));
         p21.addValue(new ValueString("value 2"));
         p21.addValue(new ValueString("value 3"));
         p21.setComment("volba 'Option 2' je seznam hodnot 'value 1', 'value 2' a 'value 3'");
+        section2.addProperty(p21);
 
         Property p22 = new Property("Option 3", false, new ValueStringRestriction());
         p22.setDelimiter(Property.ValueDelimiter.COMMA);
         p22.addValue(new ValueString("value 1"));
         p22.addValue(new ValueReference(iniFile, "Sekce 1", "Option 1", new ValueStringRestriction()));
         p22.setComment("volba 'Option 3' je seznam hodnot 'value 1' a 'value 1'");
+        section2.addProperty(p22);
 
         Property p23 = new Property("Option 4", false, new ValueStringRestriction());
         p23.setDelimiter(Property.ValueDelimiter.COMMA);
@@ -96,6 +100,7 @@ public class SampleConfigurationsLoader {
         p23.addValue(iniFile, "$Sekce::podsekce", "Option 3");
         p23.addValue(new ValueString("v2"));
         p23.setComment("volba 'Option 4' je seznam hodnot 'v1', 'value 1', 'value 1', 'v2'");
+        section2.addProperty(p23);
 
         Property p24 = new Property("Option 5", false, new ValueStringRestriction());
         p24.setDelimiter(Property.ValueDelimiter.COMMA);
@@ -103,9 +108,6 @@ public class SampleConfigurationsLoader {
         p24.addValue(new ValueString("v2:v3"));
         p24.setComment("volba 'Option 5' je seznam hodnot 'v1' a 'v2:v3', nebo 'v1, v2' a 'v3' podle zvoleneho oddelovace");
 
-        section2.addProperty(p21);
-        section2.addProperty(p22);
-        section2.addProperty(p23);
         section2.addProperty(p24);
 
         // section 3
@@ -122,7 +124,7 @@ public class SampleConfigurationsLoader {
         p33.addValue(new ValueSigned("0xAc2B"));
 
         Property p34 = new Property("cele_oct", true, new ValueSignedRestriction());
-        p34.addValue("01754");
+        p34.addValue(new ValueSigned("01754"));
 
         Property p35 = new Property("float1", true, new ValueFloatRestriction());
         p35.addValue(new ValueFloat(-124.45667356));
@@ -145,6 +147,8 @@ public class SampleConfigurationsLoader {
         section3.addProperty(p37);
         section3.addProperty(p38);
 
+        iniFile.addSection(section3);
+
         // section 4
         Section section4 = new Section("Other", true);
         Property p41 = new Property("bool1", true, new ValueBooleanRestriction());
@@ -155,14 +159,11 @@ public class SampleConfigurationsLoader {
 
         Property p43 = new Property("bool3", true, new ValueBooleanRestriction());
         p43.addValue(new ValueBoolean("f"));
-        
+
         section4.addProperty(p41);
         section4.addProperty(p42);
         section4.addProperty(p43);
-        
-        iniFile.addSection(section1);
-        iniFile.addSection(section2);
-        iniFile.addSection(section3);
+
         iniFile.addSection(section4);
 
         return iniFile;

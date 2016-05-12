@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.pp.wininilib.values.restrictions;
 
 import cz.cuni.mff.d3s.pp.wininilib.Constants;
+import cz.cuni.mff.d3s.pp.wininilib.IniFileUtils;
 import cz.cuni.mff.d3s.pp.wininilib.Value;
 import cz.cuni.mff.d3s.pp.wininilib.ValueRestriction;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
@@ -30,6 +31,10 @@ public class ValueStringRestriction implements ValueRestriction {
      */
     @Override
     public void checkRestriction(Value value) throws ViolatedRestrictionException {
+        if (IniFileUtils.checkRestrictionRecursive(value, this)) {
+            return;
+        }
+
         if (!(value instanceof ValueString)) {
             throw new ViolatedRestrictionException("Wrong value type.");
         }

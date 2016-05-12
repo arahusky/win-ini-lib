@@ -8,6 +8,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueBoolean;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueEnum;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueFloat;
+import cz.cuni.mff.d3s.pp.wininilib.values.ValueReference;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueString;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueUnsigned;
@@ -29,7 +30,7 @@ public class IniFileUtils {
     //regex for matching identifier
     private static final String identifierRegex = "[a-zA-Z\\.,\\$\\:][a-zA-Z0-9_~\\-\\.\\:\\$ ]*";
     private static final Pattern identifierPattern = Pattern.compile(identifierRegex);
-    
+
     /**
      * Validates and fills the current instance of IniFile with the specified
      * data.
@@ -304,7 +305,7 @@ public class IniFileUtils {
 
         return true;
     }
-    
+
     /**
      * Creates an INI file using the specified data.
      *
@@ -333,7 +334,7 @@ public class IniFileUtils {
      */
     private static Section parseSection(RawSection section) throws InvalidValueFormatException, FileFormatException {
         String identifier = section.getIdentifier();
-                
+
         String rawBody = section.getBody();
         Section result = new Section(identifier, true);
 
@@ -369,8 +370,8 @@ public class IniFileUtils {
      */
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
-        String propertyID = IniFileUtils.trim(propertyParts[0]);        
-                
+        String propertyID = IniFileUtils.trim(propertyParts[0]);
+
         String propertyBody = propertyParts[1];
 
         String[] bodyParts = propertyBody.split(Constants.COMMENT_DELIMITER, 2);
@@ -531,10 +532,10 @@ public class IniFileUtils {
 
     public static boolean checkIdentifierValidity(String identifier) {
         Matcher identifierMatcher = identifierPattern.matcher(identifier);
-        
+
         return identifierMatcher.matches();
     }
-    
+
     /**
      * Checks whether given string represents a reference to some other field.
      *
@@ -549,19 +550,38 @@ public class IniFileUtils {
         if (!str.startsWith("${") || !str.endsWith("}")) {
             return false;
         }
-        
+
         String body = str.substring(2, str.length() - 1);
         String[] parts = body.split("#");
-        
+
         if (parts.length != 2) {
             return false;
         }
-                
+
         if (!checkIdentifierValidity(parts[0]) || !checkIdentifierValidity(parts[1])) {
             return false;
         }
-        
-        return true;        
+
+        return true;
+    }
+
+    /**
+     * Checks restriction for reference values.
+     *
+     * @param value reference to be checked.
+     * @param restriction restriction to check against.
+     * @return true if restriction is not violated.
+     * @throws ViolatedRestrictionException if restriction has been violated.
+     */
+    public static boolean checkRestrictionRecursive(Value value, ValueRestriction restriction) throws ViolatedRestrictionException {
+        if (value instanceof ValueReference) {
+            List<Value> referencedValues = (List<Value>) value.get();
+            for (Value referencedValue : referencedValues) {
+                restriction.checkRestriction(referencedValue);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
