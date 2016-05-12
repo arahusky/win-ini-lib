@@ -98,5 +98,16 @@ public class PropertyTest {
         Property p = new Property("key", true, new ValueFloatRestriction());
         Assert.assertEquals(ValueFloat.class, p.getValueType());
     }
-
+    
+    @Test(expected = InvalidValueFormatException.class)
+    public void testInvalidID1() throws InvalidValueFormatException {
+        String malformedID = "9section";
+        Property p = new Property(malformedID, true, new ValueStringRestriction());
+    }
+    
+    @Test(expected = InvalidValueFormatException.class)
+    public void testInvalidID2() throws InvalidValueFormatException {
+        String malformedID = "section{asd}";
+        Property p = new Property(malformedID, true, new ValueStringRestriction());
+    }
 }

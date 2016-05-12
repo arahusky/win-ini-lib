@@ -63,22 +63,34 @@ try {
     ini.saveToFile(fileName, IniFile.SaveType.FULL); // save the modified configuration back to file
 } catch (FileFormatException ex) {  
     System.err.println("The file did not meet specified format."); 
-} 
-                            
                         </pre>
+                    </p>
+                    <h4> Load .ini file in a static-mode </h4>
+                    <p> <i>While loading in a static-mode, no ini-file format needs to be predefined, but it is derived from the configuration (note that all the property values are in this case strings). </i><br />
+                        
+                    <pre>
+try {
+    IniFile ini = IniFile.loadIniFromFile(fileName);
+    System.out.println(ini.toString(IniFile.SavingMode.FULL));
+} catch (FileFormatException ex) {
+    System.err.println("This file is not valid ini file.");
+}
+
+                    </pre>
+
                     </p>
                 </p>
                 <p>
-                    To get more familiar with the library, we suggest you to inspect sample demo code, which is located in ExampleUsage java file.
+                    To get more familiar with the library, we suggest you to inspect sample demo code, which is located in dmeo/ExampleUsage java file.
                 </p>
                 
                 <h3>Compilation</h3>
                 <p>
                     To compile the library, Java SDK >= 1.7.0. together with Apache Ant is required. Then these Ant tasks are available:
                     <ul>
-                    <li>compile: compiles all sources (into out/classes folder )</li>
-                    <li>refdoc: creates project documentation (in out/javadoc)</li>
-                    <li>create-jar: creates jar file of the library (out/jars)</li>
+                    <li>compile: compiles all sources (into build/classes folder )</li>
+                    <li>refdoc: creates project documentation (in build/javadoc)</li>
+                    <li>create-jar: creates jar file of the library (build/jars)</li>
                     <li>main: performs all previous tasks</li>
                                         
                     </ul>

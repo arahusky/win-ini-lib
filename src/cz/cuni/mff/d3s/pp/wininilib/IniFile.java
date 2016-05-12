@@ -83,7 +83,7 @@ public class IniFile {
     }
 
     /**
-     * Removes first occurrence of given section.
+     * Removes given section.
      *
      * @param section section to be removed.
      * @return true if any section was removed; otherwise false.
@@ -226,7 +226,7 @@ public class IniFile {
      * mode.
      *
      * @param fileName name of the file to load from.
-     * @return Loaded ini file from the file with the specified type of load.
+     * @return Loaded ini file from the file.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromFile(String fileName) throws FileFormatException, IOException {
@@ -245,8 +245,7 @@ public class IniFile {
      * mode.
      *
      * @param stream stream from which the IniFile will be loaded.
-     * @return Loaded ini file from the specified stream with the specified type
-     * of load.
+     * @return Loaded ini file from the specified stream.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromStream(InputStream stream) throws FileFormatException, IOException {
@@ -264,8 +263,7 @@ public class IniFile {
      * mode.
      *
      * @param iniFile file string from which the IniFile will be loaded.
-     * @return Loaded ini file from the specified string with the specified type
-     * of load.
+     * @return Loaded ini file from the specified string.
      * @throws FileFormatException if the loaded ini file is not valid.
      */
     public static IniFile loadIniFromString(String iniFile) throws FileFormatException {

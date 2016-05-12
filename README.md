@@ -52,6 +52,19 @@ try {
 } 
 ```
 
+###  Load .ini file in a static-mode
+
+<i>While loading in a static-mode, no ini-file format needs to be predefined, but it is derived from the configuration (note that all the property values are in this case strings). </i>
+
+```
+try {
+    IniFile ini = IniFile.loadIniFromFile(fileName);
+    System.out.println(ini.toString(IniFile.SavingMode.FULL));
+} catch (FileFormatException ex) {
+    System.err.println("This file is not valid ini file.");
+}
+```
+
 To get more familiar with the library, we suggest you to inspect sample demo code, which is located in ExampleUsage java file. 
 
 ## Compilation

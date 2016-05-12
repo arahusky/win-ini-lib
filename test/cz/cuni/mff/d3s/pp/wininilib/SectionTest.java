@@ -5,6 +5,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.TooManyValuesException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.ViolatedRestrictionException;
 import cz.cuni.mff.d3s.pp.wininilib.values.ValueSigned;
 import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueSignedRestriction;
+import cz.cuni.mff.d3s.pp.wininilib.values.restrictions.ValueStringRestriction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,5 +64,16 @@ public class SectionTest {
         String expected = "[" + identifier + "] " + Constants.COMMENT_DELIMITER + comment + Constants.NEW_LINE;
         Assert.assertEquals(expected, s.toString());
     }
-
+    
+    @Test(expected = InvalidValueFormatException.class)
+    public void testInvalidID1() throws InvalidValueFormatException {
+        String malformedID = "9section";
+        Section s = new Section(malformedID, true);
+    }
+    
+    @Test(expected = InvalidValueFormatException.class)
+    public void testInvalidID2() throws InvalidValueFormatException {
+        String malformedID = "section{asd}";
+        Section s = new Section(malformedID, true);
+    }
 }
