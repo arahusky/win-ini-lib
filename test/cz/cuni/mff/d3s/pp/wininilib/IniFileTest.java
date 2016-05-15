@@ -45,6 +45,15 @@ public class IniFileTest {
         IniFileUtilsTest.testStaticSimpleConfiguration(iniFile);
     }
     
+    @Test
+    public void testLoadMusterConfiguration() throws IOException, WinIniLibException {
+        String config1 = SampleConfigurationsLoader.getConfigMuster();
+        IniFile iniFile = SampleConfigurationsLoader.getIniFileMuster();
+        iniFile.loadDataFromString(config1, LoadingMode.STRICT);
+        
+        //IniFileUtilsTest.testSimpleConfiguration(iniFile);
+    }
+    
     @Test(expected = FileFormatException.class)
     public void loadMalformedFileShouldRaiseException() throws IOException, WinIniLibException {
         String malformedConfig = SampleConfigurationsLoader.getConfigMalformed();

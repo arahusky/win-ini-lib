@@ -113,8 +113,7 @@ public class IniFileUtils {
             //each line may contain one or more comment symbols
             String[] parts = data[i].split(Constants.COMMENT_DELIMITER, 2);
             String identif = IniFileUtils.trim(parts[0]);
-
-            if ((identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
+            if ((identif.length() > 2 && identif.charAt(0) == '[') && (identif.charAt(identif.length() - 1) == ']')) {
                 // new section found
                 if (!sectionIdentifier.isEmpty()) {
                     result.add(new RawSection(sectionIdentifier, sectionBody.toString()));
@@ -254,7 +253,7 @@ public class IniFileUtils {
             String bodyNoComment = bodyParts[0];
             String comment = bodyParts.length > 1 ? bodyParts[1] : "";
             comment = IniFileUtils.trim(comment);
-
+            
             Property property = section.getProperty(propertyID);
 
             if (property == null) {
@@ -269,7 +268,6 @@ public class IniFileUtils {
             }
 
             Class<? extends Value> valueType = property.getValueType();
-
             String[] values = null;
             if (property.isSingleValue()) {
                 values = new String[]{bodyNoComment};
@@ -278,7 +276,7 @@ public class IniFileUtils {
             }
 
             for (String value : values) {
-                value = IniFileUtils.trim(value);
+                value = IniFileUtils.trim(value);                
                 if (isReference(value)) {
                     String referenceBody = value.substring(2, value.length() - 1);
                     String[] parts = referenceBody.split("#");
@@ -435,8 +433,8 @@ public class IniFileUtils {
         }
 
         StringBuilder result = new StringBuilder();
-        int startIndex = -1;
-        int endIndex = -1;
+        int startIndex = 0;
+        int endIndex = 0;
         for (int i = 0; i < toTrim.length() - 1; i++) {
             char ch = toTrim.charAt(i);
             char next = toTrim.charAt(i + 1);
@@ -463,7 +461,6 @@ public class IniFileUtils {
                 break;
             }
         }
-
         // Append backslashed spaces at the beginning
         result.append(getSpacesToWrite(toTrim.substring(0, startIndex)));
         // Append body

@@ -58,7 +58,7 @@ public class SampleConfigurationsLoader {
         return iniFile;
     }
 
-    public static IniFile getIniFileAdvanced() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException, DuplicateNameException {
+    public static IniFile getIniFileMuster() throws InvalidValueFormatException, TooManyValuesException, ViolatedRestrictionException, DuplicateNameException {
         IniFile iniFile = new IniFile();
 
         // section 1
@@ -105,8 +105,8 @@ public class SampleConfigurationsLoader {
         Property p24 = new Property("Option 5", false, new ValueStringRestriction());
         p24.setDelimiter(Property.ValueDelimiter.COMMA);
         p24.addValue(new ValueString("v1"));
-        p24.addValue(new ValueString("v2:v3"));
-        p24.setComment("volba 'Option 5' je seznam hodnot 'v1' a 'v2:v3', nebo 'v1, v2' a 'v3' podle zvoleneho oddelovace");
+        p24.addValue(new ValueString("v2\\:v3"));
+        p24.setComment("volba 'Option 5' je seznam hodnot 'v1' a 'v2\\:v3', nebo 'v1, v2' a 'v3' podle zvoleneho oddelovace");
 
         section2.addProperty(p24);
 
