@@ -61,7 +61,7 @@ public class SectionTest {
 
         Section s = new Section(identifier, true);
         s.setComment(comment);
-        String expected = "[" + identifier + "] " + Constants.COMMENT_DELIMITER + comment + Constants.NEW_LINE;
+        String expected = "[" + identifier + "]" + Constants.NEW_LINE +  Constants.COMMENT_DELIMITER + comment + Constants.NEW_LINE;
         Assert.assertEquals(expected, s.toString());
     }
     

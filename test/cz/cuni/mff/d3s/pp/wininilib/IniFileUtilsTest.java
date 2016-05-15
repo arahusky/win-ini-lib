@@ -157,6 +157,7 @@ public class IniFileUtilsTest {
     }
     
     protected static void testMusterConfiguration(IniFile iniFile) throws InvalidValueFormatException, IOException {
+        System.out.println(iniFile.toString());
         Assert.assertEquals(SampleConfigurationsLoader.getConfigMusterToString(), iniFile.toString());
     }
 

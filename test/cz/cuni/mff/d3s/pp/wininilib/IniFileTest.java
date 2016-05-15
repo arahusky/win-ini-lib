@@ -5,6 +5,7 @@ import cz.cuni.mff.d3s.pp.wininilib.exceptions.FileFormatException;
 import cz.cuni.mff.d3s.pp.wininilib.exceptions.WinIniLibException;
 import java.io.IOException;
 import org.junit.Test;
+import sun.swing.UIAction;
 
 /**
  *

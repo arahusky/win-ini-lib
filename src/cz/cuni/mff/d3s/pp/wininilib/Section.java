@@ -155,7 +155,8 @@ public class Section {
         result.append("[").append(identifier).append("]");
         boolean hasComment = (comment != null && !comment.isEmpty());
         if (hasComment) {
-            result.append(" ;").append(comment);
+            result.append(Constants.NEW_LINE);
+            result.append(";").append(comment);
         }
         result.append(Constants.NEW_LINE);
 
