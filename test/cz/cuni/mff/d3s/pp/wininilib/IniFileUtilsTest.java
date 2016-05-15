@@ -155,6 +155,10 @@ public class IniFileUtilsTest {
         Assert.assertEquals(1, section2Property2.getNumberOfValues());
         Assert.assertEquals(new ValueSigned("0b01101001"), section2Property2.getValue(0));
     }
+    
+    protected static void testMusterConfiguration(IniFile iniFile) throws InvalidValueFormatException, IOException {
+        Assert.assertEquals(SampleConfigurationsLoader.getConfigMusterToString(), iniFile.toString());
+    }
 
     protected static void testRelaxedSimpleMoreSectionsAgainstSimple(IniFile iniFile) throws InvalidValueFormatException {
         testSimpleConfiguration(iniFile);

@@ -28,6 +28,8 @@ public class SampleConfigurationsLoader {
     private static final String CONFIG_SIMPLE = "test/sample_configurations/config_simple.txt";
     private static final String CONFIG_SIMPLE_MORE_SECTIONS = "test/sample_configurations/config_simple_more_sections.txt";
     private static final String CONFIG_MUSTER = "test/sample_configurations/config_muster.txt";
+    //required output of IniFile instance's (loaded as CONFIG_MUSTER) toString method
+    private static final String CONFIG_MUSTER_TOSTRING = "test/sample_configurations/config_muster_tostring.txt";
 
     private static final String CONFIG_MALFORMED = "test/sample_configurations/config_malformed.txt";
     private static final String CONFIG_DUPLICITE_ID_SECTION = "test/sample_configurations/config_duplicite_id_section.txt";
@@ -175,6 +177,10 @@ public class SampleConfigurationsLoader {
 
     public static String getConfigMuster() throws IOException {
         return getFileContents(CONFIG_MUSTER);
+    }
+    
+    public static String getConfigMusterToString() throws IOException {
+        return getFileContents(CONFIG_MUSTER_TOSTRING);
     }
 
     public static String getConfigMalformed() throws IOException {

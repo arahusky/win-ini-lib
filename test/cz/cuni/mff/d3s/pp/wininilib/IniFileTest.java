@@ -51,7 +51,7 @@ public class IniFileTest {
         IniFile iniFile = SampleConfigurationsLoader.getIniFileMuster();
         iniFile.loadDataFromString(config1, LoadingMode.STRICT);
         
-        //IniFileUtilsTest.testSimpleConfiguration(iniFile);
+        IniFileUtilsTest.testMusterConfiguration(iniFile);
     }
     
     @Test(expected = FileFormatException.class)
