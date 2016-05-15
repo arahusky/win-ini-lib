@@ -74,11 +74,6 @@ public class IniFileUtilsTest {
     }
 
     @Test
-    public void testPairSectionsShouldRaiseExceptionWhenMissingRequiredSection() {
-        //TODO
-    }
-
-    @Test
     public void testCombineSectionsSimple() throws IOException, WinIniLibException {
         String config1 = SampleConfigurationsLoader.getConfigSimple();
         IniFile iniFile = SampleConfigurationsLoader.getIniFileSimple();

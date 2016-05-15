@@ -360,11 +360,15 @@ public class IniFileUtils {
     }
 
     /**
-     * TODO: Rict, ze defaultne to vemu jako string a hotovo (nebo teda udelat
-     * to nejspecificnejsi...?)
+     * Tries to create property from the given String representation. All values
+     * of the created property are instances of ValueString class. When line
+     * contains comma (or colon) than it is considered as a multi-value property
+     * (with corresponding delimiter), otherwise the returned instance is a
+     * single-value property.
      *
-     * @param property
-     * @return
+     * @param property String representation of the property to be parsed
+     * @return instance of Property that corresponds to given String
+     * representation
      */
     private static Property parseProperty(String line) throws FileFormatException, InvalidValueFormatException {
         String[] propertyParts = line.split(Constants.EQUAL_SIGN, 2);
