@@ -187,7 +187,7 @@ public class IniFileUtilsTest {
         Property section3Property4 = section3.getProperty(3);
         Assert.assertEquals("third", section3Property4.getKey());
         Assert.assertEquals(2, section3Property4.getNumberOfValues());
-        
+
         Assert.assertEquals(new ValueString("ball \\: cat"), section3Property4.getValue(0));
         Assert.assertEquals(new ValueString("dog"), section3Property4.getValue(1));
     }
@@ -267,6 +267,54 @@ public class IniFileUtilsTest {
     public void testTrim7() {
         String value = "\\ \\      Test\\ string\". \\ ";
         String expected = "  Test\\ string\". ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim8() {
+        String value = " 1";
+        String expected = "1";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim9() {
+        String value = "f";
+        Assert.assertEquals(value, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim10() {
+        String value = "\\      ";
+        String expected = " ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim11() {
+        String value = " ";
+        String expected = "";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim12() {
+        String value = " \\ \\ ";
+        String expected = "  ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim13() {
+        String value = "\\ ";
+        String expected = " ";
+        Assert.assertEquals(expected, IniFileUtils.trim(value));
+    }
+
+    @Test
+    public void testTrim14() {
+        String value = "\\ x";
+        String expected = " x";
         Assert.assertEquals(expected, IniFileUtils.trim(value));
     }
 

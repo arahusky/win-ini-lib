@@ -253,7 +253,7 @@ public class IniFileUtils {
             String bodyNoComment = bodyParts[0];
             String comment = bodyParts.length > 1 ? bodyParts[1] : "";
             comment = IniFileUtils.trim(comment);
-            
+
             Property property = section.getProperty(propertyID);
 
             if (property == null) {
@@ -276,7 +276,7 @@ public class IniFileUtils {
             }
 
             for (String value : values) {
-                value = IniFileUtils.trim(value);                
+                value = IniFileUtils.trim(value);
                 if (isReference(value)) {
                     String referenceBody = value.substring(2, value.length() - 1);
                     String[] parts = referenceBody.split("#");
@@ -433,10 +433,16 @@ public class IniFileUtils {
         }
 
         StringBuilder result = new StringBuilder();
-        int startIndex = 0;
-        int endIndex = 0;
-        for (int i = 0; i < toTrim.length() - 1; i++) {
+        int startIndex = -1;
+        int endIndex = -1;
+        for (int i = 0; i < toTrim.length(); i++) {
             char ch = toTrim.charAt(i);
+            if (i == toTrim.length() - 1) {
+                if (!Character.isWhitespace(ch)) {
+                    startIndex = i;
+                }
+                break;
+            }
             char next = toTrim.charAt(i + 1);
             if (Character.isWhitespace(ch)
                     || (ch == Constants.ESCAPE_SYMBOL && Character.isWhitespace(next))) {
@@ -446,7 +452,7 @@ public class IniFileUtils {
             break;
         }
 
-        for (int i = toTrim.length() - 1; i > 0; i--) {
+        for (int i = toTrim.length() - 1; i >= 0; i--) {
             char ch = toTrim.charAt(i);
             if (Character.isWhitespace(ch)) {
                 continue;
@@ -460,6 +466,10 @@ public class IniFileUtils {
                 endIndex = i;
                 break;
             }
+        }
+
+        if (startIndex == -1) {
+            return getSpacesToWrite(toTrim);
         }
         // Append backslashed spaces at the beginning
         result.append(getSpacesToWrite(toTrim.substring(0, startIndex)));
